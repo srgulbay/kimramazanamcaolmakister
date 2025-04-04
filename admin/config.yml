@@ -1,0 +1,67 @@
+# Decap CMS Yapılandırma Dosyası
+
+backend:
+  name: github # GitHub kullanacağımızı belirtiyoruz
+  repo: srgulbay/kimramazanamcaolmakister # !!! KENDİ BİLGİLERİNLE DEĞİŞTİR !!!
+  branch: main # veya master (GitHub reponuzdaki ana dalın adı)
+  # GitHub ile kimlik doğrulama için ek ayarlar gerekebilir.
+  # Sorun yaşarsan Decap CMS dokümantasyonuna bakabilirsin.
+
+media_folder: "" # Resim kullanmıyoruz
+public_folder: "" # Resim kullanmıyoruz
+
+collections: # İçerik koleksiyonları
+  - name: "soru_bankasi"
+    label: "Soru Bankası (Tüm Kategoriler)"
+    file: "questions.json" # Düzenlenecek dosya
+    label_singular: "Kategori Soru Listesi"
+    description: "Tüm kategorilere ait soruları buradan düzenleyebilirsiniz."
+    format: "json"
+    fields: # Düzenlenecek ana alanlar (kategoriler)
+      - label: "Betül Soruları (8. Sınıf)"
+        name: "betul" # questions.json içindeki anahtar
+        widget: "list" # Soru listesi
+        label_singular: "Soru (Betül)"
+        fields: # Her sorunun alanları
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "Beyza Soruları (3. Sınıf)"
+        name: "beyza"
+        widget: "list"
+        label_singular: "Soru (Beyza)"
+        fields: # Alanları tekrar tanımla
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "Rümeysa Soruları (1. Sınıf)"
+        name: "rumeysa"
+        widget: "list"
+        label_singular: "Soru (Rümeysa)"
+        fields: # Alanları tekrar tanımla
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "OKS Fen Soruları"
+        name: "oks_fen"
+        widget: "list"
+        label_singular: "Soru (OKS Fen)"
+        fields: # Alanları tekrar tanımla
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
