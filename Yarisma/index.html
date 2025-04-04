@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3 Kişilik İsimli Bilgi Yarışması</title>
+    <title>Eşit Şartlarda Bilgi Yarışması (3 Kişilik)</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        /* (Önceki CSS kodları buraya gelecek - Font, body, temel container stilleri vb.) */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
         :root {
             --primary-bg: linear-gradient(135deg, #667eea, #764ba2);
             --container-bg: rgba(255, 255, 255, 0.98);
-            --question-bg: #ede7f6;
+            --question-bg: #e8eaf6; /* Biraz daha açık */
+            --scoreboard-bg: #eceff1; /* Scoreboard arka planı */
             --player-bg: #f3e5f5;
             --primary-text: #333;
-            --header-color: #4a148c;
+            --header-color: #3f51b5; /* Ana Başlık Rengi */
+            --subheader-color: #5e35b1; /* Alt Başlık Rengi */
             --player-name-color: #6a1b9a;
             --button-gradient: linear-gradient(145deg, #ab47bc, #8e24aa);
             --button-hover-gradient: linear-gradient(145deg, #8e24aa, #ab47bc);
@@ -30,73 +33,109 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Üstten başlasın */
             min-height: 100vh;
             background: var(--primary-bg);
             color: var(--primary-text);
-            padding: 15px;
+            padding: 20px;
             box-sizing: border-box;
         }
 
         #quiz-container {
             background-color: var(--container-bg);
-            padding: 30px 40px;
+            padding: 25px 35px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             text-align: center;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px; /* Biraz daha genişletildi */
         }
 
         h1, h2 {
             color: var(--header-color);
             margin-bottom: 25px;
         }
+        h2 {
+             color: var(--subheader-color);
+        }
 
         /* --- İsim Giriş Alanı --- */
-        #name-entry {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background-color: #fafafa;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: var(--player-name-color);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
+        #name-entry { padding: 20px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; background-color: #fafafa; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--player-name-color); }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; }
 
         /* --- Quiz İçeriği --- */
+        #quiz-content { display: none; } /* Başlangıçta gizli */
+
         #question-area {
             background-color: var(--question-bg);
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
             margin-bottom: 25px;
-            min-height: 80px;
+            min-height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.3em;
+            font-size: 1.4em; /* Biraz daha büyük soru */
             font-weight: 600;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
         }
+
+        /* --- Skor Tablosu --- */
+        #scoreboard {
+            background-color: var(--scoreboard-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #scoreboard h3 {
+             margin: 0 0 10px 0;
+             color: var(--subheader-color);
+             font-size: 1.3em;
+        }
+        #scoreboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        #scoreboard-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 5px;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+         #scoreboard-list li:last-child {
+             border-bottom: none;
+         }
+         #scoreboard-list li:nth-child(1) { font-weight: 700; color: #d32f2f; } /* 1. farklı renk */
+         #scoreboard-list li:nth-child(2) { font-weight: 600; color: #7b1fa2; } /* 2. farklı renk */
+         #scoreboard-list li:nth-child(3) { font-weight: 600; color: #1976d2; } /* 3. farklı renk */
+
+         #scoreboard-list .rank {
+             font-weight: bold;
+             margin-right: 10px;
+             min-width: 25px; /* Sıralama için yer */
+             display: inline-block;
+             text-align: right;
+         }
+         #scoreboard-list .name {
+             flex-grow: 1; /* İsme kalan alanı ver */
+             margin-right: 10px;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             white-space: nowrap;
+         }
+         #scoreboard-list .score {
+             font-weight: bold;
+             min-width: 60px; /* Skor için yer */
+             text-align: right;
+         }
+
 
         #players-area {
             display: flex;
@@ -110,130 +149,46 @@
             background-color: var(--player-bg);
             padding: 15px;
             border-radius: 10px;
-            flex-basis: 30%;
-            min-width: 200px;
+            flex: 1 1 250px; /* Esnek büyüme, küçülme ve temel genişlik */
+            min-width: 220px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.2s ease, border 0.3s ease;
-            border: 3px solid transparent; /* Başlangıçta çerçeve olmasın */
+            border: 3px solid transparent;
         }
+        /* (Diğer .player-section, .player-name, .player-score, .player-options button stilleri önceki gibi) */
+         .player-name { font-weight: 600; font-size: 1.1em; margin-bottom: 10px; color: var(--player-name-color); word-wrap: break-word; }
+         .player-score { font-size: 1em; margin-bottom: 15px; }
+         .player-options button { display: block; width: 100%; padding: 10px; margin: 8px 0; border: none; border-radius: 8px; background: var(--button-gradient); color: white; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+         .player-options button:hover:not(:disabled) { background: var(--button-hover-gradient); box-shadow: 0 4px 8px rgba(0,0,0,0.2); transform: scale(1.03); }
+         .player-options button:disabled { background: #cccccc; cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
+         .player-feedback { min-height: 25px; margin-top: 10px; font-weight: 600; font-size: 0.9em; }
+         .feedback-correct { color: var(--correct-color); }
+         .feedback-incorrect { color: var(--incorrect-color); }
 
-        .player-section:hover {
-             transform: translateY(-5px);
-        }
-
-        .player-name {
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            color: var(--player-name-color);
-            word-wrap: break-word; /* Uzun isimler için */
-        }
-
-        .player-score {
-            font-size: 1em;
-            margin-bottom: 15px;
-        }
-
-        .player-options button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 8px;
-            background: var(--button-gradient);
-            color: white;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-
-        .player-options button:hover:not(:disabled) {
-            background: var(--button-hover-gradient);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transform: scale(1.03);
-        }
-
-        .player-options button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            opacity: 0.7;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .player-feedback {
-            min-height: 25px;
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 0.9em;
-        }
-
-        .feedback-correct { color: var(--correct-color); }
-        .feedback-incorrect { color: var(--incorrect-color); }
 
         /* --- Sonuç Alanı --- */
-        #results {
-            display: none;
-            margin-top: 30px;
-        }
-        .result-line {
-            font-size: 1.2em;
-            margin: 10px 0;
-            padding: 8px;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-        }
-        .result-line .name {
-             font-weight: 600;
-             color: var(--player-name-color);
-        }
-         .result-line .score {
-             font-weight: bold;
-         }
-
-        #winner-info {
-             font-size: 1.4em;
-             font-weight: bold;
-             color: var(--winner-color);
-             margin-top: 15px;
-        }
+        #results { display: none; margin-top: 30px; }
+        #final-scores { margin-bottom: 20px;}
+        .result-line { font-size: 1.2em; margin: 10px 0; padding: 8px; border-radius: 5px; background-color: #f0f0f0; display: flex; justify-content: space-between; }
+        .result-line .name { font-weight: 600; color: var(--player-name-color); flex-grow: 1; text-align: left; margin-right: 10px; }
+        .result-line .score { font-weight: bold; }
+        #winner-info { font-size: 1.4em; font-weight: bold; color: var(--winner-color); margin-top: 15px; }
 
         /* --- Butonlar --- */
-         #confirm-names-button, #restart-button {
-             padding: 12px 25px;
-             font-size: 1.2em;
-             font-weight: 600;
-             cursor: pointer;
-             margin-top: 20px;
-             background: var(--start-button-gradient);
-             color: white;
-             border: none;
-             border-radius: 8px;
-             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-             transition: all 0.3s ease;
-         }
-         #confirm-names-button:hover, #restart-button:hover {
-             background: var(--start-button-hover-gradient);
-             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-             transform: translateY(-2px);
-         }
+         #confirm-names-button, #restart-button { padding: 12px 25px; font-size: 1.2em; font-weight: 600; cursor: pointer; margin-top: 20px; background: var(--start-button-gradient); color: white; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+         #confirm-names-button:hover, #restart-button:hover { background: var(--start-button-hover-gradient); box-shadow: 0 6px 12px rgba(0,0,0,0.2); transform: translateY(-2px); }
 
-         /* --- Başlangıçta Gizlenecekler --- */
-         #quiz-content, #results {
-             display: none;
-         }
+        /* --- Başlangıçta Gizlenecekler --- */
+         #results { display: none; }
     </style>
 </head>
 <body>
     <div id="quiz-container">
-        <h1>3 Kişilik Bilgi Yarışması</h1>
+        <h1>Eşit Şartlarda Bilgi Yarışması</h1>
 
         <div id="name-entry">
             <h2>Oyuncu İsimlerini Girin</h2>
-            <div class="input-group">
+             <div class="input-group">
                 <label for="player-1-name-input">Oyuncu 1:</label>
                 <input type="text" id="player-1-name-input" placeholder="İsim Girin..." maxlength="20">
             </div>
@@ -250,6 +205,12 @@
 
         <div id="quiz-content">
             <div id="question-area">Soru burada görünecek...</div>
+
+             <div id="scoreboard">
+                <h3>Skor Tablosu</h3>
+                <ul id="scoreboard-list">
+                    </ul>
+            </div>
 
             <div id="players-area">
                 <div class="player-section" id="player-1-section">
@@ -285,16 +246,19 @@
     <audio id="correct-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf34812.mp3" preload="auto"></audio>
     <audio id="incorrect-sound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c4ff575f54.mp3" preload="auto"></audio>
     <audio id="game-over-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_7957303f51.mp3" preload="auto"></audio>
-    <audio id="start-game-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_162f4f87ef.mp3" preload="auto"></audio> <script>
-        // --- Sorular (Yaşa Göre Avantaj Sağlamayan) ---
+    <audio id="start-game-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_162f4f87ef.mp3" preload="auto"></audio>
+
+    <script>
+        // --- Sorular (Yaş Farkını Azaltmaya Yönelik) ---
         const questions = [
-            { question: "Hangi şekil diğerlerinden farklıdır? (Kare, Kare, Üçgen, Kare)", options: ["1. Kare", "2. Kare", "Üçgen", "4. Kare"], correctAnswer: "Üçgen" }, // Görsel algı
-            { question: "Kırmızı ile sarı rengi karıştırırsak hangi renk oluşur?", options: ["Mavi", "Yeşil", "Turuncu", "Mor"], correctAnswer: "Turuncu" }, // Temel renk bilgisi
-            { question: "Resimdeki örüntüde sıradaki ne olmalı? (Elma, Armut, Elma, ...)", options: ["Elma", "Armut", "Muz", "Çilek"], correctAnswer: "Armut" }, // Basit örüntü
-            { question: "Bir bisiklette genellikle kaç tekerlek bulunur?", options: ["1", "2", "3", "4"], correctAnswer: "2" }, // Genel Gözlem
-            { question: "Hangi hayvan 'hav hav' diye ses çıkarır?", options: ["Kedi", "Kuş", "İnek", "Köpek"], correctAnswer: "Köpek" }, // Genel Bilgi (Ses)
-            { question: "Güneş hangi yönden batar?", options: ["Doğu", "Kuzey", "Güney", "Batı"], correctAnswer: "Batı" }, // Temel Coğrafi Bilgi
-            { question: "5 elmam var, 2 tanesini yersem kaç elmam kalır?", options: ["1", "2", "3", "4"], correctAnswer: "3" } // Basit Çıkarma
+            { question: "Hangisi diğerlerinden farklıdır? (Elma, Muz, Portakal, Sandalye)", options: ["Elma", "Muz", "Portakal", "Sandalye"], correctAnswer: "Sandalye" }, // Kategori Farkı
+            { question: "Yeşil trafik ışığı ne anlama gelir?", options: ["Dur", "Hazırlan", "Geç", "Yavaşla"], correctAnswer: "Geç" }, // Çok Yaygın Bilgi
+            { question: "Sıradaki şekil ne olmalı? (▲, ▼, ▲, ...)", options: ["▲", "●", "■", "▼"], correctAnswer: "▼" }, // Basit Görsel Örüntü
+            { question: "'Buz' neyin donmuş halidir?", options: ["Toprak", "Hava", "Ateş", "Su"], correctAnswer: "Su" }, // Temel Fen Bilgisi
+            { question: "Kulaklarımızla ne yaparız?", options: ["Görürüz", "Koklarız", "Duyarız", "Dokunuruz"], correctAnswer: "Duyarız" }, // Duyu Organı Fonksiyonu
+            { question: "Hangi kelime yanlış yazılmıştır? (Telefon, Telefone, Televizyon, Tablet)", options: ["Telefon", "Telefone", "Televizyon", "Tablet"], correctAnswer: "Telefone" }, // Basit Yazım Farkı / Gözlem
+            { question: "Bir haftada kaç gün vardır?", options: ["5", "6", "7", "8"], correctAnswer: "7" }, // Evrensel Bilgi
+            { question: "Kare şeklinin kaç kenarı vardır?", options: ["3", "4", "5", "6"], correctAnswer: "4" } // Temel Geometrik Şekil
         ];
 
         // --- Oyuncu Bilgileri ---
@@ -314,26 +278,21 @@
         const confirmNamesButton = document.getElementById('confirm-names-button');
         const quizContent = document.getElementById('quiz-content');
         const questionElement = document.getElementById('question-area');
+        const scoreboardListElement = document.getElementById('scoreboard-list'); // Yeni
         const resultsElement = document.getElementById('results');
         const finalScoresElement = document.getElementById('final-scores');
         const restartButton = document.getElementById('restart-button');
         const winnerInfoElement = document.getElementById('winner-info');
+        const nameInputs = [ /*...*/ ]; // Önceki gibi
+        const nameDisplays = [ /*...*/ ]; // Önceki gibi
 
-        // İsim inputları
-        const nameInputs = [
-            document.getElementById('player-1-name-input'),
-            document.getElementById('player-2-name-input'),
-            document.getElementById('player-3-name-input')
-        ];
-        // İsim gösterim alanları
-         const nameDisplays = [
-            document.getElementById('player-1-name-display'),
-            document.getElementById('player-2-name-display'),
-            document.getElementById('player-3-name-display')
-        ];
+         // İsim inputları ve gösterim alanları (Kısa yol)
+         for (let i = 1; i <= 3; i++) {
+            nameInputs.push(document.getElementById(`player-${i}-name-input`));
+            nameDisplays.push(document.getElementById(`player-${i}-name-display`));
+         }
 
-
-        // Ses elementleri
+        // Ses elementleri (Önceki gibi)
         const correctSound = document.getElementById('correct-sound');
         const incorrectSound = document.getElementById('incorrect-sound');
         const gameOverSound = document.getElementById('game-over-sound');
@@ -341,13 +300,12 @@
 
         // --- Fonksiyonlar ---
 
-        function playSound(soundElement) {
-           soundElement.pause();
-           soundElement.currentTime = 0;
-           soundElement.play().catch(error => console.log("Ses çalma hatası:", error));
+        function playSound(soundElement) { /* ... Önceki gibi ... */
+             soundElement.pause();
+             soundElement.currentTime = 0;
+             soundElement.play().catch(error => console.log("Ses çalma hatası:", error));
         }
-
-        function shuffleArray(array) {
+        function shuffleArray(array) { /* ... Önceki gibi ... */
             let currentIndex = array.length, randomIndex;
             while (currentIndex !== 0) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
@@ -357,35 +315,59 @@
             return array;
         }
 
-        function loadQuestion() {
-            playersAnsweredCount = 0;
-            players.forEach(player => {
-                player.answered = false;
-                const feedbackEl = document.getElementById(`feedback-player-${player.id}`);
-                const optionsEl = document.getElementById(`options-player-${player.id}`);
-                const sectionEl = document.getElementById(`player-${player.id}-section`);
-                feedbackEl.textContent = '';
-                feedbackEl.className = 'player-feedback';
-                optionsEl.innerHTML = ''; // Butonları temizle
-                sectionEl.style.border = '3px solid transparent'; // Çerçeveyi sıfırla
+
+        // YENİ: Skor Tablosunu Güncelleme Fonksiyonu
+        function updateScoreboard() {
+            // Oyuncuları skora göre büyükten küçüğe sırala
+            const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+
+            scoreboardListElement.innerHTML = ''; // Listeyi temizle
+
+            sortedPlayers.forEach((player, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span class="rank">${index + 1}.</span>
+                    <span class="name">${player.name}</span>
+                    <span class="score">${player.score} Puan</span>
+                `;
+                scoreboardListElement.appendChild(listItem);
             });
+        }
+
+
+        function loadQuestion() {
+             playersAnsweredCount = 0;
+             players.forEach(player => {
+                // ... (answered, feedback, options, border reset - Önceki gibi) ...
+                 player.answered = false;
+                 const feedbackEl = document.getElementById(`feedback-player-${player.id}`);
+                 const optionsEl = document.getElementById(`options-player-${player.id}`);
+                 const sectionEl = document.getElementById(`player-${player.id}-section`);
+                 feedbackEl.textContent = '';
+                 feedbackEl.className = 'player-feedback';
+                 optionsEl.innerHTML = ''; // Butonları temizle
+                 sectionEl.style.border = '3px solid transparent'; // Çerçeveyi sıfırla
+             });
 
             if (currentQuestionIndex < questionsShuffled.length) {
                 const currentQuestion = questionsShuffled[currentQuestionIndex];
-                questionElement.textContent = currentQuestion.question;
+                questionElement.textContent = `Soru ${currentQuestionIndex + 1}: ${currentQuestion.question}`; // Soru numarasını ekle
 
                 const shuffledOptions = shuffleArray([...currentQuestion.options]);
                 players.forEach(player => {
-                    const optionsContainer = document.getElementById(`options-player-${player.id}`);
-                    shuffledOptions.forEach(option => {
-                        const button = document.createElement('button');
-                        button.textContent = option;
-                        button.onclick = () => handleAnswer(player.id, option, currentQuestion.correctAnswer, button);
-                        optionsContainer.appendChild(button);
-                    });
-                    // Skoru her soru başında güncelle (gerekirse)
-                    document.getElementById(`score-player-${player.id}`).textContent = `Skor: ${player.score}`;
+                     const optionsContainer = document.getElementById(`options-player-${player.id}`);
+                     shuffledOptions.forEach(option => {
+                         const button = document.createElement('button');
+                         button.textContent = option;
+                         button.onclick = () => handleAnswer(player.id, option, currentQuestion.correctAnswer, button);
+                         optionsContainer.appendChild(button);
+                     });
+                     // Oyuncu bölümündeki skoru da güncelle (isteğe bağlı, scoreboard ana gösterge)
+                     document.getElementById(`score-player-${player.id}`).textContent = `Skor: ${player.score}`;
                 });
+
+                // Skor tablosunu her yeni soruda güncelle (Sıralama değişebilir)
+                updateScoreboard();
 
             } else {
                 showResults();
@@ -399,19 +381,20 @@
             player.answered = true;
             playersAnsweredCount++;
 
+            // ... (feedback, button disabling, border setting - Önceki gibi) ...
             const feedbackEl = document.getElementById(`feedback-player-${player.id}`);
-            const scoreEl = document.getElementById(`score-player-${player.id}`);
+            const scoreEl = document.getElementById(`score-player-${player.id}`); // Oyuncu bölümü skor
             const sectionEl = document.getElementById(`player-${player.id}-section`);
+             const playerOptionButtons = document.getElementById(`options-player-${playerId}`).getElementsByTagName('button');
+             for(let btn of playerOptionButtons){
+                 btn.disabled = true;
+                  if (btn === clickedButton) { btn.style.opacity = '1'; }
+                  else { btn.style.opacity = '0.6'; }
+             }
 
-            const playerOptionButtons = document.getElementById(`options-player-${playerId}`).getElementsByTagName('button');
-            for(let btn of playerOptionButtons){
-                btn.disabled = true;
-                 if (btn === clickedButton) { btn.style.opacity = '1'; }
-                 else { btn.style.opacity = '0.6'; }
-            }
 
             if (selectedOption === correctAnswer) {
-                player.score++;
+                player.score++; // Skoru artır
                 feedbackEl.textContent = "Doğru!";
                 feedbackEl.className = 'player-feedback feedback-correct';
                 sectionEl.style.border = `3px solid var(--correct-border)`;
@@ -422,7 +405,10 @@
                 sectionEl.style.border = `3px solid var(--incorrect-border)`;
                 playSound(incorrectSound);
             }
-            scoreEl.textContent = `Skor: ${player.score}`;
+            scoreEl.textContent = `Skor: ${player.score}`; // Oyuncu bölümü skorunu güncelle
+
+            // YENİ: Skor tablosunu ANINDA güncelle
+            updateScoreboard();
 
              if(playersAnsweredCount === players.length) {
                   setTimeout(() => {
@@ -437,29 +423,30 @@
             resultsElement.style.display = 'block';
             playSound(gameOverSound);
 
-            finalScoresElement.innerHTML = ''; // Önceki skorları temizle
+            finalScoresElement.innerHTML = ''; // Temizle
              let maxScore = -1;
              let winners = [];
 
-             players.sort((a, b) => b.score - a.score); // Skorlara göre sırala
+             // Sonuçları da sıralı gösterelim
+             const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
-             players.forEach(player => {
-                 // Sonuçları gösteren HTML oluştur
+             sortedPlayers.forEach(player => {
                   const resultLine = document.createElement('div');
                   resultLine.classList.add('result-line');
-                  resultLine.innerHTML = `<span class="name">${player.name}</span>: <span class="score">${player.score}</span> Puan`;
+                  resultLine.innerHTML = `<span class="name">${player.name}</span> <span class="score">${player.score} Puan</span>`;
                   finalScoresElement.appendChild(resultLine);
 
-                 // Kazananı belirle
+                 // Kazananı belirle (maxScore kontrolü burada da yapılmalı)
                  if (player.score > maxScore) {
                      maxScore = player.score;
                      winners = [player.name];
-                 } else if (player.score === maxScore && maxScore >= 0) { // 0 puan da beraberlik sayılabilir
+                 } else if (player.score === maxScore && maxScore >= 0) {
                      winners.push(player.name);
                  }
              });
 
-             if (maxScore < 0 || (winners.length === players.length && maxScore === 0) ) { // Herkes 0 ise veya hiç puan alınmadıysa
+             // Kazanan bilgisini yazdır (Önceki gibi)
+              if (maxScore < 0 || (winners.length === players.length && maxScore === 0) ) {
                   winnerInfoElement.textContent = "Kimse puan alamadı!";
              } else if (winners.length > 1) {
                  winnerInfoElement.textContent = `Kazananlar (Berabere): ${winners.join(', ')} (${maxScore} puan)`;
@@ -469,19 +456,16 @@
          }
 
         function initializeQuiz() {
-            // İsimleri al ve player objelerine ata
              players.forEach((player, index) => {
                  const enteredName = nameInputs[index].value.trim();
-                 // Boş bırakılırsa varsayılan ismi kullan
                  player.name = enteredName === '' ? `Oyuncu ${player.id}` : enteredName;
              });
 
-             // İsim girişini gizle, quiz içeriğini göster
              nameEntrySection.style.display = 'none';
-             resultsElement.style.display = 'none'; // Sonuçları da gizle (yeniden başlatma durumu için)
+             resultsElement.style.display = 'none';
              quizContent.style.display = 'block';
-             playSound(startGameSound); // Oyuna başlama sesi
-             startQuiz(); // Quiz'i başlat
+             playSound(startGameSound);
+             startQuiz(); // Quiz'i başlat (skorları sıfırlar, ilk soruyu yükler)
         }
 
 
@@ -490,32 +474,31 @@
             players.forEach((player, index) => {
                 player.score = 0;
                 player.answered = false;
-                nameDisplays[index].textContent = player.name; // İsimleri ekranda güncelle
-                document.getElementById(`score-player-${player.id}`).textContent = `Skor: 0`; // Skoru sıfırla
+                nameDisplays[index].textContent = player.name;
+                document.getElementById(`score-player-${player.id}`).textContent = `Skor: 0`;
             });
 
-            // Soruları karıştır ve indeksi sıfırla
              questionsShuffled = shuffleArray([...questions]);
             currentQuestionIndex = 0;
+
+             // YENİ: Başlangıç skor tablosunu göster (Herkes 0 puan)
+            updateScoreboard();
 
             loadQuestion(); // İlk soruyu yükle
         }
 
-        function resetToNameEntry() {
-             // Quiz ve sonuçları gizle, isim girişini göster
-              quizContent.style.display = 'none';
-              resultsElement.style.display = 'none';
-              nameEntrySection.style.display = 'block';
-              // İsim inputlarını temizle (isteğe bağlı)
-              // nameInputs.forEach(input => input.value = '');
+        function resetToNameEntry() { /* ... Önceki gibi ... */
+             quizContent.style.display = 'none';
+             resultsElement.style.display = 'none';
+             nameEntrySection.style.display = 'block';
         }
 
 
         // --- Olay Dinleyicileri ---
         confirmNamesButton.addEventListener('click', initializeQuiz);
-        restartButton.addEventListener('click', resetToNameEntry); // Yeniden Başlat butonu isim girişine döner
+        restartButton.addEventListener('click', resetToNameEntry);
 
-        // Başlangıçta sadece isim girişi görünsün
+        // Sayfa Yüklenince
         document.addEventListener('DOMContentLoaded', () => {
              quizContent.style.display = 'none';
              resultsElement.style.display = 'none';
