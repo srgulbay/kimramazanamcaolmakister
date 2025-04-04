@@ -1,576 +1,271 @@
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</h1>
 
-        // --- Ses Efektleri ---
-        const correctSound = new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_c4ccfa869e.mp3');
-        const incorrectSound = new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c3a530a98c.mp3');
-        correctSound.onerror = () => console.error("Doğru ses dosyası yüklenemedi veya çalınamıyor.");
-        incorrectSound.onerror = () => console.error("Yanlış ses dosyası yüklenemedi veya çalınamıyor.");
-        // correctSound.load(); // İsteğe bağlı ön yükleme
-        // incorrectSound.load(); // İsteğe bağlı ön yükleme
+        <div id="name-entry">
+            <div class="player-input-group">
+                 <label for="player-1-name-input">Oyuncu 1 Adı:</label>
+                 <input type="text" id="player-1-name-input" placeholder="İsim..." maxlength="20">
+                 <label for="player-1-age-input">Yaşı (7-18):</label>
+                 <input type="number" id="player-1-age-input" min="7" max="18" placeholder="Yaş...">
+             </div>
+             <div class="player-input-group">
+                 <label for="player-2-name-input">Oyuncu 2 Adı:</label>
+                 <input type="text" id="player-2-name-input" placeholder="İsim..." maxlength="20">
+                 <label for="player-2-age-input">Yaşı (7-18):</label>
+                 <input type="number" id="player-2-age-input" min="7" max="18" placeholder="Yaş...">
+             </div>
+             <div class="player-input-group">
+                 <label for="player-3-name-input">Oyuncu 3 Adı:</label>
+                 <input type="text" id="player-3-name-input" placeholder="İsim..." maxlength="20">
+                 <label for="player-3-age-input">Yaşı (7-18):</label>
+                 <input type="number" id="player-3-age-input" min="7" max="18" placeholder="Yaş...">
+             </div>
+             <div id="confirm-container">
+                 <button id="confirm-names-button">Yarışmayı Başlat</button>
+             </div>
+            <p id="tts-support-warning">Tarayıcınız metin seslendirme özelliğini desteklemiyor olabilir. Anlatım seslendirilemeyecek.</p>
+        </div>
+
+        <div id="quiz-content">
+             <div id="narration-area">
+                <p id="narration-info">Şimdi dikkatle dinleyin...</p>
+                <button id="play-narration-btn">Anlatımı Seslendir</button>
+            </div>
+            <div id="loading-indicator">Sıradaki sorular hazırlanıyor...</div>
+            <div id="scoreboard">
+                 <h3>Skor Tablosu</h3>
+                 <ul id="scoreboard-list"></ul>
+            </div>
+            <div id="players-area">
+                 <div class="player-quiz-area" id="player-area-1">
+                     <div class="player-info">
+                         <span class="player-name" id="player-1-name-display">Oyuncu 1</span>
+                         <span class="player-age" id="player-1-age-display">(Yaş)</span>
+                     </div>
+                     <div class="player-question" id="question-player-1">Soru yükleniyor...</div>
+                     <div class="player-options" id="options-player-1"></div>
+                     <div class="player-feedback" id="feedback-player-1"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-2">
+                     <div class="player-info">
+                          <span class="player-name" id="player-2-name-display">Oyuncu 2</span>
+                          <span class="player-age" id="player-2-age-display">(Yaş)</span>
+                     </div>
+                     <div class="player-question" id="question-player-2">Soru yükleniyor...</div>
+                     <div class="player-options" id="options-player-2"></div>
+                     <div class="player-feedback" id="feedback-player-2"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-3">
+                       <div class="player-info">
+                           <span class="player-name" id="player-3-name-display">Oyuncu 3</span>
+                           <span class="player-age" id="player-3-age-display">(Yaş)</span>
+                       </div>
+                       <div class="player-question" id="question-player-3">Soru yükleniyor...</div>
+                       <div class="player-options" id="options-player-3"></div>
+                       <div class="player-feedback" id="feedback-player-3"></div>
+                 </div>
+            </div>
+        </div>
+
+        <div id="results">
+              <h2>Yarışma Bitti!</h2>
+              <div id="final-scores"></div>
+              <p id="winner-info"></p>
+              <button id="restart-button">Yeni Oyun (Yeni İsimlerle)</button>
+        </div>
+    </div> <script src="questions.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Ses Efektleri (Yerel Dosyalar) ---
+            // BU DOSYALARIN index.html İLE AYNI KLASÖRDE OLDUĞUNU VARSAYIYORUZ!
+            const correctSound = new Audio('dogru.mp3');
+            const incorrectSound = new Audio('yanlis.mp3');
+
+            // Ses dosyası yükleme hatalarını yakala (Konsolda görmek için)
+            correctSound.onerror = () => console.error("Doğru ses dosyası ('dogru.mp3') yüklenemedi veya çalınamıyor. Dosyanın varlığını ve adını kontrol edin.");
+            incorrectSound.onerror = () => console.error("Yanlış ses dosyası ('yanlis.mp3') yüklenemedi veya çalınamıyor. Dosyanın varlığını ve adını kontrol edin.");
 
 
-        // --- SORU HAVUZU & SEGMENTLER DIŞARIDAN questions.js'den GELİYOR ---
-        if (typeof quizSegments === 'undefined' || typeof questionPool === 'undefined') {
-             console.error("CRITICAL ERROR: Question data (questions.js) not loaded!");
-             // Display error to user
-             const container = document.getElementById('quiz-container');
-             if(container) {
-                 container.innerHTML = `<h1>Hata!</h1><p>Yarışma verileri yüklenemedi. 'questions.js' dosyasının 'index.html' ile aynı klasörde olduğundan emin olun ve sayfayı yenileyin.</p>`;
-                 container.style.color = 'red'; container.style.textAlign = 'center';
-             }
-             return; // Stop script execution
-        }
-
-        // --- Oyuncu Bilgileri ---
-        const players = [
-            { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-            { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-            { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
-        ];
-        // --- Değişkenler ---
-        let currentSegmentIndex = 0;
-        // let playersAnsweredCount = 0; // Artık checkRoundCompletion kullanılıyor
-        let askedQuestionIds = [];
-
-        // --- Element Referansları ---
-        const nameEntrySection = document.getElementById('name-entry');
-        const confirmNamesButton = document.getElementById('confirm-names-button');
-        const ttsSupportWarning = document.getElementById('tts-support-warning');
-        const quizContent = document.getElementById('quiz-content');
-        const narrationArea = document.getElementById('narration-area');
-        const narrationInfo = document.getElementById('narration-info');
-        const playNarrationButton = document.getElementById('play-narration-btn');
-        const scoreboardElement = document.getElementById('scoreboard');
-        const scoreboardListElement = document.getElementById('scoreboard-list');
-        const playersArea = document.getElementById('players-area');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const resultsElement = document.getElementById('results');
-        const finalScoresElement = document.getElementById('final-scores');
-        const restartButton = document.getElementById('restart-button');
-        const winnerInfoElement = document.getElementById('winner-info');
-        const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
-        const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
-
-        for (let i = 1; i <= 3; i++) {
-            nameInputs.push(document.getElementById(`player-${i}-name-input`));
-            ageInputs.push(document.getElementById(`player-${i}-age-input`));
-            nameDisplays.push(document.getElementById(`player-${i}-name-display`));
-            ageDisplays.push(document.getElementById(`player-${i}-age-display`));
-            playerAreaElements.push(document.getElementById(`player-area-${i}`));
-            playerQuestionElements.push(document.getElementById(`question-player-${i}`));
-            playerOptionsElements.push(document.getElementById(`options-player-${i}`));
-            playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
-        }
-
-        // --- Fonksiyonlar ---
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex > 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            // --- SORU HAVUZU & SEGMENTLER questions.js'den GELMELİ ---
+            // Kritik Hata Kontrolü (questions.js yüklenmezse veya hatalıysa)
+            if (typeof quizSegments === 'undefined' || typeof questionPool === 'undefined') {
+                 console.error("CRITICAL ERROR: Question data (questions.js) not loaded or variables are undefined!");
+                 // Kullanıcıya hata göster (opsiyonel ama önerilir)
+                 const container = document.getElementById('quiz-container');
+                 if(container) {
+                     container.innerHTML = `<h1>HATA!</h1><p style="color:red; font-weight:bold;">Yarışma verileri yüklenemedi!</p><p> Lütfen 'questions.js' dosyasının 'index.html' ile aynı klasörde olduğundan, içinde yazım hatası olmadığından ve index.html içinde doğru sırada çağrıldığından emin olun. Sayfayı yenilemeyi deneyin.</p>`;
+                     container.style.textAlign = 'center';
+                 }
+                 return; // Hata varsa script'in geri kalanını çalıştırma
             }
-            return array;
-        }
 
-        // Scoreboard'u güncellerken puanı artan oyuncuya animasyon ekler
-        function updateScoreboard(scoringPlayerId = null) {
-            if (!scoreboardListElement) return;
-            scoreboardListElement.innerHTML = ''; // Önce temizle
+            // --- Oyuncu Bilgileri ve Diğer Değişkenler ---
+            // (Bu kısımda değişiklik yok, öncekiyle aynı)
+            const players = [
+                { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
+            ];
+            let currentSegmentIndex = 0;
+            let askedQuestionIds = [];
 
-            const sortedByIdPlayers = [...players].sort((a, b) => a.id - b.id);
+            // --- Element Referansları ---
+            // (Bu kısımda değişiklik yok, öncekiyle aynı)
+            const nameEntrySection = document.getElementById('name-entry');
+            const confirmNamesButton = document.getElementById('confirm-names-button');
+            const ttsSupportWarning = document.getElementById('tts-support-warning');
+            const quizContent = document.getElementById('quiz-content');
+            const narrationArea = document.getElementById('narration-area');
+            const narrationInfo = document.getElementById('narration-info');
+            const playNarrationButton = document.getElementById('play-narration-btn');
+            const scoreboardElement = document.getElementById('scoreboard');
+            const scoreboardListElement = document.getElementById('scoreboard-list');
+            const playersArea = document.getElementById('players-area');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const resultsElement = document.getElementById('results');
+            const finalScoresElement = document.getElementById('final-scores');
+            const restartButton = document.getElementById('restart-button');
+            const winnerInfoElement = document.getElementById('winner-info');
+            const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
+            const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
 
-            sortedByIdPlayers.forEach(player => {
-                if (player.age >= 7 && player.age <= 18) { // Sadece aktif oyuncular
-                    const listItem = document.createElement('li');
-                    // Oyuncu ID'sini data attribute olarak ekle (animasyon için kolay bulmak adına)
-                    listItem.dataset.playerId = player.id;
-                    listItem.classList.add(player.themeClass); // Tema sınıfını ekle (sol border için)
+            for (let i = 1; i <= 3; i++) {
+                // Elementleri alırken null kontrolü eklemek iyi bir pratiktir.
+                nameInputs.push(document.getElementById(`player-${i}-name-input`));
+                ageInputs.push(document.getElementById(`player-${i}-age-input`));
+                nameDisplays.push(document.getElementById(`player-${i}-name-display`));
+                ageDisplays.push(document.getElementById(`player-${i}-age-display`));
+                playerAreaElements.push(document.getElementById(`player-area-${i}`));
+                playerQuestionElements.push(document.getElementById(`question-player-${i}`));
+                playerOptionsElements.push(document.getElementById(`options-player-${i}`));
+                playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
+            }
 
-                    const nameSpan = `<span class="name">${player.name}</span>`; // Tema sınıfı li'de olduğu için name span'dan kaldırılabilir
-                    const scoreSpan = `<span class="score">${player.score} Puan</span>`;
-                    listItem.innerHTML = `${nameSpan}${scoreSpan}`;
+            // --- Fonksiyonlar ---
+            // (Tüm fonksiyonlar: shuffleArray, updateScoreboard, getThemeClass, loadSegment,
+            // handleNarrationEnd, loadQuestionsForPlayers, checkRoundCompletion, handleAnswer,
+            // showResults, initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport
+            // önceki cevapta verilen, ses ve animasyonları içeren güncel halleriyle buraya gelecek.)
 
-                    // Eğer bu oyuncu yeni puan aldıysa, animasyon sınıfını ekle
-                    if (player.id === scoringPlayerId) {
-                        listItem.classList.add('score-update-animation');
-                        // Animasyon bittikten sonra sınıfı kaldır
-                        setTimeout(() => {
-                            listItem.classList.remove('score-update-animation');
-                        }, 600); // CSS'teki animasyon süresiyle eşleşmeli (--animation-duration)
+            // Örnek olarak handleAnswer ve updateScoreboard'un son halini tekrar ekliyorum:
+
+            function shuffleArray(array) { /* ... */ }
+            function getThemeClass(age) { /* ... */ }
+            function loadSegment(segmentIndex) { /* ... */ }
+            function handleNarrationEnd() { /* ... */ }
+            function loadQuestionsForPlayers(segmentIdx) { /* ... */ }
+            function checkRoundCompletion() { /* ... */ }
+            function showResults() { /* ... */ }
+            function initializeQuiz() { /* ... */ }
+            function startQuiz() { /* ... */ }
+            function resetToNameEntry() { /* ... */ }
+            function checkTtsSupport() { /* ... */ }
+
+            // GÜNCELLENMİŞ updateScoreboard
+            function updateScoreboard(scoringPlayerId = null) {
+                if (!scoreboardListElement) return;
+                // Liste öğelerini bul veya oluştur (daha gelişmiş bir yol - şimdilik temizleyip yeniden oluşturalım)
+                scoreboardListElement.innerHTML = ''; // Basitlik için temizle
+
+                const sortedByIdPlayers = [...players].sort((a, b) => a.id - b.id);
+
+                sortedByIdPlayers.forEach(player => {
+                    if (player.age >= 7 && player.age <= 18) {
+                        const listItem = document.createElement('li');
+                        listItem.dataset.playerId = player.id; // ID ekle
+                        listItem.classList.add(player.themeClass); // Tema ekle
+
+                        const nameSpan = `<span class="name">${player.name}</span>`;
+                        const scoreSpan = `<span class="score">${player.score} Puan</span>`;
+                        listItem.innerHTML = `${nameSpan}${scoreSpan}`;
+
+                        if (player.id === scoringPlayerId) {
+                            listItem.classList.add('score-update-animation');
+                            setTimeout(() => {
+                                listItem.classList.remove('score-update-animation');
+                            }, 600); // CSS animasyon süresi
+                        }
+                        scoreboardListElement.appendChild(listItem);
                     }
-
-                    scoreboardListElement.appendChild(listItem);
-                }
-            });
-        }
-
-
-        function getThemeClass(age) {
-            if (age >= 7 && age <= 10) return 'theme-child';
-            if (age >= 11 && age <= 14) return 'theme-teen';
-            if (age >= 15 && age <= 18) return 'theme-young-adult';
-            return 'theme-default';
-        }
-
-        function getThemeBorderColorVar(themeClass) {
-            // Bu fonksiyon artık CSS değişkenlerini döndürmüyor,
-            // sadece border rengi ayarlaması için kullanılabilir (ama animasyonlu border'ı CSS hallediyor)
-            // Yine de referans olarak kalabilir veya kaldırılabilir.
-             switch (themeClass) {
-                case 'theme-child': return 'var(--theme-child-border)';
-                case 'theme-teen': return 'var(--theme-teen-border)';
-                case 'theme-young-adult': return 'var(--theme-young-adult-border)';
-                default: return 'transparent';
-            }
-        }
-
-        function loadSegment(segmentIndex) {
-            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-            }
-
-            if (segmentIndex >= quizSegments.length) {
-                showResults(); return;
-            }
-            currentSegmentIndex = segmentIndex;
-            const segmentData = quizSegments[segmentIndex];
-
-            playerAreaElements.forEach(el => {
-                if(el) el.classList.remove('visible', 'animate-correct', 'animate-incorrect'); // Tüm durumları temizle
-            });
-            if(playersArea) playersArea.style.display = 'none';
-
-
-            if(loadingIndicator) loadingIndicator.style.display = 'none';
-            if(narrationArea) narrationArea.style.display = 'block';
-            if(scoreboardElement) scoreboardElement.style.display = 'block';
-            if(narrationInfo) narrationInfo.textContent = `Segment ${segmentIndex + 1}: "${segmentData.narrationTitle}" konusunu dinlemek için butona basın.`;
-            if(playNarrationButton){
-                 playNarrationButton.disabled = false;
-                 playNarrationButton.textContent = "Anlatımı Seslendir";
-            }
-
-
-            players.forEach(player => {
-                if (player.age >= 7 && player.age <= 18) {
-                    const feedbackEl = playerFeedbackElements[player.id-1];
-                    const areaEl = playerAreaElements[player.id-1];
-                    if(feedbackEl) feedbackEl.textContent = '';
-                    // Border'ı CSS hallettiği için JS'de sıfırlamaya gerek yok (transparent başlangıç değeri var)
-                    // if(areaEl) { areaEl.style.borderColor = 'transparent'; }
-                     // Varsa butonlardaki highlight'ı temizle
-                     const optionsEl = playerOptionsElements[player.id - 1];
-                     if (optionsEl) {
-                        const buttons = optionsEl.getElementsByTagName('button');
-                        for (let btn of buttons) {
-                             btn.classList.remove('correct-answer-highlight', 'user-incorrect-choice');
-                             btn.disabled = false; // Butonları tekrar aktif et
-                             btn.style.opacity = '1'; // Opaklığı sıfırla
-                         }
-                     }
-                }
-            });
-            updateScoreboard(); // Skorbordu göster/güncelle (animasyonsuz)
-        }
-
-        function handleNarrationEnd() {
-            console.log("Narration ended, loading questions...");
-            if(playNarrationButton) {
-                 playNarrationButton.textContent = "Anlatım Bitti";
-                 playNarrationButton.disabled = true;
-            }
-            if(narrationArea) narrationArea.style.display = 'none';
-            if(loadingIndicator) loadingIndicator.style.display = 'block';
-
-            setTimeout(() => {
-                loadQuestionsForPlayers(currentSegmentIndex);
-                if(loadingIndicator) loadingIndicator.style.display = 'none';
-                if(playersArea) playersArea.style.display = 'flex';
-                players.forEach(player => {
-                     if (player.age >= 7 && player.age <= 18) {
-                         const areaEl = playerAreaElements[player.id - 1];
-                         if(areaEl) areaEl.classList.add('visible');
-                     }
                 });
-
-            }, 500);
-        }
+            }
 
 
-        function loadQuestionsForPlayers(segmentIdx) {
-            // playersAnsweredCount = 0; // Artık kullanılmıyor
-            let currentRoundSelectedIds = [];
+            // GÜNCELLENMİŞ handleAnswer
+            function handleAnswer(playerId, selectedOption) {
+                const player = players.find(p => p.id === playerId);
+                if (!player || player.answered || !player.currentQuestion || !(player.age >= 7 && player.age <= 18)) return;
 
-            players.forEach(player => {
-                if (!(player.age >= 7 && player.age <= 18)) {
-                    player.answered = true; // Aktif olmayanları cevaplamış say
-                    return;
+                player.answered = true;
+
+                const feedbackEl = playerFeedbackElements[player.id - 1];
+                const sectionEl = playerAreaElements[player.id - 1];
+                const optionsEl = playerOptionsElements[player.id - 1];
+                const playerOptionButtons = optionsEl?.getElementsByTagName('button');
+
+                if (!feedbackEl || !sectionEl || !optionsEl || !playerOptionButtons) {
+                    console.error(`UI elements missing for player ${playerId}.`);
+                    return; // Elementler yoksa devam etme
                 }
 
-                player.answered = false;
-                player.currentQuestion = null;
-                const optionsEl = playerOptionsElements[player.id-1];
-                const feedbackEl = playerFeedbackElements[player.id-1];
-                const questionEl = playerQuestionElements[player.id-1];
-                const sectionEl = playerAreaElements[player.id-1]; // Kart alanı
-
-                 // Önceki animasyon sınıflarını temizle
-                 if (sectionEl) {
-                     sectionEl.classList.remove('animate-correct', 'animate-incorrect');
-                     sectionEl.style.borderColor = 'transparent'; // Başlangıç border'ı
-                 }
-
-
-                if (optionsEl) optionsEl.innerHTML = '';
-                if (feedbackEl) feedbackEl.textContent = '';
-                if (questionEl) questionEl.textContent = 'Soru aranıyor...';
-
-
-                const suitableQuestions = questionPool.filter(q =>
-                    q.segmentId === quizSegments[segmentIdx].segmentId &&
-                    player.age >= q.minAge &&
-                    player.age <= q.maxAge &&
-                    !askedQuestionIds.includes(q.questionId) &&
-                    !currentRoundSelectedIds.includes(q.questionId)
-                );
-
-                let questionData = null;
-                if (suitableQuestions.length > 0) {
-                    questionData = suitableQuestions[Math.floor(Math.random() * suitableQuestions.length)];
-                    player.currentQuestion = questionData;
-                    askedQuestionIds.push(questionData.questionId);
-                    currentRoundSelectedIds.push(questionData.questionId);
-
-                    if (questionEl) questionEl.textContent = questionData.questionText;
-                    if (optionsEl) {
-                        const shuffledOptions = shuffleArray([...questionData.options]);
-                        shuffledOptions.forEach(option => {
-                            const button = document.createElement('button');
-                            button.textContent = option;
-                            button.onclick = () => handleAnswer(player.id, option);
-                            optionsEl.appendChild(button);
-                        });
+                // Butonları pasifleştir ve doğru/yanlış işaretle
+                for (let btn of playerOptionButtons) {
+                    btn.disabled = true;
+                    if (btn.textContent === player.currentQuestion.correctAnswer) {
+                        btn.classList.add('correct-answer-highlight');
                     }
-                } else {
-                    if (questionEl) questionEl.textContent = 'Size uygun soru bulunamadı.';
-                    player.answered = true; // Cevaplanmış say
-                }
-            });
-
-            // Turun bitip bitmediğini başlangıçta da kontrol et (belki kimseye soru bulunamadı)
-            checkRoundCompletion();
-        }
-
-        // Aktif oyuncuların hepsinin cevaplayıp cevaplamadığını kontrol eder
-        function checkRoundCompletion() {
-            const activePlayers = players.filter(p => p.age >= 7 && p.age <= 18);
-            // Eğer hiç aktif oyuncu yoksa veya tüm aktif oyuncular cevapladıysa
-            if (activePlayers.length === 0 || activePlayers.every(p => p.answered)) {
-                // Kısa bir gecikme ile sonraki segmente geç (animasyonların bitmesi için)
-                setTimeout(() => {
-                    console.log("Round completed, moving to next segment.");
-                    if(loadingIndicator) loadingIndicator.style.display = 'block';
-                    playerAreaElements.forEach(el => {
-                        if(el) el.classList.remove('visible');
-                    });
-                    setTimeout(() => { // Display none için ek gecikme
-                        if(playersArea) playersArea.style.display = 'none';
-                        loadSegment(currentSegmentIndex + 1);
-                    }, 300); // CSS transition süresi kadar
-                }, 1500); // Cevap sonrası bekleme süresi (animasyon + okuma)
-            }
-        }
-
-
-        function handleAnswer(playerId, selectedOption) {
-            const player = players.find(p => p.id === playerId);
-            if (!player || player.answered || !player.currentQuestion || !(player.age >= 7 && player.age <= 18)) return;
-
-            player.answered = true;
-
-            const feedbackEl = playerFeedbackElements[player.id - 1];
-            const sectionEl = playerAreaElements[player.id - 1];
-            const optionsEl = playerOptionsElements[player.id - 1]; // Seçeneklerin olduğu div
-            const playerOptionButtons = optionsEl?.getElementsByTagName('button');
-
-            if (!feedbackEl || !sectionEl || !optionsEl || !playerOptionButtons) {
-                console.error(`UI elements not found for player ${playerId}.`);
-                return;
-            }
-
-            // Tüm butonları devre dışı bırak
-            for (let btn of playerOptionButtons) {
-                btn.disabled = true;
-                // Doğru cevabı içeren butonu bul ve vurgula
-                if (btn.textContent === player.currentQuestion.correctAnswer) {
-                    btn.classList.add('correct-answer-highlight');
-                }
-                 // Kullanıcının seçtiği yanlışsa onu da işaretle (opsiyonel)
-                 if (btn.textContent === selectedOption && selectedOption !== player.currentQuestion.correctAnswer) {
-                     btn.classList.add('user-incorrect-choice');
-                 }
-            }
-
-            let scored = false; // Puan alıp almadığını takip et
-
-            // Doğru/Yanlış kontrolü, ses çalma ve animasyon
-            if (selectedOption === player.currentQuestion.correctAnswer) {
-                player.score++;
-                scored = true; // Puan aldı
-                if(feedbackEl){
-                     feedbackEl.textContent = "Doğru!";
-                     feedbackEl.className = 'player-feedback feedback-correct';
-                }
-                if(sectionEl) sectionEl.classList.add('animate-correct');
-                correctSound.play(); // Doğru sesini çal
-            } else {
-                if(feedbackEl){
-                     feedbackEl.textContent = `Yanlış! Doğru: ${player.currentQuestion.correctAnswer}`;
-                     feedbackEl.className = 'player-feedback feedback-incorrect';
-                }
-                if(sectionEl) sectionEl.classList.add('animate-incorrect');
-                incorrectSound.play(); // Yanlış sesini çal
-            }
-
-             // Animasyon sınıflarını belirli bir süre sonra kaldır
-             const animationDuration = 600; // CSS'teki --animation-duration ile eşleşmeli (ms cinsinden)
-             setTimeout(() => {
-                 if(sectionEl) sectionEl.classList.remove('animate-correct', 'animate-incorrect');
-             }, animationDuration);
-
-
-            // Skorbordu güncelle, puan alındıysa animasyon için ID'yi gönder
-            updateScoreboard(scored ? player.id : null);
-
-            // Turun bitip bitmediğini kontrol et
-            checkRoundCompletion();
-        }
-
-
-        function showResults() {
-            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-               window.speechSynthesis.cancel();
-            }
-           if(quizContent) quizContent.style.display = 'none';
-           if(resultsElement) resultsElement.style.display = 'block';
-           if(finalScoresElement) finalScoresElement.innerHTML = '';
-           let maxScore = -1;
-           let winners = [];
-
-           const activePlayers = players.filter(p => p.age >= 7 && p.age <= 18);
-           const sortedPlayers = [...activePlayers].sort((a, b) => b.score - a.score);
-
-           if (sortedPlayers.length === 0) {
-                if(winnerInfoElement) winnerInfoElement.textContent = "Yarışmaya katılan oyuncu bulunamadı.";
-                return;
-           }
-
-           sortedPlayers.forEach(player => {
-               const resultLine = document.createElement('div');
-               resultLine.classList.add('result-line');
-               // Sonuç satırına da tema sınıfı ekle (opsiyonel)
-               // resultLine.classList.add(player.themeClass);
-               resultLine.innerHTML = `<span class="name ${player.themeClass}">${player.name} (${player.age} yaş)</span> <span class="score">${player.score} Puan</span>`;
-               if(finalScoresElement) finalScoresElement.appendChild(resultLine);
-
-               if (player.score > maxScore) {
-                   maxScore = player.score;
-                   winners = [player.name];
-               } else if (player.score === maxScore && maxScore >= 0) {
-                   winners.push(player.name);
-               }
-           });
-
-            if(winnerInfoElement){
-                if (maxScore <= 0 ) {
-                        winnerInfoElement.textContent = "Kimse puan alamadı veya yeterli soru bulunamadı!";
-                        winnerInfoElement.style.background = 'rgba(200, 200, 200, 0.1)'; // Nötr arka plan
-                        winnerInfoElement.style.borderColor = 'rgba(150, 150, 150, 0.3)';
-                        winnerInfoElement.style.color = 'var(--primary-text)'; // Normal metin rengi
-                } else if (winners.length > 1) {
-                    winnerInfoElement.textContent = `🏆 Kazananlar (Berabere): ${winners.join(', ')} (${maxScore} puan)! 🎉`;
-                    winnerInfoElement.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1))'; // Altın rengi arka plan
-                    winnerInfoElement.style.borderColor = 'rgba(255, 193, 7, 0.3)';
-                    winnerInfoElement.style.color = 'var(--winner-color)'; // Kazanan rengi
-                } else {
-                    winnerInfoElement.textContent = `🏆 Kazanan: ${winners[0]} (${maxScore} puan)! 🎉`;
-                     winnerInfoElement.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1))';
-                    winnerInfoElement.style.borderColor = 'rgba(255, 193, 7, 0.3)';
-                     winnerInfoElement.style.color = 'var(--winner-color)';
-                }
-            }
-        }
-
-        // initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport fonksiyonları
-        // önceki cevapta olduğu gibi kalabilir, önemli bir değişiklik gerektirmiyorlar.
-        // Sadece initializeQuiz içinde oyuncu alanlarının başlangıçta gizlenmesi/gösterilmesi
-        // ve resetToNameEntry içinde skor tablosunun gizlenmesi gibi küçük UI ayarlamaları yapıldı.
-
-         function initializeQuiz() {
-            let allAgesValid = true;
-            let playerCount = 0;
-
-            players.forEach((player, index) => {
-                const nameInput = nameInputs[index];
-                const ageInput = ageInputs[index];
-                const areaEl = playerAreaElements[player.id - 1];
-
-                if (!nameInput || !ageInput) {
-                    console.error(`Input elements not found for player ${index + 1}.`);
-                    if(areaEl) areaEl.style.display = 'none';
-                    return;
-                }
-
-                const name = nameInput.value.trim();
-                const ageString = ageInput.value;
-
-                if (name === '' && ageString === '') {
-                    player.age = 0; player.score = 0; player.themeClass = '';
-                    if (areaEl) areaEl.style.display = 'none';
-                    return;
-                }
-
-                playerCount++;
-                player.name = name === '' ? `Oyuncu ${player.id}` : name;
-                const age = parseInt(ageString);
-
-                if (isNaN(age) || age < 7 || age > 18) {
-                    alert(`Oyuncu "${player.name}" için geçerli bir yaş (7-18 arası) girmelisiniz veya alanı boş bırakmalısınız.`);
-                    if(ageInput) ageInput.style.border = '2px solid red';
-                    allAgesValid = false;
-                    player.age = 0;
-                    if (areaEl) areaEl.style.display = 'flex'; // Hatalıysa da göster
-                } else {
-                    player.age = age;
-                    player.themeClass = getThemeClass(age);
-                    if(ageInput) ageInput.style.border = '';
-                    if (areaEl) areaEl.style.display = 'flex';
-                }
-                player.score = 0; player.answered = false; player.currentQuestion = null;
-            });
-
-            if (!allAgesValid || playerCount === 0) {
-                 if (playerCount === 0 && allAgesValid) alert("Lütfen en az bir oyuncu için isim ve yaş girin.");
-                 return;
-             }
-
-            players.forEach((player) => {
-                 if (player.age >= 7 && player.age <= 18) {
-                    const areaEl = playerAreaElements[player.id - 1];
-                    const nameEl = nameDisplays[player.id - 1];
-                    const ageEl = ageDisplays[player.id - 1];
-
-                    if (areaEl) {
-                        areaEl.className = `player-quiz-area ${player.themeClass}`; // Tema sınıfını ayarla
-                         areaEl.style.display = 'flex';
-                         areaEl.style.borderColor = 'transparent'; // Başlangıç border'ı
-                         areaEl.classList.remove('visible', 'animate-correct', 'animate-incorrect'); // Tüm durumları temizle
-                    } else { console.error(`player-area-${player.id} not found`); }
-
-                    if (nameEl) { nameEl.textContent = player.name; }
-                    else { console.error(`player-${player.id}-name-display not found`); }
-
-                    if (ageEl) { ageEl.textContent = `(${player.age} yaş)`; }
-                    else { console.error(`player-${player.id}-age-display not found`); }
-                } else {
-                     const areaEl = playerAreaElements[player.id - 1];
-                     if (areaEl) areaEl.style.display = 'none'; // Aktif olmayanları gizle
-                }
-            });
-
-            if(nameEntrySection) nameEntrySection.style.display = 'none';
-            if(resultsElement) resultsElement.style.display = 'none';
-            if(quizContent) quizContent.style.display = 'block'; // Quiz'i göster
-             if(scoreboardElement) scoreboardElement.style.display = 'block'; // Skorbordu göster
-            startQuiz();
-        }
-
-        function startQuiz() {
-            askedQuestionIds = [];
-            currentSegmentIndex = 0;
-            updateScoreboard(); // Başlangıç skorbordunu göster
-            loadSegment(currentSegmentIndex);
-        }
-
-         function resetToNameEntry() {
-            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-               window.speechSynthesis.cancel();
-            }
-            if(quizContent) quizContent.style.display = 'none';
-            if(resultsElement) resultsElement.style.display = 'none';
-             if(scoreboardElement) scoreboardElement.style.display = 'none'; // Skorbordu gizle
-            if(nameEntrySection) nameEntrySection.style.display = 'flex';
-
-             nameInputs.forEach(input => { if(input) input.value = ''; });
-             ageInputs.forEach(input => { if(input) { input.value = ''; input.style.border = ''; } });
-
-              // Oyuncu alanlarını tekrar görünür yap (isim girişi için)
-              // initializeQuiz zaten gizleyecek/gösterecek, bu yüzden isteğe bağlı
-              // playerAreaElements.forEach(el => { if(el) el.style.display = 'flex'; });
-
-            checkTtsSupport();
-        }
-
-       function checkTtsSupport() {
-           const hasTts = 'speechSynthesis' in window && window.speechSynthesis;
-           const warningEl = document.getElementById('tts-support-warning');
-           if (warningEl) {
-                warningEl.style.display = hasTts ? 'none' : 'block';
-           }
-           if (playNarrationButton) {
-               playNarrationButton.disabled = false;
-               playNarrationButton.textContent = "Anlatımı Seslendir";
-           }
-       }
-
-
-        // --- Olay Dinleyicileri ---
-        if (confirmNamesButton) { confirmNamesButton.addEventListener('click', initializeQuiz); }
-        else { console.error("confirm-names-button not found!"); }
-
-        if (restartButton) { restartButton.addEventListener('click', resetToNameEntry); }
-        else { console.error("restart-button not found!"); }
-
-        if (playNarrationButton) {
-            playNarrationButton.addEventListener('click', () => {
-                if (!('speechSynthesis' in window) || !window.speechSynthesis) {
-                    alert("Tarayıcınız metin seslendirme özelliğini desteklemiyor.");
-                    handleNarrationEnd();
-                    return;
-                 }
-                  window.speechSynthesis.cancel();
-
-                if (typeof quizSegments === 'undefined' || !quizSegments[currentSegmentIndex] || !quizSegments[currentSegmentIndex].narrationText) {
-                     console.error("Narration text not found or segment data missing!");
-                     alert("Seslendirilecek anlatım metni bulunamadı!");
-                     handleNarrationEnd();
-                     return;
-                }
-                const segmentData = quizSegments[currentSegmentIndex];
-                const utterance = new SpeechSynthesisUtterance(segmentData.narrationText);
-                utterance.lang = 'tr-TR'; utterance.rate = 0.9; utterance.pitch = 1;
-
-                utterance.onend = handleNarrationEnd;
-                utterance.onerror = (event) => {
-                    console.error('TTS Error:', event);
-                    alert(`Seslendirme sırasında bir hata oluştu: ${event.error}. Sorulara devam edilecek.`);
-                    if(playNarrationButton){
-                         playNarrationButton.textContent = "Hata!";
-                         playNarrationButton.disabled = false;
+                    if (btn.textContent === selectedOption && selectedOption !== player.currentQuestion.correctAnswer) {
+                        btn.classList.add('user-incorrect-choice'); // Yanlış seçimi de işaretle
                     }
-                    handleNarrationEnd();
-                };
+                }
 
-                playNarrationButton.disabled = true; playNarrationButton.textContent = "Seslendiriliyor...";
-                window.speechSynthesis.speak(utterance);
-            });
-        } else { console.error("play-narration-btn not found!"); }
+                let scored = false;
 
+                // Sonucu değerlendir, ses çal, animasyon ekle
+                if (selectedOption === player.currentQuestion.correctAnswer) {
+                    player.score++;
+                    scored = true;
+                    if(feedbackEl){ feedbackEl.textContent = "Doğru!"; feedbackEl.className = 'player-feedback feedback-correct'; }
+                    if(sectionEl) sectionEl.classList.add('animate-correct');
+                    correctSound.play().catch(e => console.error("Doğru ses çalma hatası:", e)); // Hata yakalama
+                } else {
+                    if(feedbackEl){ feedbackEl.textContent = `Yanlış! Doğru: ${player.currentQuestion.correctAnswer}`; feedbackEl.className = 'player-feedback feedback-incorrect'; }
+                    if(sectionEl) sectionEl.classList.add('animate-incorrect');
+                    incorrectSound.play().catch(e => console.error("Yanlış ses çalma hatası:", e)); // Hata yakalama
+                }
 
-        // --- Başlangıç ---
-        resetToNameEntry(); // Uygulama yüklendiğinde isim girişiyle başla
+                 const animationDuration = 600;
+                 setTimeout(() => {
+                     if(sectionEl) sectionEl.classList.remove('animate-correct', 'animate-incorrect');
+                 }, animationDuration);
 
-    }); // DOMContentLoaded Sonu
-</script>
+                updateScoreboard(scored ? player.id : null); // Skorbordu güncelle (gerekirse animasyonla)
+                checkRoundCompletion(); // Tur bitti mi kontrol et
+            }
+
+             // === Diğer Fonksiyonlar (Önceki cevaptaki gibi) ===
+             // shuffleArray, getThemeClass, loadSegment, handleNarrationEnd, loadQuestionsForPlayers,
+             // checkRoundCompletion, showResults, initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport
+             // fonksiyonlarının tamamını buraya eklediğinizden emin olun.
+             // Yukarıda sadece en çok değişenleri örnek olarak verdim. Önceki yanıttaki
+             // JavaScript kodunun tamamını (ses tanımlamaları hariç) buraya yapıştırabilirsiniz.
+
+            // --- Başlangıç ---
+            resetToNameEntry(); // Sayfa yüklenince isim girişiyle başla
+
+        }); // DOMContentLoaded Sonu
+    </script>
+
+</body>
+</html>
