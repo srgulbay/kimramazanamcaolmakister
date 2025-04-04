@@ -3,77 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basit Bilgi Yarışması</title>
+    <title>3 Kişilik Bilgi Yarışması</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
         body {
-            font-family: sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            padding: 15px;
+            box-sizing: border-box;
         }
+
         #quiz-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 90%;
-            max-width: 500px;
+            width: 100%;
+            max-width: 800px;
         }
-        #question {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            min-height: 50px; /* Soru alanı yüksekliğini sabit tutar */
+
+        h1 {
+            color: #4a148c; /* Mor tonu */
+            margin-bottom: 25px;
         }
-        #options button {
+
+        #question-area {
+            background-color: #ede7f6; /* Açık mor */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        #players-area {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap; /* Küçük ekranlar için */
+            gap: 20px; /* Oyuncu alanları arası boşluk */
+            margin-bottom: 25px;
+        }
+
+        .player-section {
+            background-color: #f3e5f5; /* Daha açık mor */
+            padding: 15px;
+            border-radius: 10px;
+            flex-basis: 30%; /* 3 oyuncu için yaklaşık genişlik */
+            min-width: 200px; /* Minimum genişlik */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .player-section:hover {
+             transform: translateY(-5px);
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #6a1b9a; /* Koyu mor */
+        }
+
+        .player-score {
+            font-size: 1em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .player-options button {
             display: block;
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #eee;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #ab47bc, #8e24aa); /* Mor gradient */
+            color: white;
             cursor: pointer;
             font-size: 1em;
-            transition: background-color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-        #options button:hover:not(:disabled) {
-            background-color: #ddd;
+
+        .player-options button:hover:not(:disabled) {
+            background: linear-gradient(145deg, #8e24aa, #ab47bc);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: scale(1.03);
         }
-        #options button:disabled {
+
+        .player-options button:disabled {
+            background: #cccccc;
             cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
         }
-        #feedback {
-            margin-top: 15px;
-            font-weight: bold;
-            min-height: 20px; /* Geri bildirim alanı yüksekliğini sabit tutar */
+
+        .player-feedback {
+            min-height: 25px;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 0.9em;
         }
-        .correct {
-            color: green;
+
+        .feedback-correct {
+            color: #2e7d32; /* Koyu Yeşil */
         }
-        .incorrect {
-            color: red;
+
+        .feedback-incorrect {
+            color: #c62828; /* Koyu Kırmızı */
         }
-        #score {
-            margin-top: 20px;
-            font-size: 1.1em;
+
+        #results {
+            display: none;
+            margin-top: 30px;
         }
-         #results {
-            display: none; /* Başlangıçta gizli */
-            font-size: 1.3em;
-            font-weight: bold;
-         }
+        #results h2 {
+             color: #4a148c;
+        }
+
+        #results p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        #winner-info {
+             font-size: 1.4em;
+             font-weight: bold;
+             color: #ff6f00; /* Vurgu rengi */
+             margin-top: 15px;
+        }
+
          #start-button, #restart-button {
-             padding: 10px 20px;
-             font-size: 1.1em;
+             padding: 12px 25px;
+             font-size: 1.2em;
+             font-weight: 600;
              cursor: pointer;
              margin-top: 20px;
-             background-color: #007bff;
+             background: linear-gradient(145deg, #29b6f6, #0288d1); /* Mavi gradient */
              color: white;
              border: none;
-             border-radius: 5px;
+             border-radius: 8px;
+             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+             transition: all 0.3s ease;
+         }
+         #start-button:hover, #restart-button:hover {
+             background: linear-gradient(145deg, #0288d1, #29b6f6);
+             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+             transform: translateY(-2px);
          }
          #quiz-content {
              display: none; /* Başlangıçta gizli */
@@ -82,171 +173,243 @@
 </head>
 <body>
     <div id="quiz-container">
-        <h1>Basit Bilgi Yarışması</h1>
+        <h1>3 Kişilik Bilgi Yarışması</h1>
 
         <button id="start-button">Yarışmayı Başlat</button>
 
         <div id="quiz-content">
-            <div id="question">Soru burada görünecek...</div>
-            <div id="options">
+            <div id="question-area">Soru burada görünecek...</div>
+
+            <div id="players-area">
+                <div class="player-section" id="player-1-section">
+                    <div class="player-name">Oyuncu 1</div>
+                    <div class="player-score" id="score-player-1">Skor: 0</div>
+                    <div class="player-options" id="options-player-1"></div>
+                    <div class="player-feedback" id="feedback-player-1"></div>
                 </div>
-            <div id="feedback"></div>
-            <div id="score">Skor: 0</div>
+                <div class="player-section" id="player-2-section">
+                    <div class="player-name">Oyuncu 2</div>
+                    <div class="player-score" id="score-player-2">Skor: 0</div>
+                    <div class="player-options" id="options-player-2"></div>
+                    <div class="player-feedback" id="feedback-player-2"></div>
+                </div>
+                <div class="player-section" id="player-3-section">
+                    <div class="player-name">Oyuncu 3</div>
+                    <div class="player-score" id="score-player-3">Skor: 0</div>
+                    <div class="player-options" id="options-player-3"></div>
+                    <div class="player-feedback" id="feedback-player-3"></div>
+                </div>
+            </div>
         </div>
 
         <div id="results">
             <h2>Yarışma Bitti!</h2>
-            <p id="final-score">Toplam Skorunuz: X</p>
+            <p id="final-score-player-1">Oyuncu 1 Skor: X</p>
+            <p id="final-score-player-2">Oyuncu 2 Skor: X</p>
+            <p id="final-score-player-3">Oyuncu 3 Skor: X</p>
+            <p id="winner-info">Kazanan: ...</p>
             <button id="restart-button">Yeniden Başlat</button>
         </div>
     </div>
 
+    <audio id="correct-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf34812.mp3" preload="auto"></audio>
+    <audio id="incorrect-sound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c4ff575f54.mp3" preload="auto"></audio>
+     <audio id="game-over-sound" src="https://cdn.pixabay.com/download/audio/2022/11/17/audio_7957303f51.mp3" preload="auto"></audio>
+
     <script>
         // --- Sorular ---
-        // Yaş farkı gözetmeyen, basit ve genel kültür soruları
         const questions = [
-            {
-                question: "Güneş hangi yönden doğar?",
-                options: ["Kuzey", "Güney", "Doğu", "Batı"],
-                correctAnswer: "Doğu"
-            },
-            {
-                question: "Bir yılda kaç mevsim vardır?",
-                options: ["2", "3", "4", "5"],
-                correctAnswer: "4"
-            },
-            {
-                question: "Hangi renk trafik ışığında 'dur' anlamına gelir?",
-                options: ["Sarı", "Yeşil", "Kırmızı", "Mavi"],
-                correctAnswer: "Kırmızı"
-            },
-            {
-                question: "Resimdeki hayvan hangisidir? (Kedi resmi olduğunu varsayalım)", // Gerçek uygulamada resim eklemek gerekir
-                options: ["Köpek", "Kedi", "Kuş", "Balık"],
-                correctAnswer: "Kedi" // Bu soruyu metin tabanlı hale getirelim:
-            },
-             {
-                question: "'Miyav' sesi çıkaran evcil hayvan hangisidir?",
-                options: ["Köpek", "Kedi", "Hamster", "Tavşan"],
-                correctAnswer: "Kedi"
-            },
-            {
-                question: "3 + 5 işleminin sonucu kaçtır?",
-                options: ["7", "8", "9", "10"],
-                correctAnswer: "8"
-            }
+            { question: "Hangi hayvan 'Aslan Kral' filmindeki Simba'dır?", options: ["Zürafa", "Aslan", "Fil", "Zebra"], correctAnswer: "Aslan" },
+            { question: "Gökkuşağında kaç ana renk bulunur?", options: ["5", "6", "7", "8"], correctAnswer: "7" },
+            { question: "Türkiye'nin başkenti neresidir?", options: ["İstanbul", "İzmir", "Ankara", "Bursa"], correctAnswer: "Ankara" },
+            { question: "Bir üçgenin iç açılarının toplamı kaç derecedir?", options: ["90", "180", "270", "360"], correctAnswer: "180" },
+            { question: "Hangi gezegen 'Kızıl Gezegen' olarak bilinir?", options: ["Venüs", "Mars", "Jüpiter", "Satürn"], correctAnswer: "Mars" },
+            { question: "'Pinokyo' masalında yalan söylediğinde Pinokyo'nun neresi uzar?", options: ["Kulağı", " Burnu", "Eli", "Ayağı"], correctAnswer: " Burnu" },
+             { question: "1 dakika kaç saniyedir?", options: ["30", "60", "90", "120"], correctAnswer: "60" }
+        ];
+
+        // --- Oyuncu Bilgileri ---
+        const players = [
+            { id: 1, name: "Oyuncu 1", score: 0, answered: false },
+            { id: 2, name: "Oyuncu 2", score: 0, answered: false },
+            { id: 3, name: "Oyuncu 3", score: 0, answered: false }
         ];
 
         // --- Değişkenler ---
         let currentQuestionIndex = 0;
-        let score = 0;
-        let questionsShuffled = []; // Karıştırılmış soruları tutacak dizi
+        let questionsShuffled = [];
+        let playersAnsweredCount = 0; // Bu soruda kaç oyuncunun cevap verdiğini sayar
 
         // --- HTML Element Referansları ---
         const startButton = document.getElementById('start-button');
         const quizContent = document.getElementById('quiz-content');
-        const questionElement = document.getElementById('question');
-        const optionsElement = document.getElementById('options');
-        const feedbackElement = document.getElementById('feedback');
-        const scoreElement = document.getElementById('score');
+        const questionElement = document.getElementById('question-area');
         const resultsElement = document.getElementById('results');
-        const finalScoreElement = document.getElementById('final-score');
         const restartButton = document.getElementById('restart-button');
+        const winnerInfoElement = document.getElementById('winner-info');
+
+        // Ses elementleri
+        const correctSound = document.getElementById('correct-sound');
+        const incorrectSound = document.getElementById('incorrect-sound');
+        const gameOverSound = document.getElementById('game-over-sound');
+
 
         // --- Fonksiyonlar ---
+
+        function playSound(soundElement) {
+           // Önceki çalmayı durdur ve başa sar (arka arkaya tıklamalarda sorun olmasın diye)
+           soundElement.pause();
+           soundElement.currentTime = 0;
+           soundElement.play().catch(error => console.log("Ses çalma hatası (kullanıcı etkileşimi gerekebilir):", error));
+        }
 
         // Fisher-Yates (Knuth) Karıştırma Algoritması
         function shuffleArray(array) {
             let currentIndex = array.length, randomIndex;
-            // While there remain elements to shuffle.
             while (currentIndex !== 0) {
-                // Pick a remaining element.
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex--;
-                // And swap it with the current element.
-                [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]];
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
             return array;
         }
 
-
         function loadQuestion() {
-            feedbackElement.textContent = ''; // Önceki geri bildirimi temizle
-            optionsElement.innerHTML = ''; // Önceki seçenekleri temizle
+            // Oyuncuların 'answered' durumunu ve geri bildirimleri sıfırla
+            playersAnsweredCount = 0;
+            players.forEach(player => {
+                player.answered = false;
+                const feedbackEl = document.getElementById(`feedback-player-${player.id}`);
+                const optionsEl = document.getElementById(`options-player-${player.id}`);
+                const sectionEl = document.getElementById(`player-${player.id}-section`);
+                feedbackEl.textContent = '';
+                feedbackEl.className = 'player-feedback'; // Sınıfları sıfırla
+                optionsEl.innerHTML = ''; // Önceki butonları temizle
+                sectionEl.style.border = 'none'; // Önceki border'ları kaldır
+            });
 
             if (currentQuestionIndex < questionsShuffled.length) {
                 const currentQuestion = questionsShuffled[currentQuestionIndex];
                 questionElement.textContent = currentQuestion.question;
-                scoreElement.textContent = `Skor: ${score}`;
 
-                // Seçenekleri karıştır ve buton olarak ekle
-                const shuffledOptions = shuffleArray([...currentQuestion.options]); // Orjinali bozmamak için kopyala ve karıştır
-                shuffledOptions.forEach(option => {
-                    const button = document.createElement('button');
-                    button.textContent = option;
-                    button.onclick = () => handleAnswer(option, currentQuestion.correctAnswer);
-                    optionsElement.appendChild(button);
+                // Her oyuncu için seçenek butonlarını oluştur
+                const shuffledOptions = shuffleArray([...currentQuestion.options]); // Her oyuncu için aynı sırayla karıştırılmış seçenekler
+                players.forEach(player => {
+                    const optionsContainer = document.getElementById(`options-player-${player.id}`);
+                    shuffledOptions.forEach(option => {
+                        const button = document.createElement('button');
+                        button.textContent = option;
+                        // Butona oyuncu ID'si ve seçenek bilgisini ekle (event delegation yerine doğrudan)
+                        button.onclick = () => handleAnswer(player.id, option, currentQuestion.correctAnswer, button);
+                        optionsContainer.appendChild(button);
+                    });
+                     // Skoru güncelle
+                    document.getElementById(`score-player-${player.id}`).textContent = `Skor: ${player.score}`;
                 });
+
             } else {
                 showResults();
             }
         }
 
-        function handleAnswer(selectedAnswer, correctAnswer) {
-            // Tüm butonları pasif yap
-            const buttons = optionsElement.getElementsByTagName('button');
-            for (let btn of buttons) {
-                btn.disabled = true;
-                // Doğru cevabı yeşil yap
-                if(btn.textContent === correctAnswer) {
-                    btn.style.backgroundColor = '#90ee90'; // Açık yeşil
-                }
+        function handleAnswer(playerId, selectedOption, correctAnswer, clickedButton) {
+            const player = players.find(p => p.id === playerId);
+            if (!player || player.answered) {
+                return; // Oyuncu bulunamadıysa veya zaten cevap verdiyse işlem yapma
             }
 
-            if (selectedAnswer === correctAnswer) {
-                score++;
-                feedbackElement.textContent = "Doğru!";
-                feedbackElement.className = 'correct';
-            } else {
-                feedbackElement.textContent = `Yanlış! Doğru cevap: ${correctAnswer}`;
-                feedbackElement.className = 'incorrect';
-                 // Yanlış seçimi kırmızı yap
-                 for (let btn of buttons) {
-                     if(btn.textContent === selectedAnswer) {
-                        btn.style.backgroundColor = '#f08080'; // Açık Kırmızı
-                    }
+            player.answered = true;
+            playersAnsweredCount++;
+
+            const feedbackEl = document.getElementById(`feedback-player-${player.id}`);
+            const scoreEl = document.getElementById(`score-player-${player.id}`);
+             const sectionEl = document.getElementById(`player-${player.id}-section`);
+
+            // Oyuncunun tüm butonlarını pasif yap
+            const playerOptionButtons = document.getElementById(`options-player-${playerId}`).getElementsByTagName('button');
+            for(let btn of playerOptionButtons){
+                btn.disabled = true;
+                 // Tıkladığı butonu renklendir
+                 if (btn === clickedButton) {
+                    btn.style.opacity = '1'; // Daha belirgin yap
+                 } else {
+                     btn.style.opacity = '0.6'; // Diğerlerini soluklaştır
                  }
             }
-            scoreElement.textContent = `Skor: ${score}`;
-            currentQuestionIndex++;
 
-            // 1.5 saniye sonra sonraki soruyu yükle
-            setTimeout(loadQuestion, 1500);
+            if (selectedOption === correctAnswer) {
+                player.score++;
+                feedbackEl.textContent = "Doğru!";
+                feedbackEl.className = 'player-feedback feedback-correct';
+                sectionEl.style.border = '3px solid #66bb6a'; // Yeşil çerçeve
+                playSound(correctSound);
+            } else {
+                feedbackEl.textContent = `Yanlış!`; // Doğru cevabı burada göstermeyelim, karışıklık olmasın
+                feedbackEl.className = 'player-feedback feedback-incorrect';
+                sectionEl.style.border = '3px solid #ef5350'; // Kırmızı çerçeve
+                 playSound(incorrectSound);
+            }
+            scoreEl.textContent = `Skor: ${player.score}`; // Skoru anında güncelle
+
+             // Tüm oyuncular cevap verdiğinde veya süre dolduğunda (süre eklenmedi) sonraki soruya geç
+             if(playersAnsweredCount === players.length) {
+                 // Kısa bir bekleme süresi ekleyerek oyuncuların sonucu görmesini sağla
+                  setTimeout(() => {
+                     currentQuestionIndex++;
+                     loadQuestion();
+                 }, 1800); // 1.8 saniye bekle
+             }
         }
 
-        function showResults() {
-            quizContent.style.display = 'none'; // Soru/cevap alanını gizle
-            resultsElement.style.display = 'block'; // Sonuçları göster
-            finalScoreElement.textContent = `Toplam Skorunuz: ${score} / ${questionsShuffled.length}`;
-        }
+         function showResults() {
+            quizContent.style.display = 'none';
+            resultsElement.style.display = 'block';
+            playSound(gameOverSound);
+
+             // Final skorlarını göster
+             let maxScore = -1;
+             let winners = [];
+             players.forEach(player => {
+                 document.getElementById(`final-score-player-${player.id}`).textContent = `${player.name} Skor: ${player.score}`;
+                 if (player.score > maxScore) {
+                     maxScore = player.score;
+                     winners = [player.name]; // Yeni en yüksek skor, kazananı sıfırla
+                 } else if (player.score === maxScore) {
+                     winners.push(player.name); // Eşit skor, kazananlara ekle
+                 }
+             });
+
+             // Kazanan(ları) belirle
+             if (winners.length === players.length && maxScore === 0) { // Herkes 0 aldıysa
+                  winnerInfoElement.textContent = "Kimse puan alamadı!";
+             } else if (winners.length > 1) {
+                 winnerInfoElement.textContent = `Kazananlar (Berabere): ${winners.join(', ')} (${maxScore} puan)`;
+             } else {
+                 winnerInfoElement.textContent = `Kazanan: ${winners[0]} (${maxScore} puan)! 🎉`;
+             }
+         }
 
         function startQuiz() {
-            startButton.style.display = 'none'; // Başlat butonunu gizle
-            resultsElement.style.display = 'none'; // Önceki sonuçları gizle (yeniden başlatma durumu için)
-            quizContent.style.display = 'block'; // Quiz içeriğini göster
+            startButton.style.display = 'none';
+            resultsElement.style.display = 'none';
+            quizContent.style.display = 'block';
+
+            // Oyuncu skorlarını ve durumlarını sıfırla
+            players.forEach(player => {
+                player.score = 0;
+                player.answered = false;
+            });
 
             // Soruları karıştır ve sıfırla
-             questionsShuffled = shuffleArray([...questions]); // Orijinal diziyi bozmamak için kopyasını karıştır
+             questionsShuffled = shuffleArray([...questions]);
             currentQuestionIndex = 0;
-            score = 0;
 
             loadQuestion(); // İlk soruyu yükle
         }
 
         // --- Olay Dinleyicileri ---
         startButton.addEventListener('click', startQuiz);
-        restartButton.addEventListener('click', startQuiz); // Yeniden başlat butonu da aynı fonksiyonu çağırır
+        restartButton.addEventListener('click', startQuiz);
 
     </script>
 </body>
