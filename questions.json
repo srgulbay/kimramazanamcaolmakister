@@ -73,4 +73,9 @@
     { "question": "Bir kaldıraçta kuvvetten kazanç sağlamak için kuvvet kolunun yük kolundan nasıl olması gerekir?", "optionA": "Daha kısa", "optionB": "Eşit", "optionC": "Daha uzun", "optionD": "Farketmez", "answer": "C" },
     { "question": "Canlıların yaşadıkları ortama uyum sağlayarak hayatta kalma şansını artıran özelliklerine ne denir?", "optionA": "Mutasyon", "optionB": "Modifikasyon", "optionC": "Adaptasyon", "optionD": "Seleksiyon", "answer": "C" },
     { "question": "Mavi turnusol kağıdını kırmızıya çeviren ve tatları ekşi olan çözeltiler hangi özelliği gösterir?", "optionA": "Bazik", "optionB": "Nötr", "optionC": "Asidik", "optionD": "Tuz", "answer": "C" },
-    { "question": "Bir elektrik devresinde iletkenin uçları arasındaki potansiyel farkının (Gerilim), iletk
+    { "question": "Bir elektrik devresinde iletkenin uçları arasındaki potansiyel farkının (Gerilim), iletkenden geçen akım şiddetine oranı sabittir ve bu oran iletkenin nesini verir?", "optionA": "Gücünü", "optionB": "Enerjisini", "optionC": "Direncini", "optionD": "Yükünü", "answer": "C" },
+    { "question": "Fotosentez denklemi (Karbondioksit + Su --Işık/Klorofil--> Besin + ?) düşünüldüğünde, '?' ile gösterilen temel ürün nedir?", "optionA": "Azot", "optionB": "Oksijen", "optionC": "Hidrojen", "optionD": "Karbonmonoksit", "answer": "B" },
+    { "question": "Bir canlının dış görünüşünde ortaya çıkan özelliklerine ne ad verilir?", "optionA": "Genotip", "optionB": "Kromozom", "optionC": "DNA", "optionD": "Fenotip", "answer": "D" },
+    { "question": "Atmosferdeki karbondioksit gibi gazların artışının neden olduğu düşünülen temel çevre sorunu hangisidir?", "optionA": "Ozon Tabakasının İncelmesi", "optionB": "Asit Yağmurları", "optionC": "Küresel Isınma", "optionD": "Su Kirliliği", "answer": "C" }
+  ]
+}
