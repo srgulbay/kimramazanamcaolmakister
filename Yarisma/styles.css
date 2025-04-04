@@ -1,0 +1,373 @@
+/* styles.css - Yaşa Özel İslami Bilgi Yarışması Stilleri */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary-bg: linear-gradient(135deg, #72EDF2, #5151E5);
+    --container-bg: rgba(255, 255, 255, 0.98);
+    --question-bg: #e8eaf6;
+    --scoreboard-bg: #eceff1;
+    --primary-text: #333;
+    --header-color: #3f51b5;
+    --subheader-color: #5e35b1;
+    --winner-color: #ff6f00;
+    --theme-child-bg: #e0f7fa; --theme-child-border: #4dd0e1; --theme-child-header: #0097a7; --theme-child-button: linear-gradient(145deg, #26c6da, #00acc1); --theme-child-button-hover: linear-gradient(145deg, #00acc1, #26c6da);
+    --theme-teen-bg: #e8f5e9; --theme-teen-border: #81c784; --theme-teen-header: #388e3c; --theme-teen-button: linear-gradient(145deg, #66bb6a, #43a047); --theme-teen-button-hover: linear-gradient(145deg, #43a047, #66bb6a);
+    --theme-young-adult-bg: #f3e5f5; --theme-young-adult-border: #ce93d8; --theme-young-adult-header: #8e24aa; --theme-young-adult-button: linear-gradient(145deg, #ab47bc, #8e24aa); --theme-young-adult-button-hover: linear-gradient(145deg, #8e24aa, #ab47bc);
+    --correct-color: #2e7d32; --incorrect-color: #c62828;
+    --correct-border: #2e7d32; --incorrect-border: #c62828; /* Added for border feedback */
+    --start-button-gradient: linear-gradient(145deg, #5c6bc0, #3f51b5); /* Button gradient */
+    --start-button-hover-gradient: linear-gradient(145deg, #7986cb, #5c6bc0); /* Button hover gradient */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background: var(--primary-bg);
+    color: var(--primary-text);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#quiz-container {
+    background-color: var(--container-bg);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+h1, h2 {
+    color: var(--header-color);
+    margin-bottom: 20px;
+}
+h2 {
+    color: var(--subheader-color);
+    font-size: 1.5em;
+}
+h3 {
+    color: var(--subheader-color);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#name-entry {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.player-input-group {
+    flex: 1 1 250px;
+    text-align: left;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.player-input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--subheader-color);
+}
+
+.player-input-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+#confirm-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+#quiz-content {
+    display: none; /* Initially hidden */
+}
+
+#narration-area {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--question-bg);
+    border-radius: 10px;
+    text-align: center;
+}
+
+#narration-area p {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+#play-narration-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background: var(--start-button-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+#play-narration-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+#scoreboard {
+    background-color: var(--scoreboard-bg);
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#scoreboard h3 {
+    margin: 0 0 10px 0;
+    color: var(--subheader-color);
+    font-size: 1.1em;
+}
+
+#scoreboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+#scoreboard-list li {
+    font-size: 1em;
+    padding: 5px 10px;
+}
+
+#scoreboard-list .name {
+    font-weight: 600;
+}
+/* Added color to score names based on theme */
+#scoreboard-list .theme-child { color: var(--theme-child-header); }
+#scoreboard-list .theme-teen { color: var(--theme-teen-header); }
+#scoreboard-list .theme-young-adult { color: var(--theme-young-adult-header); }
+
+#scoreboard-list .score {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+#players-area {
+    display: flex;
+    justify-content: space-between; /* Changed to space-between for better spacing */
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.player-quiz-area {
+    flex: 1 1 30%; /* Allows flexibility, adjusts based on number of players */
+    min-width: 280px; /* Minimum width for readability */
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid transparent; /* Use border-top for theme color */
+    border-bottom: 5px solid transparent; /* Added bottom border for balance */
+    transition: border-color 0.5s ease, opacity 0.5s ease;
+    text-align: center;
+    opacity: 0; /* Start hidden for animation */
+    display: flex; /* Use flexbox for internal alignment */
+    flex-direction: column; /* Stack elements vertically */
+}
+
+.player-quiz-area.visible {
+    opacity: 1; /* Fade in */
+}
+
+/* Theme Backgrounds */
+.theme-child { background-color: var(--theme-child-bg); }
+.theme-teen { background-color: var(--theme-teen-bg); }
+.theme-young-adult { background-color: var(--theme-young-adult-bg); }
+/* Border colors are set via JavaScript */
+
+.player-info {
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.player-info .player-age {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 5px;
+}
+
+/* Theme Header Colors */
+.theme-child .player-info { color: var(--theme-child-header); }
+.theme-teen .player-info { color: var(--theme-teen-header); }
+.theme-young-adult .player-info { color: var(--theme-young-adult-header); }
+
+.player-question {
+    min-height: 70px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(255,255,255, 0.7);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.05em;
+    font-weight: 600;
+    line-height: 1.4;
+    flex-grow: 1; /* Allow question area to grow */
+}
+
+.player-options {
+     margin-top: auto; /* Push options to the bottom */
+}
+
+
+.player-options button {
+    display: block;
+    width: 100%;
+    padding: 9px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Theme Button Backgrounds and Hover Effects */
+.theme-child .player-options button { background: var(--theme-child-button); }
+.theme-child .player-options button:hover:not(:disabled) { background: var(--theme-child-button-hover); transform: translateY(-1px); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+.theme-teen .player-options button { background: var(--theme-teen-button); }
+.theme-teen .player-options button:hover:not(:disabled) { background: var(--theme-teen-button-hover); transform: translateY(-1px); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+.theme-young-adult .player-options button { background: var(--theme-young-adult-button); }
+.theme-young-adult .player-options button:hover:not(:disabled) { background: var(--theme-young-adult-button-hover); transform: translateY(-1px); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+
+.player-options button:disabled {
+    background: #cccccc !important; /* Override theme gradients */
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none; /* Remove hover effect */
+    box-shadow: none; /* Remove hover shadow */
+}
+
+.player-feedback {
+    min-height: 20px; /* Ensure space for feedback */
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.feedback-correct { color: var(--correct-color); }
+.feedback-incorrect { color: var(--incorrect-color); }
+
+#results {
+    display: none; /* Initially hidden */
+    margin-top: 30px;
+}
+
+#final-scores {
+    margin-bottom: 20px;
+}
+
+.result-line {
+    font-size: 1.2em;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically align items */
+}
+
+.result-line .name {
+    font-weight: 600;
+    flex-grow: 1; /* Allow name to take available space */
+    text-align: left;
+    margin-right: 10px;
+}
+
+/* Added theme color to result names */
+.result-line .theme-child { color: var(--theme-child-header); }
+.result-line .theme-teen { color: var(--theme-teen-header); }
+.result-line .theme-young-adult { color: var(--theme-young-adult-header); }
+
+
+.result-line .score {
+    font-weight: bold;
+    background-color: rgba(0,0,0,0.05); /* Slightly styled score */
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+#winner-info {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--winner-color);
+    margin-top: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Added subtle shadow */
+}
+
+#confirm-names-button,
+#restart-button {
+    padding: 12px 25px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    background: var(--start-button-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+#confirm-names-button:hover,
+#restart-button:hover {
+    background: var(--start-button-hover-gradient);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+#loading-indicator {
+    display: none; /* Initially hidden */
+    font-size: 1.2em;
+    color: var(--subheader-color);
+    margin: 20px;
+    font-weight: bold;
+}
+
+#tts-support-warning {
+    color: red;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    display: none; /* Initially hidden */
+}
