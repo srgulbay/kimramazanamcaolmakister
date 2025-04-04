@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geniş Havuzlu Yaşa Özel İslami Bilgi Yarışması</title>
+    <title>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</title>
     <style>
-        /* --- CSS Stilleri (Bir önceki cevapta olduğu gibi kalacak) --- */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
         :root {
             --primary-bg: linear-gradient(135deg, #72EDF2, #5151E5);
@@ -76,96 +75,155 @@
 </head>
 <body>
     <div id="quiz-container">
-        <h1>Geniş Havuzlu Yaşa Özel İslami Bilgi Yarışması</h1>
-        <div id="name-entry"> /* ... önceki gibi ... */ </div>
-        <div id="quiz-content"> /* ... önceki gibi ... */ </div>
-        <div id="results"> /* ... önceki gibi ... */ </div>
+        <h1>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</h1>
+
+        <div id="name-entry">
+            <div class="player-input-group">
+                <label for="player-1-name-input">Oyuncu 1 Adı:</label>
+                <input type="text" id="player-1-name-input" placeholder="İsim..." maxlength="20">
+                <label for="player-1-age-input">Yaşı (7-18):</label>
+                <input type="number" id="player-1-age-input" min="7" max="18" placeholder="Yaş...">
+            </div>
+            <div class="player-input-group">
+                <label for="player-2-name-input">Oyuncu 2 Adı:</label>
+                <input type="text" id="player-2-name-input" placeholder="İsim..." maxlength="20">
+                <label for="player-2-age-input">Yaşı (7-18):</label>
+                <input type="number" id="player-2-age-input" min="7" max="18" placeholder="Yaş...">
+            </div>
+            <div class="player-input-group">
+                <label for="player-3-name-input">Oyuncu 3 Adı:</label>
+                <input type="text" id="player-3-name-input" placeholder="İsim..." maxlength="20">
+                <label for="player-3-age-input">Yaşı (7-18):</label>
+                <input type="number" id="player-3-age-input" min="7" max="18" placeholder="Yaş...">
+            </div>
+            <div id="confirm-container">
+                <button id="confirm-names-button">Yarışmayı Başlat</button>
+            </div>
+            <p id="tts-support-warning" style="color: red; width: 100%; text-align: center; margin-top: 10px; display: none;">Tarayıcınız metin seslendirme özelliğini desteklemiyor olabilir.</p>
+        </div>
+
+        <div id="quiz-content">
+            <div id="narration-area" style="display: none;">
+                <p id="narration-info">Şimdi dikkatle dinleyin...</p>
+                <button id="play-narration-btn">Anlatımı Seslendir</button>
+            </div>
+            <div id="loading-indicator">Sıradaki sorular hazırlanıyor...</div>
+            <div id="scoreboard" style="display: none;">
+                 <h3>Skor Tablosu</h3>
+                 <ul id="scoreboard-list"></ul>
+            </div>
+            <div id="players-area">
+                 <div class="player-quiz-area" id="player-area-1">
+                    <div class="player-info">
+                        <span class="player-name" id="player-1-name-display">Oyuncu 1</span>
+                        <span class="player-age" id="player-1-age-display">(Yaş)</span>
+                    </div>
+                    <div class="player-question" id="question-player-1">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-1"></div>
+                    <div class="player-feedback" id="feedback-player-1"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-2">
+                    <div class="player-info">
+                        <span class="player-name" id="player-2-name-display">Oyuncu 2</span>
+                        <span class="player-age" id="player-2-age-display">(Yaş)</span>
+                     </div>
+                    <div class="player-question" id="question-player-2">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-2"></div>
+                    <div class="player-feedback" id="feedback-player-2"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-3">
+                     <div class="player-info">
+                        <span class="player-name" id="player-3-name-display">Oyuncu 3</span>
+                        <span class="player-age" id="player-3-age-display">(Yaş)</span>
+                    </div>
+                    <div class="player-question" id="question-player-3">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-3"></div>
+                    <div class="player-feedback" id="feedback-player-3"></div>
+                 </div>
+            </div>
+        </div>
+
+        <div id="results">
+             <h2>Yarışma Bitti!</h2>
+             <div id="final-scores"></div>
+             <p id="winner-info"></p>
+             <button id="restart-button">Yeni Oyun (Yeni İsimlerle)</button>
+        </div>
     </div>
 
     <script>
+        // *** TÜM JAVASCRIPT KODU BURADA ***
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- GENİŞLETİLMİŞ SORU HAVUZU ---
+            // --- SORU HAVUZU (Genişletilmiş Örnek) ---
             const questionPool = [
-                // --- Segment 1 (Fatiha 1-4) ---
-                // 7-10 Yaş
+                // Segment 1 (Fatiha 1-4) Soruları
                 { questionId: 101, segmentId: 1, questionText: "Metin hangi kelime ile başlar?", options: ["Hamd", "Rahman", "Allah", "Rab"], correctAnswer: "Allah", minAge: 7, maxAge: 10 },
                 { questionId: 102, segmentId: 1, questionText: "'Hamd' ne demek?", options: ["Sevgi", "Övgü/Şükür", "Güç", "Gün"], correctAnswer: "Övgü/Şükür", minAge: 7, maxAge: 10 },
                 { questionId: 103, segmentId: 1, questionText: "Metinde geçen Allah'ın güzel isimlerinden biri hangisidir?", options: ["Kadir", "Rahim", "Alim", "Semi"], correctAnswer: "Rahim", minAge: 7, maxAge: 10 },
                 { questionId: 104, segmentId: 1, questionText: "Allah neyin sahibidir?", options: ["Sadece iyilerin", "Sadece dünyanın", "Hesap gününün", "Sadece Müslümanların"], correctAnswer: "Hesap gününün", minAge: 8, maxAge: 11 },
                 { questionId: 105, segmentId: 1, questionText: "Metinde hangi kelime iki kere geçer?", options: ["Allah", "Rab", "Rahman/Rahim", "Hamd"], correctAnswer: "Rahman/Rahim", minAge: 9, maxAge: 12 },
-                // 11-14 Yaş
                 { questionId: 106, segmentId: 1, questionText: "'Alemlerin Rabbi' ifadesi Allah'ın hangi özelliğini daha çok vurgular?", options: ["Affediciliğini", "Cömertliğini", "Tüm varlıkların sahibi ve yöneticisi olduğunu", "Cezalandırıcı olduğunu"], correctAnswer: "Tüm varlıkların sahibi ve yöneticisi olduğunu", minAge: 11, maxAge: 14 },
                 { questionId: 107, segmentId: 1, questionText: "Rahman ve Rahim isimleri Allah'ın hangi yönünü öne çıkarır?", options: ["Gücünü", "Adaletini", "Merhametini", "Bilgisini"], correctAnswer: "Merhametini", minAge: 11, maxAge: 14 },
                 { questionId: 108, segmentId: 1, questionText: "'Hesap günü' ifadesinden ne anlıyoruz?", options: ["Dünyanın sonu", "İnsanların yaptıklarından sorgulanacağı gün", "Cennete giriş günü", "Bayram günü"], correctAnswer: "İnsanların yaptıklarından sorgulanacağı gün", minAge: 11, maxAge: 15 },
                 { questionId: 109, segmentId: 1, questionText: "Metne göre 'Hamd' kime 'mahsustur'?", options: ["Peygambere", "Meleklere", "İnsanlara", "Allah'a"], correctAnswer: "Allah'a", minAge: 10, maxAge: 14 },
                 { questionId: 110, segmentId: 1, questionText: "Fatiha suresinin bu ayetlerinde Allah'ın hangi isim/sıfatı GEÇMEZ?", options: ["Rab", "Rahman", "Melik", "Rahim"], correctAnswer: "Melik", minAge: 12, maxAge: 16 },
-                // 15-18 Yaş
                 { questionId: 111, segmentId: 1, questionText: "'Rab' kelimesinin kök anlamlarından biri hangisi DEĞİLDİR?", options: ["Terbiye eden", "Sahip olan", "Yöneten", "Uzak olan"], correctAnswer: "Uzak olan", minAge: 15, maxAge: 18 },
                 { questionId: 112, segmentId: 1, questionText: "'Din Günü' (Hesap Günü) kavramı hangi temel inançla doğrudan ilgilidir?", options: ["Kadere iman", "Ahirete iman", "Kitaplara iman", "Meleklere iman"], correctAnswer: "Ahirete iman", minAge: 15, maxAge: 18 },
                 { questionId: 113, segmentId: 1, questionText: "Rahman ve Rahim sıfatlarının birlikte zikredilmesi neyi ifade eder?", options: ["Allah'ın sadece Müslümanlara merhamet ettiğini", "Allah'ın merhametinin hem dünyada hem ahirette geniş olduğunu", "Allah'ın cezalandırmayacağını", "Merhametin sadece insanlara özgü olduğunu"], correctAnswer: "Allah'ın merhametinin hem dünyada hem ahirette geniş olduğunu", minAge: 14, maxAge: 18 },
-                { questionId: 114, segmentId: 1, questionText: "Bu ayetlerde hangi dua veya talep ifadesi yer alır?", options: ["Bizi doğru yola ilet", "Bize yardım et", "Bizi affet", "Hiçbiri"], correctAnswer: "Hiçbiri", minAge: 13, maxAge: 18 }, // Dikkat sorusu
-                { questionId: 115, segmentId: 1, questionText: "Fatiha suresinin bu ilk ayetleri genel olarak neyi konu alır?", options: ["Ahlak kuralları", "Peygamber kıssaları", "Allah'a hamd ve O'nun temel sıfatları", "İbadetlerin yapılışı"], correctAnswer: "Allah'a hamd ve O'nun temel sıfatları", minAge: 12, maxAge: 18 }, // Özetleme
+                { questionId: 114, segmentId: 1, questionText: "Bu ayetlerde hangi dua veya talep ifadesi yer alır?", options: ["Bizi doğru yola ilet", "Bize yardım et", "Bizi affet", "Hiçbiri"], correctAnswer: "Hiçbiri", minAge: 13, maxAge: 18 },
+                { questionId: 115, segmentId: 1, questionText: "Fatiha suresinin bu ilk ayetleri genel olarak neyi konu alır?", options: ["Ahlak kuralları", "Peygamber kıssaları", "Allah'a hamd ve O'nun temel sıfatları", "İbadetlerin yapılışı"], correctAnswer: "Allah'a hamd ve O'nun temel sıfatları", minAge: 12, maxAge: 18 },
 
                 // --- Segment 2 (Niyet Hadisi) ---
-                // 7-10 Yaş
                 { questionId: 201, segmentId: 2, questionText: "Yaptığımız bir işin iyi mi kötü mü olduğunu belirleyen en önemli şey nedir?", options: ["İşin büyüklüğü", "Niyetimiz", "Kimsenin görmemesi", "Hızlı yapmak"], correctAnswer: "Niyetimiz", minAge: 7, maxAge: 10 },
                 { questionId: 202, segmentId: 2, questionText: "Hadiste adı geçen Peygamberimiz kimdir?", options: ["Hz. İsa", "Hz. Musa", "Hz. Muhammed (sav)", "Hz. Adem"], correctAnswer: "Hz. Muhammed (sav)", minAge: 7, maxAge: 10 },
                 { questionId: 203, segmentId: 2, questionText: "Bir kişi Allah için bir iş yaparsa, karşılığını kimden alır?", options: ["İnsanlardan", "Patronundan", "Allah'tan", "Kimseden"], correctAnswer: "Allah'tan", minAge: 8, maxAge: 11 },
                 { questionId: 204, segmentId: 2, questionText: "Metinde geçen 'amel' ne demektir?", options: ["Niyet", "İş, davranış", "Para", "Ev"], correctAnswer: "İş, davranış", minAge: 9, maxAge: 12 },
                 { questionId: 205, segmentId: 2, questionText: "İnsan ne niyet ederse, genellikle neyi elde eder?", options: ["Hiçbir şeyi", "Niyet ettiğini", "Niyet etmediğini", "Başkasının niyet ettiğini"], correctAnswer: "Niyet ettiğini", minAge: 7, maxAge: 10 },
-                // 11-14 Yaş
                 { questionId: 206, segmentId: 2, questionText: "Hadise göre, sadece evlenmek amacıyla yapılan bir hicretin (işin) değeri nedir?", options: ["Allah katında çok değerlidir", "Hem Allah hem insanlar katında değerlidir", "Sadece o evlilikle sınırlıdır", "Hiçbir değeri yoktur"], correctAnswer: "Sadece o evlilikle sınırlıdır", minAge: 11, maxAge: 14 },
                 { questionId: 207, segmentId: 2, questionText: "'Hicret' kelimesi bu hadiste sadece fiziksel göçü mü ifade eder?", options: ["Evet, sadece onu", "Hayır, manevi yönelişi de kapsar", "Sadece savaşa gitmeyi", "Sadece ticareti"], correctAnswer: "Hayır, manevi yönelişi de kapsar", minAge: 11, maxAge: 15 },
                 { questionId: 208, segmentId: 2, questionText: "Bu hadis, ibadetlerimizde ve günlük işlerimizde neye dikkat etmemizi vurgular?", options: ["İşin sonucuna", "İşi yapan kişiye", "İşin yapılış niyetine", "İşin süresine"], correctAnswer: "İşin yapılış niyetine", minAge: 10, maxAge: 14 },
                 { questionId: 209, segmentId: 2, questionText: "Hadiste 'Resul' kelimesi kim için kullanılır?", options: ["Elçi, Peygamber", "Yönetici", "Tüccar", "Öğretmen"], correctAnswer: "Elçi, Peygamber", minAge: 11, maxAge: 14 },
-                { questionId: 210, segmentId: 2, questionText: "Niyetin önemini anlatan bu hadis hangi ünlü hadis kitabında yer alır?", options: ["Riyazüs Salihin", "Muvatta", "Buhari ve Müslim", "Tirmizi"], correctAnswer: "Buhari ve Müslim", minAge: 13, maxAge: 16 }, // Biraz daha bilgi
-                 // 15-18 Yaş
+                { questionId: 210, segmentId: 2, questionText: "Niyetin önemini anlatan bu hadis hangi ünlü hadis kitabında yer alır?", options: ["Riyazüs Salihin", "Muvatta", "Buhari ve Müslim", "Tirmizi"], correctAnswer: "Buhari ve Müslim", minAge: 13, maxAge: 16 },
                 { questionId: 211, segmentId: 2, questionText: "Bu hadis İslam hukukunda (fıkıh) hangi prensibin temelini oluşturur?", options: ["Zaruretler haramı mübah kılar", "Niyet amelin ruhudur", "Kolaylaştırınız, zorlaştırmayınız", "Şüphe ile yakin zail olmaz"], correctAnswer: "Niyet amelin ruhudur", minAge: 15, maxAge: 18 },
                 { questionId: 212, segmentId: 2, questionText: "Hadiste geçen 'dünyalık' ifadesi neleri kapsayabilir?", options: ["Sadece para", "Sadece mal mülk", "Makam, şöhret, kazanç gibi geçici şeyler", "Sadece aile"], correctAnswer: "Makam, şöhret, kazanç gibi geçici şeyler", minAge: 14, maxAge: 18 },
                 { questionId: 213, segmentId: 2, questionText: "Niyetin gizli olması mı, açık olması mı amelin değerini etkiler?", options: ["Gizli olması", "Açık olması", "Hadiste buna değinilmiyor", "Niyetin kendisi önemlidir, gizliliği/açıklığı değil"], correctAnswer: "Niyetin kendisi önemlidir, gizliliği/açıklığı değil", minAge: 15, maxAge: 18 },
-                { questionId: 214, segmentId: 2, questionText: "Bir amelin hem Allah rızası hem de dünyalık bir beklentiyle yapılması durumunda hadise göre sonuç ne olabilir?", options: ["Kesinlikle kabul olmaz", "Sadece Allah rızası geçerli olur", "Niyetin hangisinin ağır bastığına göre değişir", "Sadece dünyalık elde edilir"], correctAnswer: "Niyetin hangisinin ağır bastığına göre değişir", minAge: 16, maxAge: 18 }, // Yorum
-                { questionId: 215, segmentId: 2, questionText: "Bu hadisten çıkarılacak en temel ders nedir?", options: ["Göç etmek sevaptır", "Evlenmek önemlidir", "Her işte Allah rızasını gözetmek gerekir", "Çok amel işlemek gerekir"], correctAnswer: "Her işte Allah rızasını gözetmek gerekir", minAge: 12, maxAge: 18 }, // Özet
+                { questionId: 214, segmentId: 2, questionText: "Bir amelin hem Allah rızası hem de dünyalık bir beklentiyle yapılması durumunda hadise göre sonuç ne olabilir?", options: ["Kesinlikle kabul olmaz", "Sadece Allah rızası geçerli olur", "Niyetin hangisinin ağır bastığına göre değişir", "Sadece dünyalık elde edilir"], correctAnswer: "Niyetin hangisinin ağır bastığına göre değişir", minAge: 16, maxAge: 18 },
+                { questionId: 215, segmentId: 2, questionText: "Bu hadisten çıkarılacak en temel ders nedir?", options: ["Göç etmek sevaptır", "Evlenmek önemlidir", "Her işte Allah rızasını gözetmek gerekir", "Çok amel işlemek gerekir"], correctAnswer: "Her işte Allah rızasını gözetmek gerekir", minAge: 12, maxAge: 18 },
 
                  // --- Segment 3 (İhlas Suresi) ---
-                 // 7-10 Yaş
-                 { questionId: 301, segmentId: 3, questionText: "Allah için 'O birdir' demek ne anlama gelir?", options: ["Çok büyüktür", "Tekdir, eşi yoktur", "Görünmezdir", "Her yerdedir"], correctAnswer: "Tekdir, eşi yoktur", minAge: 7, maxAge: 10 },
+                 { questionId: 301, segmentId: 3, questionText: "İhlas suresine göre Allah kaçtır?", options: ["İki", "Üç", "Sayısız", "Bir"], correctAnswer: "Bir", minAge: 7, maxAge: 9 },
                  { questionId: 302, segmentId: 3, questionText: "Her şey kime muhtaçtır?", options: ["Peygambere", "İnsanlara", "Meleklere", "Allah'a"], correctAnswer: "Allah'a", minAge: 7, maxAge: 10 },
                  { questionId: 303, segmentId: 3, questionText: "Allah'ın çocuğu veya anne-babası var mıdır?", options: ["Vardır", "Yoktur", "Sadece çocuğu vardır", "Sadece annesi vardır"], correctAnswer: "Yoktur", minAge: 7, maxAge: 10 },
                  { questionId: 304, segmentId: 3, questionText: "Allah'a benzeyen başka bir şey var mıdır?", options: ["Evet, melekler", "Evet, insanlar", "Hayır, O'na denk hiçbir şey yoktur", "Evet, güneş"], correctAnswer: "Hayır, O'na denk hiçbir şey yoktur", minAge: 8, maxAge: 11 },
                  { questionId: 305, segmentId: 3, questionText: "Surenin adı nedir?", options: ["Fatiha", "Nas", "Felak", "İhlas"], correctAnswer: "İhlas", minAge: 9, maxAge: 12 },
-                 // 11-14 Yaş
                  { questionId: 306, segmentId: 3, questionText: "'Samed' sıfatı Allah'ın hangi özelliğini ifade eder?", options: ["Affediciliğini", "Yaratıcılığını", "Hiçbir şeye muhtaç olmayıp her şeyin O'na muhtaç olduğunu", "Adaletini"], correctAnswer: "Hiçbir şeye muhtaç olmayıp her şeyin O'na muhtaç olduğunu", minAge: 11, maxAge: 14 },
                  { questionId: 307, segmentId: 3, questionText: "İhlas suresi İslam'ın hangi temel ilkesini özetler?", options: ["Namaz", "Zekat", "Tevhid (Allah'ın birliği)", "Ahiret"], correctAnswer: "Tevhid (Allah'ın birliği)", minAge: 11, maxAge: 15 },
                  { questionId: 308, segmentId: 3, questionText: "'Lem yelid ve lem yûled' ayetinin anlamı nedir?", options: ["O görür ve işitir", "O doğurmamış ve doğmamıştır", "O bağışlar ve merhamet eder", "O diriltir ve öldürür"], correctAnswer: "O doğurmamış ve doğmamıştır", minAge: 10, maxAge: 14 },
                  { questionId: 309, segmentId: 3, questionText: "Bu sureye neden 'İhlas' denmiş olabilir?", options: ["Okuması çok kolay olduğu için", "Çok kısa olduğu için", "Allah'a katışıksız, samimi inancı ifade ettiği için", "Sadece namazda okunduğu için"], correctAnswer: "Allah'a katışıksız, samimi inancı ifade ettiği için", minAge: 12, maxAge: 16 },
-                 { questionId: 310, segmentId: 3, questionText: "Surede Allah için hangi ifade kullanılmaz?", options: ["Bir", "Samed", "Denk", "Rahman"], correctAnswer: "Rahman", minAge: 11, maxAge: 15 }, // Dikkat
-                 // 15-18 Yaş
+                 { questionId: 310, segmentId: 3, questionText: "Surede Allah için hangi ifade kullanılmaz?", options: ["Bir", "Samed", "Denk", "Rahman"], correctAnswer: "Rahman", minAge: 11, maxAge: 15 },
                  { questionId: 311, segmentId: 3, questionText: "İhlas suresi, hangi yanlış inançlara doğrudan bir cevap niteliğindedir?", options: ["Meleklere inanmamaya", "Kadere inanmamaya", "Allah'a ortak koşmaya (şirk) ve O'na çocuk isnat etmeye", "Ahireti inkar etmeye"], correctAnswer: "Allah'a ortak koşmaya (şirk) ve O'na çocuk isnat etmeye", minAge: 15, maxAge: 18 },
                  { questionId: 312, segmentId: 3, questionText: "'Samed' isminin tecellisi olarak evrendeki düzen neyi gösterir?", options: ["Her şeyin tesadüfen olduğunu", "Evrenin kendi kendine yettiğini", "Her şeyin bir yaratıcıya ve düzenleyiciye muhtaç olduğunu", "Evrenin sonsuz olduğunu"], correctAnswer: "Her şeyin bir yaratıcıya ve düzenleyiciye muhtaç olduğunu", minAge: 15, maxAge: 18 },
-                 { questionId: 313, segmentId: 3, questionText: "'Hiçbir şey O'na denk değildir' ayeti Allah'ın hangi sıfatını vurgular?", options: ["Hayat", "İlim", "Muhalefetün lil havadis (Yaratılmışlara benzememek)", "Kıyam bi nefsihi (Varlığı kendinden olmak)"], correctAnswer: "Muhalefetün lil havadis (Yaratılmışlara benzememek)", minAge: 16, maxAge: 18 }, // Kavramsal
+                 { questionId: 313, segmentId: 3, questionText: "'Hiçbir şey O'na denk değildir' ayeti Allah'ın hangi sıfatını vurgular?", options: ["Hayat", "İlim", "Muhalefetün lil havadis (Yaratılmışlara benzememek)", "Kıyam bi nefsihi (Varlığı kendinden olmak)"], correctAnswer: "Muhalefetün lil havadis (Yaratılmışlara benzememek)", minAge: 16, maxAge: 18 },
                  { questionId: 314, segmentId: 3, questionText: "Bu surenin Kur'an'ın üçte birine denk olduğu rivayet edilir. Bunun sebebi ne olabilir?", options: ["En çok okunan sure olması", "En kısa sure olması", "İmanın temeli olan Tevhid'i özlüce anlatması", "Ezberlemesi en kolay olması"], correctAnswer: "İmanın temeli olan Tevhid'i özlüce anlatması", minAge: 14, maxAge: 18 },
-                 { questionId: 315, segmentId: 3, questionText: "Sure hangi kelime ile başlar?", options: ["Allah", "De ki", "Samed", "Bir"], correctAnswer: "De ki", minAge: 12, maxAge: 18 }, // Dikkat
+                 { questionId: 315, segmentId: 3, questionText: "Sure hangi kelime ile başlar?", options: ["Allah", "De ki", "Samed", "Bir"], correctAnswer: "De ki", minAge: 12, maxAge: 18 },
 
-                // --- Segment 4 (Sabır) ---
-                // 7-10 Yaş
-                { questionId: 401, segmentId: 4, questionText: "Zor bir durumla karşılaşınca ne yapmalıyız?", options: ["Kızmak", "Sabretmek", "Kaçmak", "Uyumak"], correctAnswer: "Sabretmek", minAge: 7, maxAge: 10 },
-                { questionId: 402, segmentId: 4, questionText: "Her zorluğun yanında ne gelirmiş?", options: ["Daha çok zorluk", "Bir kolaylık", "Bir hediye", "Bir ceza"], correctAnswer: "Bir kolaylık", minAge: 7, maxAge: 10 },
-                { questionId: 403, segmentId: 4, questionText: "Sabredenler sonunda ne kazanır?", options: ["Hiçbir şey", "Oyuncaq", "Allah'tan mükafat", "Pasta"], correctAnswer: "Allah'tan mükafat", minAge: 8, maxAge: 11 },
-                { questionId: 404, segmentId: 4, questionText: "Metne göre sabır neyin yarısıymış?", options: ["Elmanın", "Günün", "İmanın", "Oyunun"], correctAnswer: "İmanın", minAge: 7, maxAge: 10 },
-                { questionId: 405, segmentId: 4, questionText: "Zorluk anında kimden yardım istemeliyiz?", options: ["Arkadaşımızdan", "Öğretmenden", "Allah'tan", "Kimseden"], correctAnswer: "Allah'tan", minAge: 7, maxAge: 10 },
-                // 11-14 Yaş
-                { questionId: 406, segmentId: 4, questionText: "Metinde sabrın tanımı içinde hangisi yoktur?", options: ["Yılgınlık göstermemek", "Aceleci davranmamak", "İsyan etmek", "Allah'tan yardım dileyerek beklemek"], correctAnswer: "İsyan etmek", minAge: 11, maxAge: 14 },
-                { questionId: 407, segmentId: 4, questionText: "'İmanın yarısı' ifadesi sabrın ne kadar önemli olduğunu gösterir?", options: ["Çok az önemli", "Biraz önemli", "Çok önemli", "Hiç önemli değil"], correctAnswer: "Çok önemli", minAge: 10, maxAge: 14 },
-                { questionId: 408, segmentId: 4, questionText: "'Her zorlukla beraber bir kolaylık vardır' ayeti hangi surede geçer?", options: ["Fatiha", "İhlas", "İnşirah", "Nasr"], correctAnswer: "İnşirah", minAge: 13, maxAge: 16 }, // Ek bilgi
-                { questionId: 409, segmentId: 4, questionText: "Metne göre sabretmek pasif bir bekleyiş midir?", options: ["Evet, sadece beklemektir", "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", "Bazen evet, bazen hayır", "Metinde belirtilmiyor"], correctAnswer: "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", minAge: 12, maxAge: 15 },
-                { questionId: 410, segmentId: 4, questionText: "'Mükafat' kelimesinin anlamı nedir?", options: ["Ceza", "Ödül, karşılık", "Unutmak", "Kaybetmek"], correctAnswer: "Ödül, karşılık", minAge: 11, maxAge: 14 },
-                 // 15-18 Yaş
+                 // --- Segment 4 (Sabır) ---
+                 { questionId: 401, segmentId: 4, questionText: "Zor bir durumla karşılaşınca ne yapmalıyız?", options: ["Kızmak", "Sabretmek", "Kaçmak", "Uyumak"], correctAnswer: "Sabretmek", minAge: 7, maxAge: 10 },
+                 { questionId: 402, segmentId: 4, questionText: "Her zorluğun yanında ne gelirmiş?", options: ["Daha çok zorluk", "Bir kolaylık", "Bir hediye", "Bir ceza"], correctAnswer: "Bir kolaylık", minAge: 7, maxAge: 10 },
+                 { questionId: 403, segmentId: 4, questionText: "Sabredenler sonunda ne kazanır?", options: ["Hiçbir şey", "Oyuncaq", "Allah'tan mükafat", "Pasta"], correctAnswer: "Allah'tan mükafat", minAge: 8, maxAge: 11 },
+                 { questionId: 404, segmentId: 4, questionText: "Metne göre sabır neyin yarısıymış?", options: ["Elmanın", "Günün", "İmanın", "Oyunun"], correctAnswer: "İmanın", minAge: 7, maxAge: 10 },
+                 { questionId: 405, segmentId: 4, questionText: "Zorluk anında kimden yardım istemeliyiz?", options: ["Arkadaşımızdan", "Öğretmenden", "Allah'tan", "Kimseden"], correctAnswer: "Allah'tan", minAge: 7, maxAge: 10 },
+                 { questionId: 406, segmentId: 4, questionText: "Metinde sabrın tanımı içinde hangisi yoktur?", options: ["Yılgınlık göstermemek", "Aceleci davranmamak", "İsyan etmek", "Allah'tan yardım dileyerek beklemek"], correctAnswer: "İsyan etmek", minAge: 11, maxAge: 14 },
+                 { questionId: 407, segmentId: 4, questionText: "'İmanın yarısı' ifadesi sabrın ne kadar önemli olduğunu gösterir?", options: ["Çok az önemli", "Biraz önemli", "Çok önemli", "Hiç önemli değil"], correctAnswer: "Çok önemli", minAge: 10, maxAge: 14 },
+                 { questionId: 408, segmentId: 4, questionText: "'Her zorlukla beraber bir kolaylık vardır' ayeti hangi surede geçer?", options: ["Fatiha", "İhlas", "İnşirah", "Nasr"], correctAnswer: "İnşirah", minAge: 13, maxAge: 16 },
+                 { questionId: 409, segmentId: 4, questionText: "Metne göre sabretmek pasif bir bekleyiş midir?", options: ["Evet, sadece beklemektir", "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", "Bazen evet, bazen hayır", "Metinde belirtilmiyor"], correctAnswer: "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", minAge: 12, maxAge: 15 },
+                 { questionId: 410, segmentId: 4, questionText: "'Mükafat' kelimesinin anlamı nedir?", options: ["Ceza", "Ödül, karşılık", "Unutmak", "Kaybetmek"], correctAnswer: "Ödül, karşılık", minAge: 11, maxAge: 14 },
                  { questionId: 411, segmentId: 4, questionText: "Sabır kavramı, İslam'daki hangi diğer kavramlarla yakından ilişkilidir?", options: ["Acelecilik ve Telaş", "Tevekkül, Şükür ve Rıza", "İsyan ve Ümitsizlik", "Gösteriş ve Kibir"], correctAnswer: "Tevekkül, Şükür ve Rıza", minAge: 15, maxAge: 18 },
                  { questionId: 412, segmentId: 4, questionText: "Zorluk anında 'yılgınlık göstermemek' psikolojik olarak neyi ifade eder?", options: ["Duygusuz olmayı", "Umutsuzluğa kapılmamayı, direnmeyi", "Sorunu görmezden gelmeyi", "Başkalarını suçlamayı"], correctAnswer: "Umutsuzluğa kapılmamayı, direnmeyi", minAge: 14, maxAge: 18 },
                  { questionId: 413, segmentId: 4, questionText: "Allah'tan yardım dileyerek beklemenin ardındaki temel inanç nedir?", options: ["Her şeyin kendi kendine olacağı", "İnsanların mutlaka yardım edeceği", "Allah'ın her şeye gücünün yettiği ve duaları duyduğu", "Yardımın hiç gelmeyeceği"], correctAnswer: "Allah'ın her şeye gücünün yettiği ve duaları duyduğu", minAge: 15, maxAge: 18 },
                  { questionId: 414, segmentId: 4, questionText: "'Kolaylık' sadece maddi rahatlama mıdır, yoksa manevi ferahlama da olabilir mi?", options: ["Sadece maddidir", "Sadece manevidir", "Hem maddi hem manevi olabilir", "Metinde sadece maddi kastedilir"], correctAnswer: "Hem maddi hem manevi olabilir", minAge: 14, maxAge: 18 },
-                 { questionId: 415, segmentId: 4, questionText: "Sabır göstermenin toplumsal faydaları neler olabilir?", options: ["Toplumda kargaşa çıkarır", "İlişkileri zayıflatır", "Anlaşmazlıkları azaltır, huzuru artırır", "Tembelliği teşvik eder"], correctAnswer: "Anlaşmazlıkları azaltır, huzuru artırır", minAge: 15, maxAge: 18 }, // Toplumsal çıkarım
+                 { questionId: 415, segmentId: 4, questionText: "Sabır göstermenin toplumsal faydaları neler olabilir?", options: ["Toplumda kargaşa çıkarır", "İlişkileri zayıflatır", "Anlaşmazlıkları azaltır, huzuru artırır", "Tembelliği teşvik eder"], correctAnswer: "Anlaşmazlıkları azaltır, huzuru artırır", minAge: 15, maxAge: 18 },
             ];
 
             // --- Anlatım Metinleri ---
@@ -177,77 +235,337 @@
             ];
 
             // --- Oyuncu Bilgileri ---
-            const players = [ /* ... önceki gibi ... */ ];
+            const players = [
+                 { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                 { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                 { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
+            ];
             // --- Değişkenler ---
             let currentSegmentIndex = 0;
             let playersAnsweredCount = 0;
-            let askedQuestionIds = [];
+            let askedQuestionIds = []; // Sorulan soru ID'lerini tut
 
             // --- Element Referansları ---
-            /* ... önceki gibi ... */
-             const nameEntrySection = document.getElementById('name-entry');
-             const confirmNamesButton = document.getElementById('confirm-names-button');
-             const ttsSupportWarning = document.getElementById('tts-support-warning');
-             const quizContent = document.getElementById('quiz-content');
-             const narrationArea = document.getElementById('narration-area');
-             const narrationInfo = document.getElementById('narration-info');
-             const playNarrationButton = document.getElementById('play-narration-btn');
-             const scoreboardElement = document.getElementById('scoreboard');
-             const scoreboardListElement = document.getElementById('scoreboard-list');
-             const playersArea = document.getElementById('players-area');
-             const loadingIndicator = document.getElementById('loading-indicator');
-             const resultsElement = document.getElementById('results');
-             const finalScoresElement = document.getElementById('final-scores');
-             const restartButton = document.getElementById('restart-button');
-             const winnerInfoElement = document.getElementById('winner-info');
-             const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
-             const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
-             for (let i = 1; i <= 3; i++) {
-                 nameInputs.push(document.getElementById(`player-${i}-name-input`));
-                 ageInputs.push(document.getElementById(`player-${i}-age-input`));
-                 nameDisplays.push(document.getElementById(`player-${i}-name-display`));
-                 ageDisplays.push(document.getElementById(`player-${i}-age-display`));
-                 playerAreaElements.push(document.getElementById(`player-area-${i}`));
-                 playerQuestionElements.push(document.getElementById(`question-player-${i}`));
-                 playerOptionsElements.push(document.getElementById(`options-player-${i}`));
-                 playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
+            // DOM elementlerini burada alıyoruz, DOMContentLoaded içinde olduğu için sorun olmaz
+            const nameEntrySection = document.getElementById('name-entry');
+            const confirmNamesButton = document.getElementById('confirm-names-button');
+            const ttsSupportWarning = document.getElementById('tts-support-warning');
+            const quizContent = document.getElementById('quiz-content');
+            const narrationArea = document.getElementById('narration-area');
+            const narrationInfo = document.getElementById('narration-info');
+            const playNarrationButton = document.getElementById('play-narration-btn');
+            const scoreboardElement = document.getElementById('scoreboard');
+            const scoreboardListElement = document.getElementById('scoreboard-list');
+            const playersArea = document.getElementById('players-area');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const resultsElement = document.getElementById('results');
+            const finalScoresElement = document.getElementById('final-scores');
+            const restartButton = document.getElementById('restart-button');
+            const winnerInfoElement = document.getElementById('winner-info');
+            const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
+            const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
+
+            for (let i = 1; i <= 3; i++) {
+                nameInputs.push(document.getElementById(`player-${i}-name-input`));
+                ageInputs.push(document.getElementById(`player-${i}-age-input`));
+                nameDisplays.push(document.getElementById(`player-${i}-name-display`));
+                ageDisplays.push(document.getElementById(`player-${i}-age-display`));
+                playerAreaElements.push(document.getElementById(`player-area-${i}`));
+                playerQuestionElements.push(document.getElementById(`question-player-${i}`));
+                playerOptionsElements.push(document.getElementById(`options-player-${i}`));
+                playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
+            }
+
+             // --- Fonksiyonlar ---
+             function shuffleArray(array) {
+                 let currentIndex = array.length,  randomIndex;
+                 while (currentIndex > 0) {
+                     randomIndex = Math.floor(Math.random() * currentIndex);
+                     currentIndex--;
+                     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                 }
+                 return array;
+             }
+
+             function updateScoreboard() {
+                 scoreboardListElement.innerHTML = '';
+                 players.forEach(player => {
+                     const listItem = document.createElement('li');
+                      // Temaya uygun renkli isimler (isteğe bağlı)
+                     const nameSpan = `<span class="name ${player.themeClass}">${player.name}</span>`;
+                     listItem.innerHTML = `${nameSpan}: <span class="score">${player.score} Puan</span>`;
+                     scoreboardListElement.appendChild(listItem);
+                 });
+             }
+
+             function getThemeClass(age) {
+                 if (age >= 7 && age <= 10) return 'theme-child';
+                 if (age >= 11 && age <= 14) return 'theme-teen';
+                 if (age >= 15 && age <= 18) return 'theme-young-adult';
+                 return 'theme-default';
+             }
+
+             function loadSegment(segmentIndex) {
+                 window.speechSynthesis.cancel();
+                 if (segmentIndex >= quizSegments.length) {
+                     showResults(); return;
+                 }
+                 currentSegmentIndex = segmentIndex;
+                 const segmentData = quizSegments[segmentIndex];
+                 playerAreaElements.forEach(el => el.classList.remove('visible')); // Önce gizle
+                 playersArea.style.display = 'none';
+                 loadingIndicator.style.display = 'none';
+                 narrationArea.style.display = 'block';
+                 scoreboardElement.style.display = 'block';
+                 narrationInfo.textContent = `Segment ${segmentIndex + 1}: "${segmentData.narrationTitle}" konusunu dinlemek için butona basın.`;
+                 playNarrationButton.disabled = false;
+                 playNarrationButton.textContent = "Anlatımı Seslendir";
+                 players.forEach(player => {
+                     if(playerFeedbackElements[player.id-1]) playerFeedbackElements[player.id-1].textContent = '';
+                     if(playerAreaElements[player.id-1]) playerAreaElements[player.id-1].style.borderColor = 'transparent'; // Başlangıçta border rengini sıfırla
+                 });
+                 updateScoreboard();
+             }
+
+             function handleNarrationEnd() {
+                 console.log("Seslendirme bitti, sorular yükleniyor...");
+                 playNarrationButton.textContent = "Anlatım Bitti";
+                 playNarrationButton.disabled = true;
+                 narrationArea.style.display = 'none';
+                 loadingIndicator.style.display = 'block';
+                 setTimeout(() => {
+                     loadQuestionsForPlayers(currentSegmentIndex);
+                     loadingIndicator.style.display = 'none';
+                     playersArea.style.display = 'flex';
+                     playerAreaElements.forEach(el => el.classList.add('visible')); // Şimdi göster
+                 }, 500);
+             }
+
+             function loadQuestionsForPlayers(segmentIdx) {
+                 playersAnsweredCount = 0;
+                 let currentRoundSelectedIds = [];
+
+                 players.forEach(player => {
+                     player.answered = false;
+                     player.currentQuestion = null;
+                     const optionsEl = playerOptionsElements[player.id-1];
+                     const feedbackEl = playerFeedbackElements[player.id-1];
+                     const questionEl = playerQuestionElements[player.id-1];
+                     const sectionEl = playerAreaElements[player.id-1];
+
+                     if (optionsEl) optionsEl.innerHTML = '';
+                     if (feedbackEl) feedbackEl.textContent = '';
+                     if (questionEl) questionEl.textContent = 'Soru aranıyor...';
+                     if (sectionEl) sectionEl.style.borderColor = 'transparent'; // Tema rengi border'ı sıfırla
+
+                     const suitableQuestions = questionPool.filter(q =>
+                         q.segmentId === quizSegments[segmentIdx].segmentId &&
+                         player.age >= q.minAge &&
+                         player.age <= q.maxAge &&
+                         !askedQuestionIds.includes(q.questionId) &&
+                         !currentRoundSelectedIds.includes(q.questionId)
+                     );
+
+                     let questionData = null;
+                     if (suitableQuestions.length > 0) {
+                         questionData = suitableQuestions[Math.floor(Math.random() * suitableQuestions.length)];
+                         player.currentQuestion = questionData;
+                         askedQuestionIds.push(questionData.questionId);
+                         currentRoundSelectedIds.push(questionData.questionId);
+
+                         if (questionEl) questionEl.textContent = questionData.questionText;
+                         if (optionsEl) {
+                             const shuffledOptions = shuffleArray([...questionData.options]);
+                             shuffledOptions.forEach(option => {
+                                 const button = document.createElement('button');
+                                 button.textContent = option;
+                                 button.onclick = () => handleAnswer(player.id, option);
+                                 optionsEl.appendChild(button);
+                             });
+                         }
+                     } else {
+                         if (questionEl) questionEl.textContent = 'Size uygun soru bulunamadı.';
+                         player.answered = true;
+                         playersAnsweredCount++;
+                     }
+                 });
+
+                 if (playersAnsweredCount === players.length && playersAnsweredCount > 0) { // Eğer hepsi için soru bulunamadıysa
+                    console.log("Bu turda kimseye soru bulunamadı veya hepsi otomatik geçildi.");
+                    loadingIndicator.style.display = 'block';
+                    playersArea.style.display = 'none';
+                    setTimeout(() => loadSegment(currentSegmentIndex + 1), 1800);
+                 }
              }
 
 
-            // --- Fonksiyonlar (shuffleArray, updateScoreboard, getThemeClass, loadSegment, handleNarrationEnd, loadQuestionsForPlayers, handleAnswer, showResults, initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport) ---
-            /* ... önceki cevapta bulunan fonksiyonlar buraya gelecek ... */
-             function shuffleArray(array) { /* ... */ }
-             function updateScoreboard() { /* ... */ }
-             function getThemeClass(age) { /* ... */ }
-             function loadSegment(segmentIndex) { /* ... */ }
-             function handleNarrationEnd() { /* ... */ }
-             function loadQuestionsForPlayers(segmentIdx) { /* ... */ }
-             function handleAnswer(playerId, selectedOption) { /* ... */ }
-             function showResults() { /* ... */ }
-             function initializeQuiz() { /* ... */ }
-             function startQuiz() { /* ... */ }
-             function resetToNameEntry() { /* ... */ }
-             function checkTtsSupport() { /* ... */ }
+             function handleAnswer(playerId, selectedOption) {
+                 const player = players.find(p => p.id === playerId);
+                 if (!player || player.answered || !player.currentQuestion) return;
+
+                 player.answered = true;
+                 playersAnsweredCount++;
+
+                 const feedbackEl = playerFeedbackElements[player.id-1];
+                 const sectionEl = playerAreaElements[player.id-1];
+                 const playerOptionButtons = playerOptionsElements[player.id-1].getElementsByTagName('button');
+
+                 // Kontrol: Elementler null değilse işlem yap
+                 if (!feedbackEl || !sectionEl || !playerOptionButtons) {
+                     console.error(`Oyuncu ${playerId} için elementler bulunamadı.`);
+                     return;
+                 }
+
+
+                 for(let btn of playerOptionButtons){ btn.disabled = true; }
+
+                 if (selectedOption === player.currentQuestion.correctAnswer) {
+                     player.score++;
+                     feedbackEl.textContent = "Doğru!";
+                     feedbackEl.className = 'player-feedback feedback-correct';
+                     // Tema rengini koruyarak border ekle
+                     sectionEl.style.borderColor = getComputedStyle(sectionEl).getPropertyValue('--theme-' + player.themeClass.split('-')[1] + '-border') || 'var(--correct-border)';
+
+                 } else {
+                     feedbackEl.textContent = `Yanlış!`;
+                     feedbackEl.className = 'player-feedback feedback-incorrect';
+                     sectionEl.style.borderColor = 'var(--incorrect-border)';
+                 }
+                 // scoreEl.textContent = `Skor: ${player.score}`; // Gerek yok, skorbord var
+
+                 updateScoreboard();
+
+                 if(playersAnsweredCount === players.length) {
+                     console.log("Tur tamamlandı, sonraki segmente geçiliyor.");
+                     loadingIndicator.style.display = 'block';
+                     playerAreaElements.forEach(el => el.classList.remove('visible')); // Gizle
+                     playersArea.style.display = 'none';
+                     setTimeout(() => {
+                         loadSegment(currentSegmentIndex + 1);
+                     }, 1800);
+                 }
+             }
+
+             function showResults() {
+                 quizContent.style.display = 'none';
+                 resultsElement.style.display = 'block';
+                 finalScoresElement.innerHTML = '';
+                 let maxScore = -1;
+                 let winners = [];
+                 const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+                 sortedPlayers.forEach(player => {
+                      const resultLine = document.createElement('div');
+                      resultLine.classList.add('result-line');
+                      resultLine.innerHTML = `<span class="name ${player.themeClass}">${player.name} (${player.age} yaş)</span> <span class="score">${player.score} Puan</span>`;
+                      finalScoresElement.appendChild(resultLine);
+                      if (player.score > maxScore) { maxScore = player.score; winners = [player.name]; }
+                      else if (player.score === maxScore && maxScore >= 0) { winners.push(player.name); }
+                 });
+                  if (maxScore <= 0 ) { winnerInfoElement.textContent = "Kimse puan alamadı veya yeterli soru bulunamadı!"; }
+                  else if (winners.length > 1) { winnerInfoElement.textContent = `Kazananlar (Berabere): ${winners.join(', ')} (${maxScore} puan)`; }
+                  else { winnerInfoElement.textContent = `🏆 Kazanan: ${winners[0]} (${maxScore} puan)! 🎉`; }
+            }
+
+             function initializeQuiz() {
+                 let allAgesValid = true;
+                 players.forEach((player, index) => {
+                     const name = nameInputs[index].value.trim();
+                     const age = parseInt(ageInputs[index].value);
+                     player.name = name === '' ? `Oyuncu ${player.id}` : name;
+                     if (isNaN(age) || age < 7 || age > 18) {
+                         alert(`Oyuncu ${player.id} için geçerli bir yaş (7-18 arası) girin.`);
+                         allAgesValid = false;
+                     } else {
+                         player.age = age;
+                         player.themeClass = getThemeClass(age);
+                     }
+                     player.score = 0; player.answered = false; player.currentQuestion = null;
+                 });
+
+                 if (!allAgesValid) return;
+
+                 players.forEach((player, index) => {
+                      // Elementlerin varlığını kontrol et
+                     const areaEl = playerAreaElements[player.id - 1];
+                     const nameEl = nameDisplays[player.id - 1];
+                     const ageEl = ageDisplays[player.id - 1];
+
+                     if (areaEl) {
+                         areaEl.className = `player-quiz-area ${player.themeClass}`; // Temayı uygula
+                         areaEl.style.borderColor = 'transparent'; // Başlangıç border'ını gizle
+                     } else { console.error(`player-area-${player.id} bulunamadı`); }
+
+                     if (nameEl) { nameEl.textContent = player.name; }
+                     else { console.error(`player-${player.id}-name-display bulunamadı`); }
+
+                     if (ageEl) { ageEl.textContent = `(${player.age} yaş)`; }
+                     else { console.error(`player-${player.id}-age-display bulunamadı`); }
+
+                    // Skor başlangıçta skorbordda görünecek, bireysel alanda göstermeye gerek yok
+                    // const scoreEl = document.getElementById(`score-player-${player.id}`);
+                    // if(scoreEl) scoreEl.textContent = `Skor: 0`;
+                 });
+
+                 nameEntrySection.style.display = 'none';
+                 resultsElement.style.display = 'none';
+                 quizContent.style.display = 'block';
+                 startQuiz();
+             }
+
+             function startQuiz() {
+                 askedQuestionIds = [];
+                 currentSegmentIndex = 0;
+                 players.forEach(p => { p.score = 0; }); // Skorları sıfırla
+                 updateScoreboard();
+                 loadSegment(currentSegmentIndex);
+             }
+
+             function resetToNameEntry() {
+                 window.speechSynthesis.cancel();
+                 quizContent.style.display = 'none';
+                 resultsElement.style.display = 'none';
+                 nameEntrySection.style.display = 'block';
+                 checkTtsSupport();
+             }
+
+             function checkTtsSupport() {
+                 if (!('speechSynthesis' in window) || !window.speechSynthesis) {
+                     ttsSupportWarning.style.display = 'block';
+                      if(confirmNamesButton) confirmNamesButton.disabled = true; // Buton varsa disable et
+                 } else {
+                     ttsSupportWarning.style.display = 'none';
+                     if(confirmNamesButton) confirmNamesButton.disabled = false;
+                 }
+             }
 
             // --- Olay Dinleyicileri ---
-            confirmNamesButton.addEventListener('click', initializeQuiz);
-            restartButton.addEventListener('click', resetToNameEntry);
-            playNarrationButton.addEventListener('click', () => {
-                 /* ... önceki cevapta bulunan TTS başlatma kodu ... */
-                  if (!('speechSynthesis' in window) || !window.speechSynthesis) { alert("TTS desteklenmiyor."); return; }
-                  window.speechSynthesis.cancel();
-                  const segmentData = quizSegments[currentSegmentIndex];
-                  if (!segmentData || !segmentData.narrationText) { console.error("Metin yok!"); alert("Metin yok!"); return; }
-                  const utterance = new SpeechSynthesisUtterance(segmentData.narrationText);
-                  utterance.lang = 'tr-TR'; utterance.rate = 0.9; utterance.pitch = 1;
-                  utterance.onend = handleNarrationEnd;
-                  utterance.onerror = (event) => { console.error('TTS Hatası:', event); alert(`Seslendirme hatası: ${event.error}`); playNarrationButton.textContent = "Hata!"; playNarrationButton.disabled = false; };
-                  playNarrationButton.disabled = true; playNarrationButton.textContent = "Seslendiriliyor...";
-                  window.speechSynthesis.speak(utterance);
-            });
+            // Elementlerin varlığını kontrol ederek listener ekle
+             if (confirmNamesButton) {
+                confirmNamesButton.addEventListener('click', initializeQuiz);
+             } else { console.error("confirmNamesButton bulunamadı!"); }
+
+             if (restartButton) {
+                restartButton.addEventListener('click', resetToNameEntry);
+             } else { console.error("restartButton bulunamadı!"); }
+
+             if (playNarrationButton) {
+                playNarrationButton.addEventListener('click', () => {
+                    if (!('speechSynthesis' in window) || !window.speechSynthesis) { alert("TTS desteklenmiyor."); return; }
+                    window.speechSynthesis.cancel();
+                    const segmentData = quizSegments[currentSegmentIndex];
+                    if (!segmentData || !segmentData.narrationText) { console.error("Seslendirilecek metin yok!"); alert("Metin yok!"); return; }
+                    const utterance = new SpeechSynthesisUtterance(segmentData.narrationText);
+                    utterance.lang = 'tr-TR'; utterance.rate = 0.9; utterance.pitch = 1;
+                    utterance.onend = handleNarrationEnd;
+                    utterance.onerror = (event) => { console.error('TTS Hatası:', event); alert(`Seslendirme hatası: ${event.error}`); playNarrationButton.textContent = "Hata!"; playNarrationButton.disabled = false; };
+                    playNarrationButton.disabled = true; playNarrationButton.textContent = "Seslendiriliyor...";
+                    window.speechSynthesis.speak(utterance);
+                });
+             } else { console.error("playNarrationButton bulunamadı!"); }
+
 
             // --- Başlangıç ---
-            resetToNameEntry();
+            resetToNameEntry(); // Sayfa ilk yüklendiğinde isim girişi ekranını göster
 
         }); // DOMContentLoaded Sonu
     </script>
