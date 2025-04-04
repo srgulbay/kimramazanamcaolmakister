@@ -1,4 +1,4 @@
-// questions.js - Yarışma Soruları ve Anlatım Metinleri (Genişletilmiş)
+// questions.js - Yarışma Soruları ve Anlatım Metinleri (Genişletilmiş - 10 Segment)
 
 // --- SORU HAVUZU ---
 const questionPool = [
@@ -97,7 +97,7 @@ const questionPool = [
     { questionId: 612, segmentId: 6, questionText: "Bu beş şartı yerine getirmek kimin görevidir?", options: ["Sadece yaşlıların", "Sadece erkeklerin", "Sadece zenginlerin", "Akıllı ve ergenlik çağına ulaşmış her Müslümanın (şartlarını taşıdıkça)"], correctAnswer: "Akıllı ve ergenlik çağına ulaşmış her Müslümanın (şartlarını taşıdıkça)", minAge: 13, maxAge: 18 },
 
      // === Segment 7 (İmanın Şartları) ===
-    { questionId: 701, segmentId: 7, questionText: "Bir Müslümanın inanması gereken temel inanç esaslarına ne ad verilir?", options: ["İslam'ın Şartları", "İmanın Şartları", "Amentü", "Beş Vakit Namaz"], correctAnswer: "İmanın Şartları", minAge: 8, maxAge: 12 }, // Amentü de denir ama İmanın Şartları daha genel
+    { questionId: 701, segmentId: 7, questionText: "Bir Müslümanın inanması gereken temel inanç esaslarına ne ad verilir?", options: ["İslam'ın Şartları", "İmanın Şartları", "Amentü", "Beş Vakit Namaz"], correctAnswer: "İmanın Şartları", minAge: 8, maxAge: 12 },
     { questionId: 702, segmentId: 7, questionText: "İmanın şartları kaç tanedir?", options: ["3", "5", "6", "7"], correctAnswer: "6", minAge: 7, maxAge: 10 },
     { questionId: 703, segmentId: 7, questionText: "İmanın ilk ve en temel şartı nedir?", options: ["Meleklere İman", "Kitaplara İman", "Allah'a İman", "Peygamberlere İman"], correctAnswer: "Allah'a İman", minAge: 7, maxAge: 10 },
     { questionId: 704, segmentId: 7, questionText: "Allah tarafından nurdan yaratılmış, gözle göremediğimiz ve Allah'ın emirlerini yerine getiren varlıklar kimlerdir?", options: ["Cinler", "Peygamberler", "Melekler", "Evliyalar"], correctAnswer: "Melekler", minAge: 8, maxAge: 11 },
@@ -161,7 +161,6 @@ const questionPool = [
     { questionId: 1013, segmentId: 10, questionText: "Başkalarının haklarına saygı göstermek ve herkese eşit davranmaya çalışmak hangi ilkeyle ilgilidir?", options: ["Sabır", "Adalet", "Cömertlik", "Doğruluk"], correctAnswer: "Adalet", minAge: 12, maxAge: 16 },
     { questionId: 1014, segmentId: 10, questionText: "Peygamberimiz 'Müslüman, elinden ve dilinden başkalarının güvende olduğu kimsedir' derken neyi vurgulamıştır?", options: ["Müslümanların çok güçlü olduğunu", "Müslümanların kimseye zarar vermemesi gerektiğini", "Müslümanların çok konuşkan olduğunu", "Müslümanların sessiz olması gerektiğini"], correctAnswer: "Müslümanların kimseye zarar vermemesi gerektiğini", minAge: 13, maxAge: 18 },
     { questionId: 1015, segmentId: 10, questionText: "İslam'da güzel ahlakın amacı nedir?", options: ["Sadece cennete gitmek", "İnsanlar tarafından sevilmek", "Hem Allah'ın rızasını kazanmak hem de iyi bir insan ve toplum oluşturmak", "Daha zeki olmak"], correctAnswer: "Hem Allah'ın rızasını kazanmak hem de iyi bir insan ve toplum oluşturmak", minAge: 14, maxAge: 18 }
-
 ];
 
 
@@ -181,3 +180,5 @@ const quizSegments = [
     { segmentId: 9, narrationTitle: "Kur'an-ı Kerim", narrationText: "Kur'an-ı Kerim, Allah'ın son kutsal kitabıdır. Peygamberimiz Hz. Muhammed'e (sav) Cebrail (as) aracılığıyla Arapça olarak vahyedilmiştir. Yaklaşık 23 yılda tamamlanmış, günümüze kadar hiç değiştirilmeden ulaşmıştır. İçinde 114 sure bulunur ve Müslümanlar için temel bir yol göstericidir. Onu okumak ve anlamaya çalışmak önemli bir ibadettir." },
     { segmentId: 10, narrationTitle: "Güzel Ahlak İlkeleri", narrationText: "İslam dini sadece ibadetlerden ibaret değildir, aynı zamanda güzel ahlaklı olmayı da emreder. Doğru sözlü olmak, emanete sahip çıkmak, yardımsever olmak, anne-babaya ve büyüklere saygılı, küçüklere şefkatli davranmak, temizliğe önem vermek, komşu haklarını gözetmek ve insanlara zarar vermemek güzel ahlakın temel prensiplerindendir." }
 ];
+
+console.log("questions.js başarıyla yüklendi."); // Yüklendiğini doğrulamak için log
