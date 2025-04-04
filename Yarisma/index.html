@@ -3,114 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sıfırdan Gelişmiş İslami Bilgi Yarışması</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</title>
     <style>
-        /* --- CSS Stilleri (Önceki modern tasarım korunuyor) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
         :root {
-            --font-primary: 'Poppins', sans-serif; --font-heading: 'Merriweather', serif;
-            --bg-gradient: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            --primary-bg: linear-gradient(135deg, #72EDF2, #5151E5);
             --container-bg: rgba(255, 255, 255, 0.98);
-            --shadow-light: rgba(100, 116, 139, 0.1); --shadow-medium: rgba(51, 65, 85, 0.15);
-            --text-primary: #1e293b; --text-secondary: #475569;
-            --header-color: #1d4ed8; --subheader-color: #6d28d9; --accent-color: #f59e0b;
-            --border-color: #cbd5e1; --disabled-bg: #e2e8f0; --disabled-text: #94a3b8;
-            /* Temalar */
-            --c-bg: #ecfeff; --c-border: #22d3ee; --c-head: #0e7490; --c-btn: linear-gradient(145deg, #67e8f9, #22d3ee); --c-btn-h: linear-gradient(145deg, #22d3ee, #67e8f9);
-            --t-bg: #f0fdf4; --t-border: #34d399; --t-head: #059669; --t-btn: linear-gradient(145deg, #6ee7b7, #34d399); --t-btn-h: linear-gradient(145deg, #34d399, #6ee7b7);
-            --y-bg: #fefce8; --y-border: #facc15; --y-head: #ca8a04; --y-btn: linear-gradient(145deg, #fde047, #facc15); --y-btn-h: linear-gradient(145deg, #facc15, #fde047);
-            /* Geri Bildirim */
-            --correct-bg: #f0fdf4; --correct-border: #22c55e; --correct-text: #166534;
-            --incorrect-bg: #fff1f2; --incorrect-border: #f43f5e; --incorrect-text: #9f1239;
+            --question-bg: #e8eaf6;
+            --scoreboard-bg: #eceff1;
+            --primary-text: #333;
+            --header-color: #3f51b5;
+            --subheader-color: #5e35b1;
+            --winner-color: #ff6f00;
+            --theme-child-bg: #e0f7fa; --theme-child-border: #4dd0e1; --theme-child-header: #0097a7; --theme-child-button: linear-gradient(145deg, #26c6da, #00acc1); --theme-child-button-hover: linear-gradient(145deg, #00acc1, #26c6da);
+            --theme-teen-bg: #e8f5e9; --theme-teen-border: #81c784; --theme-teen-header: #388e3c; --theme-teen-button: linear-gradient(145deg, #66bb6a, #43a047); --theme-teen-button-hover: linear-gradient(145deg, #43a047, #66bb6a);
+            --theme-young-adult-bg: #f3e5f5; --theme-young-adult-border: #ce93d8; --theme-young-adult-header: #8e24aa; --theme-young-adult-button: linear-gradient(145deg, #ab47bc, #8e24aa); --theme-young-adult-button-hover: linear-gradient(145deg, #8e24aa, #ab47bc);
+            --correct-color: #2e7d32; --incorrect-color: #c62828;
         }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-primary); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; background: var(--bg-gradient); color: var(--text-primary); padding: 15px; line-height: 1.7; }
-        #quiz-container { background-color: var(--container-bg); padding: clamp(25px, 5vw, 45px); border-radius: 24px; box-shadow: 0 20px 40px var(--shadow-medium); text-align: center; width: 100%; max-width: 1400px; border-top: 6px solid var(--header-color); }
-        h1, h2, h3 { font-family: var(--font-heading); }
-        h1 { color: var(--header-color); margin-bottom: 20px; font-size: clamp(2rem, 5vw, 2.8rem); }
-        h2 { color: var(--subheader-color); margin-bottom: 30px; font-size: clamp(1.5rem, 4vw, 2rem); }
-        h3 { color: var(--subheader-color); margin: 0 0 15px 0; font-size: 1.4em; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; }
-        /* --- Giriş Alanı --- */
-        #name-entry { padding: 30px; border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 30px; background-color: #f9fafb; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .player-input-group { text-align: left; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-light); border: 1px solid var(--border-color); }
-        .player-input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--subheader-color); font-size: 1em; }
-        .player-input-group input { width: 100%; padding: 12px 15px; border: 1px solid #bdc3c7; border-radius: 8px; font-size: 1em; box-sizing: border-box; margin-bottom: 12px; transition: border-color 0.3s, box-shadow 0.3s; }
-        .player-input-group input:focus { border-color: var(--header-color); box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15); outline: none; }
-        #confirm-container { grid-column: 1 / -1; text-align: center; margin-top: 10px; }
-        /* --- Butonlar --- */
-        .btn { padding: 14px 32px; font-size: 1.15em; font-weight: 600; cursor: pointer; color: white; border: none; border-radius: 10px; box-shadow: 0 5px 12px var(--shadow-medium); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.8px; }
-        .btn-primary { background: linear-gradient(145deg, #4f46e5, #3730a3); }
-        .btn-primary:hover { background: linear-gradient(145deg, #3730a3, #4f46e5); box-shadow: 0 7px 18px var(--shadow-medium); transform: translateY(-3px); }
-        .btn:disabled { background: var(--disabled-bg) !important; color: var(--disabled-text) !important; cursor: not-allowed; box-shadow: none; transform: none; }
-        #quiz-content, #results { display: none; }
-        /* --- Anlatım / Skorboard --- */
-        #narration-area { margin-bottom: 30px; padding: 25px; background-color: #f0f9ff; border-radius: 16px; text-align: center; border: 1px solid #bae6fd; box-shadow: 0 4px 12px var(--shadow-light); }
-        #narration-area p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1.15em; font-style: normal; }
-        #play-narration-btn { font-size: 1.05em; }
-        #scoreboard { background-color: #fafafa; padding: 15px 25px; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 4px 10px var(--shadow-light); border: 1px solid var(--border-color); }
-        #scoreboard-list { display: flex; justify-content: space-evenly; flex-wrap: wrap; list-style: none; gap: 20px; }
-        #scoreboard-list li { font-size: 1.1em; background: #fff; padding: 10px 18px; border-radius: 8px; box-shadow: 0 2px 5px var(--shadow-light); border: 1px solid var(--border-color); }
-        #scoreboard-list .name { font-weight: 600; color: var(--subheader-color); }
-        #scoreboard-list .score { font-weight: 700; margin-left: 8px; color: var(--header-color); font-size: 1.1em; }
-        /* --- Oyuncu Alanları --- */
-        #players-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .player-quiz-area { border-radius: 18px; padding: 25px; box-shadow: 0 10px 25px var(--shadow-medium); border-top: 8px solid; transition: all 0.4s ease; opacity: 0; transform: scale(0.98); }
-        .player-quiz-area.visible { opacity: 1; transform: scale(1); }
-        .theme-child { background-color: var(--c-bg); border-color: var(--c-border); }
-        .theme-teen { background-color: var(--t-bg); border-color: var(--t-border); }
-        .theme-young-adult { background-color: var(--y-bg); border-color: var(--y-border); }
-        .player-info { margin-bottom: 20px; font-weight: 700; font-size: 1.3em; }
-        .player-info .player-age { font-size: 0.85em; color: var(--text-secondary); margin-left: 10px; font-weight: 500; }
-        .theme-child .player-info { color: var(--c-head); }
-        .theme-teen .player-info { color: var(--t-head); }
-        .theme-young-adult .player-info { color: var(--y-head); }
-        .player-question { min-height: 90px; margin-bottom: 20px; padding: 18px; background-color: rgba(255,255,255, 0.85); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.15em; font-weight: 600; line-height: 1.6; border: 1px solid var(--border-color); }
-        /* Cevap Butonları */
-        .player-options button { display: flex; align-items: center; width: 100%; padding: 12px 18px; margin: 10px 0; border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 1.05em; font-weight: 500; transition: all 0.25s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.1); position: relative; text-align: left; }
-        .player-options button .option-text { flex-grow: 1; }
-        .player-options button .feedback-icon { margin-left: auto; font-size: 1.3em; width: 25px; text-align: center; }
-        .theme-child .player-options button { background: var(--c-btn); }
-        .theme-child .player-options button:hover:not(:disabled) { background: var(--c-btn-h); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .theme-teen .player-options button { background: var(--t-btn); }
-        .theme-teen .player-options button:hover:not(:disabled) { background: var(--t-btn-h); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .theme-young-adult .player-options button { background: var(--y-btn); }
-        .theme-young-adult .player-options button:hover:not(:disabled) { background: var(--y-btn-h); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .player-options button:disabled { background: var(--disabled-bg) !important; color: var(--disabled-text) !important; cursor: not-allowed; opacity: 0.8; transform: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-        /* Görsel Geri Bildirim */
-        .player-options button.selected { outline: 3px solid var(--accent-color); outline-offset: 2px; }
-        .player-options button.correct { background: var(--correct-bg) !important; color: var(--correct-text) !important; border: 2px solid var(--correct-border); font-weight: 700; animation: pulseCorrect 0.6s ease; }
-        .player-options button.incorrect { background: var(--incorrect-bg) !important; color: var(--incorrect-text) !important; border: 2px solid var(--incorrect-border); animation: shakeIncorrect 0.5s ease; }
-        .player-options button.correct .feedback-icon::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--correct-text); }
-        .player-options button.incorrect .feedback-icon::before { content: '\f00d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--incorrect-text); }
-        /* Animasyonlar */
-        @keyframes pulseCorrect { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-        @keyframes shakeIncorrect { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .player-feedback { min-height: 25px; margin-top: 15px; font-weight: 700; font-size: 1.1em; transition: color 0.3s; }
-        .feedback-correct { color: var(--correct-text); }
-        .feedback-incorrect { color: var(--incorrect-text); }
-        /* Sonuç Alanı */
-        #results { display: none; margin-top: 30px; padding: 30px; background: #fff; border-radius: 16px; box-shadow: 0 10px 25px var(--shadow-light); border: 1px solid var(--border-color); }
-        #final-scores { margin-bottom: 25px; }
-        .result-line { font-size: 1.2em; margin: 10px 0; padding: 12px 18px; border-radius: 8px; background-color: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; transition: background-color 0.3s; }
-        .result-line:hover { background-color: #f1f5f9; }
-        .result-line .name { font-weight: 600; flex-grow: 1; text-align: left; margin-right: 15px; }
-        .result-line .score { font-weight: 700; font-size: 1.15em;}
-        .result-line.theme-child { border-color: var(--c-border); } .result-line.theme-child .name { color: var(--c-head); }
-        .result-line.theme-teen { border-color: var(--t-border); } .result-line.theme-teen .name { color: var(--t-head); }
-        .result-line.theme-young-adult { border-color: var(--y-border); } .result-line.theme-young-adult .name { color: var(--y-head); }
-        #winner-info { font-family: var(--font-heading); font-size: 1.8em; font-weight: 700; color: var(--winner-color); margin-top: 25px; text-shadow: 1px 1px 3px var(--shadow-light); }
-        #loading-indicator { display: none; font-size: 1.4em; color: var(--subheader-color); margin: 30px; font-weight: 600; }
-        /* --- Küçük Ekran Ayarları --- */
-        @media (max-width: 992px) { #players-area { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;} }
-        @media (max-width: 600px) { h1 { font-size: 1.8rem; } h2 {font-size: 1.4rem;} .btn { padding: 12px 24px; font-size: 1em; } #quiz-container { padding: 15px; } #name-entry { padding: 15px; gap: 15px; } .player-input-group { padding: 15px; } #players-area { gap: 15px; } }
+        body { font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; background: var(--primary-bg); color: var(--primary-text); padding: 10px; box-sizing: border-box; }
+        #quiz-container { background-color: var(--container-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); text-align: center; width: 100%; max-width: 1200px; }
+        h1, h2 { color: var(--header-color); margin-bottom: 20px; } h2 { color: var(--subheader-color); font-size: 1.5em; } h3 { color: var(--subheader-color); font-size: 1.2em; margin-bottom: 10px; }
+        #name-entry { padding: 20px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; background-color: #fafafa; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px; }
+        .player-input-group { flex: 1 1 250px; text-align: left; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .player-input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--subheader-color); }
+        .player-input-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; margin-bottom: 5px; }
+        #confirm-container { width: 100%; text-align: center; margin-top: 15px; }
+        #quiz-content { display: none; }
+        #narration-area { margin-bottom: 20px; padding: 15px; background-color: var(--question-bg); border-radius: 10px; text-align: center; }
+        #narration-area p { font-style: italic; color: #555; margin-bottom: 15px; }
+        #play-narration-btn { padding: 10px 20px; font-size: 1em; cursor: pointer; background: var(--start-button-gradient); color: white; border: none; border-radius: 8px; transition: background-color 0.3s; }
+        #play-narration-btn:disabled { background-color: #aaa; cursor: not-allowed; }
+        #scoreboard { background-color: var(--scoreboard-bg); padding: 10px 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #scoreboard h3 { margin: 0 0 10px 0; color: var(--subheader-color); font-size: 1.1em; }
+        #scoreboard-list { list-style: none; padding: 0; margin: 0; display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap;}
+        #scoreboard-list li { font-size: 1em; padding: 5px 10px; }
+        #scoreboard-list .name { font-weight: 600; }
+        #scoreboard-list .score { font-weight: bold; margin-left: 5px; }
+        #players-area { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+        .player-quiz-area { flex: 1 1 30%; min-width: 280px; border-radius: 12px; padding: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); border-top: 5px solid; transition: border-color 0.5s ease, opacity 0.5s ease; text-align: center; opacity: 0; }
+        .player-quiz-area.visible { opacity: 1; }
+        .theme-child { background-color: var(--theme-child-bg); border-color: var(--theme-child-border); }
+        .theme-teen { background-color: var(--theme-teen-bg); border-color: var(--theme-teen-border); }
+        .theme-young-adult { background-color: var(--theme-young-adult-bg); border-color: var(--theme-young-adult-border); }
+        .player-info { margin-bottom: 15px; font-weight: 600; font-size: 1.1em; }
+        .player-info .player-age { font-size: 0.9em; color: #555; margin-left: 5px; }
+        .theme-child .player-info { color: var(--theme-child-header); }
+        .theme-teen .player-info { color: var(--theme-teen-header); }
+        .theme-young-adult .player-info { color: var(--theme-young-adult-header); }
+        .player-question { min-height: 70px; margin-bottom: 15px; padding: 10px; background-color: rgba(255,255,255, 0.7); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.05em; font-weight: 600; line-height: 1.4; }
+        .player-options button { display: block; width: 100%; padding: 9px; margin: 6px 0; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 0.95em; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        .theme-child .player-options button { background: var(--theme-child-button); }
+        .theme-child .player-options button:hover:not(:disabled) { background: var(--theme-child-button-hover); }
+        .theme-teen .player-options button { background: var(--theme-teen-button); }
+        .theme-teen .player-options button:hover:not(:disabled) { background: var(--theme-teen-button-hover); }
+        .theme-young-adult .player-options button { background: var(--theme-young-adult-button); }
+        .theme-young-adult .player-options button:hover:not(:disabled) { background: var(--theme-young-adult-button-hover); }
+        .player-options button:disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
+        .player-feedback { min-height: 20px; margin-top: 10px; font-weight: 600; font-size: 0.9em; }
+        .feedback-correct { color: var(--correct-color); }
+        .feedback-incorrect { color: var(--incorrect-color); }
+        #results { display: none; margin-top: 30px; }
+        #final-scores { margin-bottom: 20px;}
+        .result-line { font-size: 1.2em; margin: 10px 0; padding: 8px; border-radius: 5px; background-color: #f0f0f0; display: flex; justify-content: space-between; }
+        .result-line .name { font-weight: 600; flex-grow: 1; text-align: left; margin-right: 10px; }
+        .result-line .score { font-weight: bold; }
+        #winner-info { font-size: 1.4em; font-weight: bold; color: var(--winner-color); margin-top: 15px; }
+        #confirm-names-button, #restart-button { padding: 12px 25px; font-size: 1.2em; font-weight: 600; cursor: pointer; margin-top: 20px; background: var(--start-button-gradient); color: white; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+        #confirm-names-button:hover, #restart-button:hover { background: var(--start-button-hover-gradient); box-shadow: 0 6px 12px rgba(0,0,0,0.2); transform: translateY(-2px); }
+        #loading-indicator { display: none; font-size: 1.2em; color: var(--subheader-color); margin: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div id="quiz-container">
-        <h1>Modern İslami Bilgi Yarışması</h1>
+        <h1>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</h1>
 
         <div id="name-entry">
             <div class="player-input-group">
@@ -132,343 +97,474 @@
                 <input type="number" id="player-3-age-input" min="7" max="18" placeholder="Yaş...">
             </div>
             <div id="confirm-container">
-                <button id="confirm-names-button" class="btn btn-primary">Yarışmayı Başlat</button>
+                <button id="confirm-names-button">Yarışmayı Başlat</button>
             </div>
             <p id="tts-support-warning" style="color: red; width: 100%; text-align: center; margin-top: 10px; display: none;">Tarayıcınız metin seslendirme özelliğini desteklemiyor olabilir.</p>
         </div>
 
         <div id="quiz-content">
-             <div id="narration-area" style="display: none;">
-                 <p id="narration-info">Şimdi dikkatle dinleyin...</p>
-                 <button id="play-narration-btn" class="btn btn-primary">Anlatımı Seslendir</button>
-             </div>
-             <div id="loading-indicator">Sıradaki sorular hazırlanıyor...</div>
-             <div id="scoreboard" style="display: none;">
-                  <h3>Skor Tablosu</h3>
-                  <ul id="scoreboard-list"></ul>
-             </div>
-             <div id="players-area">
-                  <div class="player-quiz-area" id="player-area-1"> <div class="player-info"> <span class="player-name" id="player-1-name-display"></span> <span class="player-age" id="player-1-age-display"></span> </div> <div class="player-question" id="question-player-1"></div> <div class="player-options" id="options-player-1"></div> <div class="player-feedback" id="feedback-player-1"></div> </div>
-                  <div class="player-quiz-area" id="player-area-2"> <div class="player-info"> <span class="player-name" id="player-2-name-display"></span> <span class="player-age" id="player-2-age-display"></span> </div> <div class="player-question" id="question-player-2"></div> <div class="player-options" id="options-player-2"></div> <div class="player-feedback" id="feedback-player-2"></div> </div>
-                  <div class="player-quiz-area" id="player-area-3"> <div class="player-info"> <span class="player-name" id="player-3-name-display"></span> <span class="player-age" id="player-3-age-display"></span> </div> <div class="player-question" id="question-player-3"></div> <div class="player-options" id="options-player-3"></div> <div class="player-feedback" id="feedback-player-3"></div> </div>
-             </div>
+            <div id="narration-area" style="display: none;">
+                <p id="narration-info">Şimdi dikkatle dinleyin...</p>
+                <button id="play-narration-btn">Anlatımı Seslendir</button>
+            </div>
+            <div id="loading-indicator">Sıradaki sorular hazırlanıyor...</div>
+            <div id="scoreboard" style="display: none;">
+                 <h3>Skor Tablosu</h3>
+                 <ul id="scoreboard-list"></ul>
+            </div>
+            <div id="players-area">
+                 <div class="player-quiz-area" id="player-area-1">
+                    <div class="player-info">
+                        <span class="player-name" id="player-1-name-display">Oyuncu 1</span>
+                        <span class="player-age" id="player-1-age-display">(Yaş)</span>
+                    </div>
+                    <div class="player-question" id="question-player-1">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-1"></div>
+                    <div class="player-feedback" id="feedback-player-1"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-2">
+                    <div class="player-info">
+                        <span class="player-name" id="player-2-name-display">Oyuncu 2</span>
+                        <span class="player-age" id="player-2-age-display">(Yaş)</span>
+                     </div>
+                    <div class="player-question" id="question-player-2">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-2"></div>
+                    <div class="player-feedback" id="feedback-player-2"></div>
+                 </div>
+                 <div class="player-quiz-area" id="player-area-3">
+                     <div class="player-info">
+                        <span class="player-name" id="player-3-name-display">Oyuncu 3</span>
+                        <span class="player-age" id="player-3-age-display">(Yaş)</span>
+                    </div>
+                    <div class="player-question" id="question-player-3">Soru yükleniyor...</div>
+                    <div class="player-options" id="options-player-3"></div>
+                    <div class="player-feedback" id="feedback-player-3"></div>
+                 </div>
+            </div>
         </div>
 
         <div id="results">
              <h2>Yarışma Bitti!</h2>
              <div id="final-scores"></div>
              <p id="winner-info"></p>
-             <button id="restart-button" class="btn btn-primary">Yeni Oyun</button>
+             <button id="restart-button">Yeni Oyun (Yeni İsimlerle)</button>
         </div>
     </div>
 
-     <audio id="correct-sound" src="https://cdn.jsdelivr.net/gh/k-luna/assets-prod/sounds/correct_bell_vbr.mp3" preload="auto"></audio>
-     <audio id="incorrect-sound" src="https://cdn.jsdelivr.net/gh/k-luna/assets-prod/sounds/incorrect_buzz_vbr.mp3" preload="auto"></audio>
-     <script>
-        // *** SIFIRDAN YAZILMIŞ JAVASCRIPT ***
+    <script>
+        // *** TÜM JAVASCRIPT KODU BURADA ***
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Veri Yapıları ---
-            const quizSegments = [ /* Önceki cevaptaki 10 segment buraya eklenecek */ ];
-            const questionPool = [ /* Önceki cevaptaki ~60+ soru buraya eklenecek */ ];
-            const players = [
-                { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-                { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-                { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
+            // --- SORU HAVUZU (Genişletilmiş Örnek) ---
+            const questionPool = [
+                // Segment 1 (Fatiha 1-4) Soruları
+                { questionId: 101, segmentId: 1, questionText: "Metin hangi kelime ile başlar?", options: ["Hamd", "Rahman", "Allah", "Rab"], correctAnswer: "Allah", minAge: 7, maxAge: 10 },
+                { questionId: 102, segmentId: 1, questionText: "'Hamd' ne demek?", options: ["Sevgi", "Övgü/Şükür", "Güç", "Gün"], correctAnswer: "Övgü/Şükür", minAge: 7, maxAge: 10 },
+                { questionId: 103, segmentId: 1, questionText: "Metinde geçen Allah'ın güzel isimlerinden biri hangisidir?", options: ["Kadir", "Rahim", "Alim", "Semi"], correctAnswer: "Rahim", minAge: 7, maxAge: 10 },
+                { questionId: 104, segmentId: 1, questionText: "Allah neyin sahibidir?", options: ["Sadece iyilerin", "Sadece dünyanın", "Hesap gününün", "Sadece Müslümanların"], correctAnswer: "Hesap gününün", minAge: 8, maxAge: 11 },
+                { questionId: 105, segmentId: 1, questionText: "Metinde hangi kelime iki kere geçer?", options: ["Allah", "Rab", "Rahman/Rahim", "Hamd"], correctAnswer: "Rahman/Rahim", minAge: 9, maxAge: 12 },
+                { questionId: 106, segmentId: 1, questionText: "'Alemlerin Rabbi' ifadesi Allah'ın hangi özelliğini daha çok vurgular?", options: ["Affediciliğini", "Cömertliğini", "Tüm varlıkların sahibi ve yöneticisi olduğunu", "Cezalandırıcı olduğunu"], correctAnswer: "Tüm varlıkların sahibi ve yöneticisi olduğunu", minAge: 11, maxAge: 14 },
+                { questionId: 107, segmentId: 1, questionText: "Rahman ve Rahim isimleri Allah'ın hangi yönünü öne çıkarır?", options: ["Gücünü", "Adaletini", "Merhametini", "Bilgisini"], correctAnswer: "Merhametini", minAge: 11, maxAge: 14 },
+                { questionId: 108, segmentId: 1, questionText: "'Hesap günü' ifadesinden ne anlıyoruz?", options: ["Dünyanın sonu", "İnsanların yaptıklarından sorgulanacağı gün", "Cennete giriş günü", "Bayram günü"], correctAnswer: "İnsanların yaptıklarından sorgulanacağı gün", minAge: 11, maxAge: 15 },
+                { questionId: 109, segmentId: 1, questionText: "Metne göre 'Hamd' kime 'mahsustur'?", options: ["Peygambere", "Meleklere", "İnsanlara", "Allah'a"], correctAnswer: "Allah'a", minAge: 10, maxAge: 14 },
+                { questionId: 110, segmentId: 1, questionText: "Fatiha suresinin bu ayetlerinde Allah'ın hangi isim/sıfatı GEÇMEZ?", options: ["Rab", "Rahman", "Melik", "Rahim"], correctAnswer: "Melik", minAge: 12, maxAge: 16 },
+                { questionId: 111, segmentId: 1, questionText: "'Rab' kelimesinin kök anlamlarından biri hangisi DEĞİLDİR?", options: ["Terbiye eden", "Sahip olan", "Yöneten", "Uzak olan"], correctAnswer: "Uzak olan", minAge: 15, maxAge: 18 },
+                { questionId: 112, segmentId: 1, questionText: "'Din Günü' (Hesap Günü) kavramı hangi temel inançla doğrudan ilgilidir?", options: ["Kadere iman", "Ahirete iman", "Kitaplara iman", "Meleklere iman"], correctAnswer: "Ahirete iman", minAge: 15, maxAge: 18 },
+                { questionId: 113, segmentId: 1, questionText: "Rahman ve Rahim sıfatlarının birlikte zikredilmesi neyi ifade eder?", options: ["Allah'ın sadece Müslümanlara merhamet ettiğini", "Allah'ın merhametinin hem dünyada hem ahirette geniş olduğunu", "Allah'ın cezalandırmayacağını", "Merhametin sadece insanlara özgü olduğunu"], correctAnswer: "Allah'ın merhametinin hem dünyada hem ahirette geniş olduğunu", minAge: 14, maxAge: 18 },
+                { questionId: 114, segmentId: 1, questionText: "Bu ayetlerde hangi dua veya talep ifadesi yer alır?", options: ["Bizi doğru yola ilet", "Bize yardım et", "Bizi affet", "Hiçbiri"], correctAnswer: "Hiçbiri", minAge: 13, maxAge: 18 },
+                { questionId: 115, segmentId: 1, questionText: "Fatiha suresinin bu ilk ayetleri genel olarak neyi konu alır?", options: ["Ahlak kuralları", "Peygamber kıssaları", "Allah'a hamd ve O'nun temel sıfatları", "İbadetlerin yapılışı"], correctAnswer: "Allah'a hamd ve O'nun temel sıfatları", minAge: 12, maxAge: 18 },
+
+                // --- Segment 2 (Niyet Hadisi) ---
+                { questionId: 201, segmentId: 2, questionText: "Yaptığımız bir işin iyi mi kötü mü olduğunu belirleyen en önemli şey nedir?", options: ["İşin büyüklüğü", "Niyetimiz", "Kimsenin görmemesi", "Hızlı yapmak"], correctAnswer: "Niyetimiz", minAge: 7, maxAge: 10 },
+                { questionId: 202, segmentId: 2, questionText: "Hadiste adı geçen Peygamberimiz kimdir?", options: ["Hz. İsa", "Hz. Musa", "Hz. Muhammed (sav)", "Hz. Adem"], correctAnswer: "Hz. Muhammed (sav)", minAge: 7, maxAge: 10 },
+                { questionId: 203, segmentId: 2, questionText: "Bir kişi Allah için bir iş yaparsa, karşılığını kimden alır?", options: ["İnsanlardan", "Patronundan", "Allah'tan", "Kimseden"], correctAnswer: "Allah'tan", minAge: 8, maxAge: 11 },
+                { questionId: 204, segmentId: 2, questionText: "Metinde geçen 'amel' ne demektir?", options: ["Niyet", "İş, davranış", "Para", "Ev"], correctAnswer: "İş, davranış", minAge: 9, maxAge: 12 },
+                { questionId: 205, segmentId: 2, questionText: "İnsan ne niyet ederse, genellikle neyi elde eder?", options: ["Hiçbir şeyi", "Niyet ettiğini", "Niyet etmediğini", "Başkasının niyet ettiğini"], correctAnswer: "Niyet ettiğini", minAge: 7, maxAge: 10 },
+                { questionId: 206, segmentId: 2, questionText: "Hadise göre, sadece evlenmek amacıyla yapılan bir hicretin (işin) değeri nedir?", options: ["Allah katında çok değerlidir", "Hem Allah hem insanlar katında değerlidir", "Sadece o evlilikle sınırlıdır", "Hiçbir değeri yoktur"], correctAnswer: "Sadece o evlilikle sınırlıdır", minAge: 11, maxAge: 14 },
+                { questionId: 207, segmentId: 2, questionText: "'Hicret' kelimesi bu hadiste sadece fiziksel göçü mü ifade eder?", options: ["Evet, sadece onu", "Hayır, manevi yönelişi de kapsar", "Sadece savaşa gitmeyi", "Sadece ticareti"], correctAnswer: "Hayır, manevi yönelişi de kapsar", minAge: 11, maxAge: 15 },
+                { questionId: 208, segmentId: 2, questionText: "Bu hadis, ibadetlerimizde ve günlük işlerimizde neye dikkat etmemizi vurgular?", options: ["İşin sonucuna", "İşi yapan kişiye", "İşin yapılış niyetine", "İşin süresine"], correctAnswer: "İşin yapılış niyetine", minAge: 10, maxAge: 14 },
+                { questionId: 209, segmentId: 2, questionText: "Hadiste 'Resul' kelimesi kim için kullanılır?", options: ["Elçi, Peygamber", "Yönetici", "Tüccar", "Öğretmen"], correctAnswer: "Elçi, Peygamber", minAge: 11, maxAge: 14 },
+                { questionId: 210, segmentId: 2, questionText: "Niyetin önemini anlatan bu hadis hangi ünlü hadis kitabında yer alır?", options: ["Riyazüs Salihin", "Muvatta", "Buhari ve Müslim", "Tirmizi"], correctAnswer: "Buhari ve Müslim", minAge: 13, maxAge: 16 },
+                { questionId: 211, segmentId: 2, questionText: "Bu hadis İslam hukukunda (fıkıh) hangi prensibin temelini oluşturur?", options: ["Zaruretler haramı mübah kılar", "Niyet amelin ruhudur", "Kolaylaştırınız, zorlaştırmayınız", "Şüphe ile yakin zail olmaz"], correctAnswer: "Niyet amelin ruhudur", minAge: 15, maxAge: 18 },
+                { questionId: 212, segmentId: 2, questionText: "Hadiste geçen 'dünyalık' ifadesi neleri kapsayabilir?", options: ["Sadece para", "Sadece mal mülk", "Makam, şöhret, kazanç gibi geçici şeyler", "Sadece aile"], correctAnswer: "Makam, şöhret, kazanç gibi geçici şeyler", minAge: 14, maxAge: 18 },
+                { questionId: 213, segmentId: 2, questionText: "Niyetin gizli olması mı, açık olması mı amelin değerini etkiler?", options: ["Gizli olması", "Açık olması", "Hadiste buna değinilmiyor", "Niyetin kendisi önemlidir, gizliliği/açıklığı değil"], correctAnswer: "Niyetin kendisi önemlidir, gizliliği/açıklığı değil", minAge: 15, maxAge: 18 },
+                { questionId: 214, segmentId: 2, questionText: "Bir amelin hem Allah rızası hem de dünyalık bir beklentiyle yapılması durumunda hadise göre sonuç ne olabilir?", options: ["Kesinlikle kabul olmaz", "Sadece Allah rızası geçerli olur", "Niyetin hangisinin ağır bastığına göre değişir", "Sadece dünyalık elde edilir"], correctAnswer: "Niyetin hangisinin ağır bastığına göre değişir", minAge: 16, maxAge: 18 },
+                { questionId: 215, segmentId: 2, questionText: "Bu hadisten çıkarılacak en temel ders nedir?", options: ["Göç etmek sevaptır", "Evlenmek önemlidir", "Her işte Allah rızasını gözetmek gerekir", "Çok amel işlemek gerekir"], correctAnswer: "Her işte Allah rızasını gözetmek gerekir", minAge: 12, maxAge: 18 },
+
+                 // --- Segment 3 (İhlas Suresi) ---
+                 { questionId: 301, segmentId: 3, questionText: "İhlas suresine göre Allah kaçtır?", options: ["İki", "Üç", "Sayısız", "Bir"], correctAnswer: "Bir", minAge: 7, maxAge: 9 },
+                 { questionId: 302, segmentId: 3, questionText: "Her şey kime muhtaçtır?", options: ["Peygambere", "İnsanlara", "Meleklere", "Allah'a"], correctAnswer: "Allah'a", minAge: 7, maxAge: 10 },
+                 { questionId: 303, segmentId: 3, questionText: "Allah'ın çocuğu veya anne-babası var mıdır?", options: ["Vardır", "Yoktur", "Sadece çocuğu vardır", "Sadece annesi vardır"], correctAnswer: "Yoktur", minAge: 7, maxAge: 10 },
+                 { questionId: 304, segmentId: 3, questionText: "Allah'a benzeyen başka bir şey var mıdır?", options: ["Evet, melekler", "Evet, insanlar", "Hayır, O'na denk hiçbir şey yoktur", "Evet, güneş"], correctAnswer: "Hayır, O'na denk hiçbir şey yoktur", minAge: 8, maxAge: 11 },
+                 { questionId: 305, segmentId: 3, questionText: "Surenin adı nedir?", options: ["Fatiha", "Nas", "Felak", "İhlas"], correctAnswer: "İhlas", minAge: 9, maxAge: 12 },
+                 { questionId: 306, segmentId: 3, questionText: "'Samed' sıfatı Allah'ın hangi özelliğini ifade eder?", options: ["Affediciliğini", "Yaratıcılığını", "Hiçbir şeye muhtaç olmayıp her şeyin O'na muhtaç olduğunu", "Adaletini"], correctAnswer: "Hiçbir şeye muhtaç olmayıp her şeyin O'na muhtaç olduğunu", minAge: 11, maxAge: 14 },
+                 { questionId: 307, segmentId: 3, questionText: "İhlas suresi İslam'ın hangi temel ilkesini özetler?", options: ["Namaz", "Zekat", "Tevhid (Allah'ın birliği)", "Ahiret"], correctAnswer: "Tevhid (Allah'ın birliği)", minAge: 11, maxAge: 15 },
+                 { questionId: 308, segmentId: 3, questionText: "'Lem yelid ve lem yûled' ayetinin anlamı nedir?", options: ["O görür ve işitir", "O doğurmamış ve doğmamıştır", "O bağışlar ve merhamet eder", "O diriltir ve öldürür"], correctAnswer: "O doğurmamış ve doğmamıştır", minAge: 10, maxAge: 14 },
+                 { questionId: 309, segmentId: 3, questionText: "Bu sureye neden 'İhlas' denmiş olabilir?", options: ["Okuması çok kolay olduğu için", "Çok kısa olduğu için", "Allah'a katışıksız, samimi inancı ifade ettiği için", "Sadece namazda okunduğu için"], correctAnswer: "Allah'a katışıksız, samimi inancı ifade ettiği için", minAge: 12, maxAge: 16 },
+                 { questionId: 310, segmentId: 3, questionText: "Surede Allah için hangi ifade kullanılmaz?", options: ["Bir", "Samed", "Denk", "Rahman"], correctAnswer: "Rahman", minAge: 11, maxAge: 15 },
+                 { questionId: 311, segmentId: 3, questionText: "İhlas suresi, hangi yanlış inançlara doğrudan bir cevap niteliğindedir?", options: ["Meleklere inanmamaya", "Kadere inanmamaya", "Allah'a ortak koşmaya (şirk) ve O'na çocuk isnat etmeye", "Ahireti inkar etmeye"], correctAnswer: "Allah'a ortak koşmaya (şirk) ve O'na çocuk isnat etmeye", minAge: 15, maxAge: 18 },
+                 { questionId: 312, segmentId: 3, questionText: "'Samed' isminin tecellisi olarak evrendeki düzen neyi gösterir?", options: ["Her şeyin tesadüfen olduğunu", "Evrenin kendi kendine yettiğini", "Her şeyin bir yaratıcıya ve düzenleyiciye muhtaç olduğunu", "Evrenin sonsuz olduğunu"], correctAnswer: "Her şeyin bir yaratıcıya ve düzenleyiciye muhtaç olduğunu", minAge: 15, maxAge: 18 },
+                 { questionId: 313, segmentId: 3, questionText: "'Hiçbir şey O'na denk değildir' ayeti Allah'ın hangi sıfatını vurgular?", options: ["Hayat", "İlim", "Muhalefetün lil havadis (Yaratılmışlara benzememek)", "Kıyam bi nefsihi (Varlığı kendinden olmak)"], correctAnswer: "Muhalefetün lil havadis (Yaratılmışlara benzememek)", minAge: 16, maxAge: 18 },
+                 { questionId: 314, segmentId: 3, questionText: "Bu surenin Kur'an'ın üçte birine denk olduğu rivayet edilir. Bunun sebebi ne olabilir?", options: ["En çok okunan sure olması", "En kısa sure olması", "İmanın temeli olan Tevhid'i özlüce anlatması", "Ezberlemesi en kolay olması"], correctAnswer: "İmanın temeli olan Tevhid'i özlüce anlatması", minAge: 14, maxAge: 18 },
+                 { questionId: 315, segmentId: 3, questionText: "Sure hangi kelime ile başlar?", options: ["Allah", "De ki", "Samed", "Bir"], correctAnswer: "De ki", minAge: 12, maxAge: 18 },
+
+                 // --- Segment 4 (Sabır) ---
+                 { questionId: 401, segmentId: 4, questionText: "Zor bir durumla karşılaşınca ne yapmalıyız?", options: ["Kızmak", "Sabretmek", "Kaçmak", "Uyumak"], correctAnswer: "Sabretmek", minAge: 7, maxAge: 10 },
+                 { questionId: 402, segmentId: 4, questionText: "Her zorluğun yanında ne gelirmiş?", options: ["Daha çok zorluk", "Bir kolaylık", "Bir hediye", "Bir ceza"], correctAnswer: "Bir kolaylık", minAge: 7, maxAge: 10 },
+                 { questionId: 403, segmentId: 4, questionText: "Sabredenler sonunda ne kazanır?", options: ["Hiçbir şey", "Oyuncaq", "Allah'tan mükafat", "Pasta"], correctAnswer: "Allah'tan mükafat", minAge: 8, maxAge: 11 },
+                 { questionId: 404, segmentId: 4, questionText: "Metne göre sabır neyin yarısıymış?", options: ["Elmanın", "Günün", "İmanın", "Oyunun"], correctAnswer: "İmanın", minAge: 7, maxAge: 10 },
+                 { questionId: 405, segmentId: 4, questionText: "Zorluk anında kimden yardım istemeliyiz?", options: ["Arkadaşımızdan", "Öğretmenden", "Allah'tan", "Kimseden"], correctAnswer: "Allah'tan", minAge: 7, maxAge: 10 },
+                 { questionId: 406, segmentId: 4, questionText: "Metinde sabrın tanımı içinde hangisi yoktur?", options: ["Yılgınlık göstermemek", "Aceleci davranmamak", "İsyan etmek", "Allah'tan yardım dileyerek beklemek"], correctAnswer: "İsyan etmek", minAge: 11, maxAge: 14 },
+                 { questionId: 407, segmentId: 4, questionText: "'İmanın yarısı' ifadesi sabrın ne kadar önemli olduğunu gösterir?", options: ["Çok az önemli", "Biraz önemli", "Çok önemli", "Hiç önemli değil"], correctAnswer: "Çok önemli", minAge: 10, maxAge: 14 },
+                 { questionId: 408, segmentId: 4, questionText: "'Her zorlukla beraber bir kolaylık vardır' ayeti hangi surede geçer?", options: ["Fatiha", "İhlas", "İnşirah", "Nasr"], correctAnswer: "İnşirah", minAge: 13, maxAge: 16 },
+                 { questionId: 409, segmentId: 4, questionText: "Metne göre sabretmek pasif bir bekleyiş midir?", options: ["Evet, sadece beklemektir", "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", "Bazen evet, bazen hayır", "Metinde belirtilmiyor"], correctAnswer: "Hayır, Allah'tan yardım dileyerek aktif bir bekleyiştir", minAge: 12, maxAge: 15 },
+                 { questionId: 410, segmentId: 4, questionText: "'Mükafat' kelimesinin anlamı nedir?", options: ["Ceza", "Ödül, karşılık", "Unutmak", "Kaybetmek"], correctAnswer: "Ödül, karşılık", minAge: 11, maxAge: 14 },
+                 { questionId: 411, segmentId: 4, questionText: "Sabır kavramı, İslam'daki hangi diğer kavramlarla yakından ilişkilidir?", options: ["Acelecilik ve Telaş", "Tevekkül, Şükür ve Rıza", "İsyan ve Ümitsizlik", "Gösteriş ve Kibir"], correctAnswer: "Tevekkül, Şükür ve Rıza", minAge: 15, maxAge: 18 },
+                 { questionId: 412, segmentId: 4, questionText: "Zorluk anında 'yılgınlık göstermemek' psikolojik olarak neyi ifade eder?", options: ["Duygusuz olmayı", "Umutsuzluğa kapılmamayı, direnmeyi", "Sorunu görmezden gelmeyi", "Başkalarını suçlamayı"], correctAnswer: "Umutsuzluğa kapılmamayı, direnmeyi", minAge: 14, maxAge: 18 },
+                 { questionId: 413, segmentId: 4, questionText: "Allah'tan yardım dileyerek beklemenin ardındaki temel inanç nedir?", options: ["Her şeyin kendi kendine olacağı", "İnsanların mutlaka yardım edeceği", "Allah'ın her şeye gücünün yettiği ve duaları duyduğu", "Yardımın hiç gelmeyeceği"], correctAnswer: "Allah'ın her şeye gücünün yettiği ve duaları duyduğu", minAge: 15, maxAge: 18 },
+                 { questionId: 414, segmentId: 4, questionText: "'Kolaylık' sadece maddi rahatlama mıdır, yoksa manevi ferahlama da olabilir mi?", options: ["Sadece maddidir", "Sadece manevidir", "Hem maddi hem manevi olabilir", "Metinde sadece maddi kastedilir"], correctAnswer: "Hem maddi hem manevi olabilir", minAge: 14, maxAge: 18 },
+                 { questionId: 415, segmentId: 4, questionText: "Sabır göstermenin toplumsal faydaları neler olabilir?", options: ["Toplumda kargaşa çıkarır", "İlişkileri zayıflatır", "Anlaşmazlıkları azaltır, huzuru artırır", "Tembelliği teşvik eder"], correctAnswer: "Anlaşmazlıkları azaltır, huzuru artırır", minAge: 15, maxAge: 18 },
             ];
 
-            // --- Durum Değişkenleri ---
+            // --- Anlatım Metinleri ---
+            const quizSegments = [
+                 { segmentId: 1, narrationTitle: "Fatiha Suresi (Ayet 1-4)", narrationText: "Rahmân ve Rahîm olan Allah'ın adıyla. Hamd, âlemlerin Rabbi Allah’a mahsustur. O, Rahmân’dır, Rahîm’dir. Hesap gününün sahibidir." },
+                 { segmentId: 2, narrationTitle: "Hadis-i Şerif (Ameller ve Niyetler)", narrationText: "Peygamber Efendimiz sallallahu aleyhi ve sellem şöyle buyurmuştur: Ameller ancak niyetlere göredir. Herkes için ancak niyet ettiği şey vardır. Kimin hicreti Allah'a ve Resûlü'ne ise, onun hicreti Allah'a ve Resûlü'nedir. Kimin hicreti de elde edeceği bir dünyalığa veya evleneceği bir kadına ise, onun hicreti de hicret ettiği şeyedir." },
+                 { segmentId: 3, narrationTitle: "İhlas Suresi", narrationText: "Rahmân ve Rahîm olan Allah'ın adıyla. De ki: O Allah birdir. Allah Samed'dir (Her şey O'na muhtaçtır, O kimseye muhtaç değildir). O doğurmamış ve doğmamıştır. Hiçbir şey O'na denk değildir." },
+                 { segmentId: 4, narrationTitle: "Sabrın Önemi", narrationText: "Sabır, imanın yarısıdır. Zorluklar karşısında yılgınlık göstermemek, aceleci davranmamak ve Allah'tan yardım dileyerek beklemektir. Sabredenler, sonunda mutlaka mükafatlarını alırlar. Unutmayın, her zorlukla beraber bir kolaylık vardır." }
+            ];
+
+            // --- Oyuncu Bilgileri ---
+            const players = [
+                 { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                 { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
+                 { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
+            ];
+            // --- Değişkenler ---
             let currentSegmentIndex = 0;
             let playersAnsweredCount = 0;
-            let askedQuestionIds = [];
-            let currentUtterance = null; // Aktif seslendirmeyi takip etmek için
+            let askedQuestionIds = []; // Sorulan soru ID'lerini tut
 
-            // --- Ana Element Referansları (Güvenli Erişim) ---
-            const getElement = (id) => {
-                const element = document.getElementById(id);
-                if (!element) {
-                    console.error(`Hata: "${id}" ID'li element bulunamadı! HTML'i kontrol edin.`);
-                }
-                return element;
-            };
-
-            const nameEntrySection = getElement('name-entry');
-            const confirmNamesButton = getElement('confirm-names-button');
-            const ttsSupportWarning = getElement('tts-support-warning');
-            const quizContent = getElement('quiz-content');
-            const narrationArea = getElement('narration-area');
-            const narrationInfo = getElement('narration-info');
-            const playNarrationButton = getElement('play-narration-btn');
-            const scoreboardElement = getElement('scoreboard');
-            const scoreboardListElement = getElement('scoreboard-list');
-            const playersArea = getElement('players-area');
-            const loadingIndicator = getElement('loading-indicator');
-            const resultsElement = getElement('results');
-            const finalScoresElement = getElement('final-scores');
-            const restartButton = getElement('restart-button');
-            const winnerInfoElement = getElement('winner-info');
-
-            // Oyuncu Element Referansları (Diziler)
-            const nameInputs = [], ageInputs = [], nameDisplays = [], ageDisplays = [];
-            const playerAreaElements = [], playerQuestionElements = [], playerOptionsElements = [], playerFeedbackElements = [];
+            // --- Element Referansları ---
+            // DOM elementlerini burada alıyoruz, DOMContentLoaded içinde olduğu için sorun olmaz
+            const nameEntrySection = document.getElementById('name-entry');
+            const confirmNamesButton = document.getElementById('confirm-names-button');
+            const ttsSupportWarning = document.getElementById('tts-support-warning');
+            const quizContent = document.getElementById('quiz-content');
+            const narrationArea = document.getElementById('narration-area');
+            const narrationInfo = document.getElementById('narration-info');
+            const playNarrationButton = document.getElementById('play-narration-btn');
+            const scoreboardElement = document.getElementById('scoreboard');
+            const scoreboardListElement = document.getElementById('scoreboard-list');
+            const playersArea = document.getElementById('players-area');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const resultsElement = document.getElementById('results');
+            const finalScoresElement = document.getElementById('final-scores');
+            const restartButton = document.getElementById('restart-button');
+            const winnerInfoElement = document.getElementById('winner-info');
+            const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
+            const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
 
             for (let i = 1; i <= 3; i++) {
-                nameInputs.push(getElement(`player-${i}-name-input`));
-                ageInputs.push(getElement(`player-${i}-age-input`));
-                nameDisplays.push(getElement(`player-${i}-name-display`));
-                ageDisplays.push(getElement(`player-${i}-age-display`));
-                playerAreaElements.push(getElement(`player-area-${i}`));
-                playerQuestionElements.push(getElement(`question-player-${i}`));
-                playerOptionsElements.push(getElement(`options-player-${i}`));
-                playerFeedbackElements.push(getElement(`feedback-player-${i}`));
+                nameInputs.push(document.getElementById(`player-${i}-name-input`));
+                ageInputs.push(document.getElementById(`player-${i}-age-input`));
+                nameDisplays.push(document.getElementById(`player-${i}-name-display`));
+                ageDisplays.push(document.getElementById(`player-${i}-age-display`));
+                playerAreaElements.push(document.getElementById(`player-area-${i}`));
+                playerQuestionElements.push(document.getElementById(`question-player-${i}`));
+                playerOptionsElements.push(document.getElementById(`options-player-${i}`));
+                playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
             }
 
-             // Ses Efekti Elementleri
-             const correctSound = getElement('correct-sound');
-             const incorrectSound = getElement('incorrect-sound');
-
-            // --- Yardımcı Fonksiyonlar ---
-            function shuffleArray(array) { /* ... önceki gibi ... */ }
-            function getThemeClass(age) { /* ... önceki gibi ... */ }
-            function checkTtsSupport() { /* ... önceki gibi ... */ }
-
-            function playSound(soundElement) {
-                // Null kontrolü ve src kontrolü (placeholder veya boş olmamalı)
-                 if (soundElement && soundElement.src && soundElement.src !== window.location.href /*boş src kontrolü*/ && !soundElement.src.includes('YOUR_SOUND_URL')) {
-                    soundElement.pause();
-                    soundElement.currentTime = 0;
-                    soundElement.play().catch(error => console.warn("Ses efekti çalınamadı:", error));
+             // --- Fonksiyonlar ---
+             function shuffleArray(array) {
+                 let currentIndex = array.length,  randomIndex;
+                 while (currentIndex > 0) {
+                     randomIndex = Math.floor(Math.random() * currentIndex);
+                     currentIndex--;
+                     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
                  }
-            }
-
-            // --- Ana Quiz Fonksiyonları ---
-
-            function updateScoreboard() {
-                if (!scoreboardListElement) return;
-                scoreboardListElement.innerHTML = '';
-                players.forEach(player => {
-                    const listItem = document.createElement('li');
-                    // Null kontrolü tema için
-                    const theme = player.themeClass ? player.themeClass.split('-')[1] : 'default';
-                    const nameSpan = `<span class="name theme-${theme}">${player.name}</span>`;
-                    listItem.innerHTML = `${nameSpan}: <span class="score">${player.score} Puan</span>`;
-                    scoreboardListElement.appendChild(listItem);
-                });
-            }
-
-            function loadSegment(segmentIndex) {
-                // Önceki seslendirmeyi durdur
-                if (window.speechSynthesis && window.speechSynthesis.speaking) {
-                    window.speechSynthesis.cancel();
-                }
-                currentUtterance = null; // Referansı temizle
-
-                if (segmentIndex >= quizSegments.length) {
-                    showResults(); return;
-                }
-                currentSegmentIndex = segmentIndex;
-                const segmentData = quizSegments[segmentIndex];
-                if (!segmentData) { console.error("Segment verisi bulunamadı:", segmentIndex); showResults(); return; }
-
-                // UI Güncelleme (Null kontrolleri ile)
-                if(playersArea) playersArea.style.display = 'none';
-                playerAreaElements.forEach(el => { if(el) el.classList.remove('visible');});
-                if(loadingIndicator) loadingIndicator.style.display = 'none';
-                if(narrationArea) narrationArea.style.display = 'block';
-                if(scoreboardElement) scoreboardElement.style.display = 'block';
-                if(narrationInfo) narrationInfo.textContent = `Segment ${segmentIndex + 1}: "${segmentData.narrationTitle}" konusunu dinlemek için butona basın.`;
-                if(playNarrationButton) { playNarrationButton.disabled = false; playNarrationButton.textContent = "Anlatımı Seslendir"; }
-
-                players.forEach(player => {
-                    const feedbackEl = playerFeedbackElements[player.id - 1];
-                    const sectionEl = playerAreaElements[player.id - 1];
-                    if (feedbackEl) feedbackEl.textContent = '';
-                    if (sectionEl) sectionEl.style.borderColor = 'transparent';
-                });
-                updateScoreboard();
-            }
-
-             function playNarration() {
-                 if (!('speechSynthesis' in window) || !window.speechSynthesis) {
-                     alert("Üzgünüz, tarayıcınız metin seslendirme özelliğini desteklemiyor.");
-                     if (playNarrationButton) playNarrationButton.disabled = true;
-                     return;
-                 }
-                 window.speechSynthesis.cancel(); // Öncekini durdur
-
-                 const segmentData = quizSegments[currentSegmentIndex];
-                 if (!segmentData || !segmentData.narrationText) {
-                     console.error("Seslendirilecek metin bulunamadı!"); alert("Metin verisi eksik!");
-                     return;
-                 }
-
-                 currentUtterance = new SpeechSynthesisUtterance(segmentData.narrationText);
-                 currentUtterance.lang = 'tr-TR';
-                 currentUtterance.rate = 0.9;
-                 currentUtterance.pitch = 1;
-                 currentUtterance.onend = handleNarrationEnd;
-                 currentUtterance.onerror = (event) => {
-                     console.error('TTS Hatası:', event);
-                     alert(`Seslendirme hatası: ${event.error}. Farklı tarayıcı deneyin veya ses paketlerini kontrol edin.`);
-                     if (playNarrationButton) { playNarrationButton.textContent = "Hata!"; playNarrationButton.disabled = false; }
-                     currentUtterance = null; // Hata sonrası temizle
-                 };
-
-                 if (playNarrationButton) { playNarrationButton.disabled = true; playNarrationButton.textContent = "Seslendiriliyor..."; }
-                 window.speechSynthesis.speak(currentUtterance);
+                 return array;
              }
 
+             function updateScoreboard() {
+                 scoreboardListElement.innerHTML = '';
+                 players.forEach(player => {
+                     const listItem = document.createElement('li');
+                      // Temaya uygun renkli isimler (isteğe bağlı)
+                     const nameSpan = `<span class="name ${player.themeClass}">${player.name}</span>`;
+                     listItem.innerHTML = `${nameSpan}: <span class="score">${player.score} Puan</span>`;
+                     scoreboardListElement.appendChild(listItem);
+                 });
+             }
 
-            function handleNarrationEnd() {
-                console.log("Seslendirme bitti.");
-                currentUtterance = null; // Referansı temizle
-                if (playNarrationButton) { playNarrationButton.textContent = "Anlatım Bitti"; playNarrationButton.disabled = true; }
-                if (narrationArea) narrationArea.style.display = 'none';
-                if (loadingIndicator) loadingIndicator.style.display = 'block';
-                setTimeout(() => {
-                    loadQuestionsForPlayers(currentSegmentIndex);
-                    if (loadingIndicator) loadingIndicator.style.display = 'none';
-                    if (playersArea) playersArea.style.display = 'grid';
-                    playerAreaElements.forEach(el => { if(el) el.classList.add('visible'); });
-                }, 500);
-            }
+             function getThemeClass(age) {
+                 if (age >= 7 && age <= 10) return 'theme-child';
+                 if (age >= 11 && age <= 14) return 'theme-teen';
+                 if (age >= 15 && age <= 18) return 'theme-young-adult';
+                 return 'theme-default';
+             }
 
-            function loadQuestionsForPlayers(segmentIdx) {
-                playersAnsweredCount = 0;
-                let currentRoundSelectedIds = [];
-                const segmentIdToLoad = quizSegments[segmentIdx]?.segmentId;
+             function loadSegment(segmentIndex) {
+                 window.speechSynthesis.cancel();
+                 if (segmentIndex >= quizSegments.length) {
+                     showResults(); return;
+                 }
+                 currentSegmentIndex = segmentIndex;
+                 const segmentData = quizSegments[segmentIndex];
+                 playerAreaElements.forEach(el => el.classList.remove('visible')); // Önce gizle
+                 playersArea.style.display = 'none';
+                 loadingIndicator.style.display = 'none';
+                 narrationArea.style.display = 'block';
+                 scoreboardElement.style.display = 'block';
+                 narrationInfo.textContent = `Segment ${segmentIndex + 1}: "${segmentData.narrationTitle}" konusunu dinlemek için butona basın.`;
+                 playNarrationButton.disabled = false;
+                 playNarrationButton.textContent = "Anlatımı Seslendir";
+                 players.forEach(player => {
+                     if(playerFeedbackElements[player.id-1]) playerFeedbackElements[player.id-1].textContent = '';
+                     if(playerAreaElements[player.id-1]) playerAreaElements[player.id-1].style.borderColor = 'transparent'; // Başlangıçta border rengini sıfırla
+                 });
+                 updateScoreboard();
+             }
 
-                if (segmentIdToLoad === undefined) { console.error("loadQuestions: Geçersiz segment index:", segmentIdx); showResults(); return; }
+             function handleNarrationEnd() {
+                 console.log("Seslendirme bitti, sorular yükleniyor...");
+                 playNarrationButton.textContent = "Anlatım Bitti";
+                 playNarrationButton.disabled = true;
+                 narrationArea.style.display = 'none';
+                 loadingIndicator.style.display = 'block';
+                 setTimeout(() => {
+                     loadQuestionsForPlayers(currentSegmentIndex);
+                     loadingIndicator.style.display = 'none';
+                     playersArea.style.display = 'flex';
+                     playerAreaElements.forEach(el => el.classList.add('visible')); // Şimdi göster
+                 }, 500);
+             }
 
-                players.forEach(player => {
-                    player.answered = false; player.currentQuestion = null;
-                    const optionsEl = playerOptionsElements[player.id - 1];
-                    const feedbackEl = playerFeedbackElements[player.id - 1];
-                    const questionEl = playerQuestionElements[player.id - 1];
-                    const sectionEl = playerAreaElements[player.id - 1];
+             function loadQuestionsForPlayers(segmentIdx) {
+                 playersAnsweredCount = 0;
+                 let currentRoundSelectedIds = [];
 
-                    // Element kontrolleri
-                    if (!optionsEl || !feedbackEl || !questionEl || !sectionEl) {
-                        console.error(`loadQuestions: Oyuncu ${player.id} için element bulunamadı.`);
-                        player.answered = true; // Sorunlu oyuncuyu geç
-                        playersAnsweredCount++; return;
-                    }
+                 players.forEach(player => {
+                     player.answered = false;
+                     player.currentQuestion = null;
+                     const optionsEl = playerOptionsElements[player.id-1];
+                     const feedbackEl = playerFeedbackElements[player.id-1];
+                     const questionEl = playerQuestionElements[player.id-1];
+                     const sectionEl = playerAreaElements[player.id-1];
 
-                    optionsEl.innerHTML = ''; feedbackEl.textContent = ''; questionEl.textContent = 'Soru aranıyor...';
-                    sectionEl.style.borderColor = 'transparent';
+                     if (optionsEl) optionsEl.innerHTML = '';
+                     if (feedbackEl) feedbackEl.textContent = '';
+                     if (questionEl) questionEl.textContent = 'Soru aranıyor...';
+                     if (sectionEl) sectionEl.style.borderColor = 'transparent'; // Tema rengi border'ı sıfırla
 
-                    // Soru filtreleme ve seçme
-                    const suitableQuestions = questionPool.filter(q =>
-                        q.segmentId === segmentIdToLoad && player.age >= q.minAge && player.age <= q.maxAge &&
-                        !askedQuestionIds.includes(q.questionId) && !currentRoundSelectedIds.includes(q.questionId)
-                    );
+                     const suitableQuestions = questionPool.filter(q =>
+                         q.segmentId === quizSegments[segmentIdx].segmentId &&
+                         player.age >= q.minAge &&
+                         player.age <= q.maxAge &&
+                         !askedQuestionIds.includes(q.questionId) &&
+                         !currentRoundSelectedIds.includes(q.questionId)
+                     );
 
-                    let questionData = null;
-                    if (suitableQuestions.length > 0) {
-                        questionData = suitableQuestions[Math.floor(Math.random() * suitableQuestions.length)];
-                        player.currentQuestion = questionData;
-                        askedQuestionIds.push(questionData.questionId);
-                        currentRoundSelectedIds.push(questionData.questionId);
-                        questionEl.textContent = questionData.questionText;
-                        const shuffledOptions = shuffleArray([...questionData.options]);
-                        shuffledOptions.forEach(option => { // Butonları oluştur
-                            const button = document.createElement('button');
-                            const textSpan = document.createElement('span'); textSpan.className = 'option-text'; textSpan.textContent = option;
-                            const iconSpan = document.createElement('span'); iconSpan.className = 'feedback-icon';
-                            button.appendChild(textSpan); button.appendChild(iconSpan);
-                            button.onclick = () => handleAnswer(player.id, option);
-                            optionsEl.appendChild(button);
-                        });
-                    } else {
-                        questionEl.textContent = 'Size uygun soru bulunamadı.';
-                        player.answered = true; playersAnsweredCount++;
-                    }
-                });
+                     let questionData = null;
+                     if (suitableQuestions.length > 0) {
+                         questionData = suitableQuestions[Math.floor(Math.random() * suitableQuestions.length)];
+                         player.currentQuestion = questionData;
+                         askedQuestionIds.push(questionData.questionId);
+                         currentRoundSelectedIds.push(questionData.questionId);
 
-                // Turun hemen bitme kontrolü
-                if (playersAnsweredCount === players.length && playersAnsweredCount > 0) {
+                         if (questionEl) questionEl.textContent = questionData.questionText;
+                         if (optionsEl) {
+                             const shuffledOptions = shuffleArray([...questionData.options]);
+                             shuffledOptions.forEach(option => {
+                                 const button = document.createElement('button');
+                                 button.textContent = option;
+                                 button.onclick = () => handleAnswer(player.id, option);
+                                 optionsEl.appendChild(button);
+                             });
+                         }
+                     } else {
+                         if (questionEl) questionEl.textContent = 'Size uygun soru bulunamadı.';
+                         player.answered = true;
+                         playersAnsweredCount++;
+                     }
+                 });
+
+                 if (playersAnsweredCount === players.length && playersAnsweredCount > 0) { // Eğer hepsi için soru bulunamadıysa
                     console.log("Bu turda kimseye soru bulunamadı veya hepsi otomatik geçildi.");
-                    if(loadingIndicator) loadingIndicator.style.display = 'block';
-                    if(playersArea) playersArea.style.display = 'none';
+                    loadingIndicator.style.display = 'block';
+                    playersArea.style.display = 'none';
                     setTimeout(() => loadSegment(currentSegmentIndex + 1), 1800);
-                }
-            }
+                 }
+             }
+
 
              function handleAnswer(playerId, selectedOption) {
                  const player = players.find(p => p.id === playerId);
                  if (!player || player.answered || !player.currentQuestion) return;
 
-                 player.answered = true; playersAnsweredCount++;
+                 player.answered = true;
+                 playersAnsweredCount++;
 
                  const feedbackEl = playerFeedbackElements[player.id-1];
                  const sectionEl = playerAreaElements[player.id-1];
-                 const optionsEl = playerOptionsElements[player.id-1];
+                 const playerOptionButtons = playerOptionsElements[player.id-1].getElementsByTagName('button');
 
-                 if (!feedbackEl || !sectionEl || !optionsEl) { console.error("handleAnswer: Elementler null"); return; } // Null Check
-                 const playerOptionButtons = optionsEl.getElementsByTagName('button');
-
-                 let correctButton = null; let selectedButton = null;
-
-                 for(let btn of playerOptionButtons){
-                     btn.disabled = true;
-                     const btnTextSpan = btn.querySelector('.option-text');
-                     if (!btnTextSpan) continue;
-                     if (btnTextSpan.textContent === selectedOption) { selectedButton = btn; btn.classList.add('selected'); }
-                     if (btnTextSpan.textContent === player.currentQuestion.correctAnswer) { correctButton = btn; }
+                 // Kontrol: Elementler null değilse işlem yap
+                 if (!feedbackEl || !sectionEl || !playerOptionButtons) {
+                     console.error(`Oyuncu ${playerId} için elementler bulunamadı.`);
+                     return;
                  }
 
-                 // Geri bildirimler
+
+                 for(let btn of playerOptionButtons){ btn.disabled = true; }
+
                  if (selectedOption === player.currentQuestion.correctAnswer) {
-                     player.score++; feedbackEl.textContent = "Doğru!"; feedbackEl.className = 'player-feedback feedback-correct';
-                     if (selectedButton) { selectedButton.classList.remove('selected'); selectedButton.classList.add('correct'); }
-                     playSound(correctSound);
+                     player.score++;
+                     feedbackEl.textContent = "Doğru!";
+                     feedbackEl.className = 'player-feedback feedback-correct';
+                     // Tema rengini koruyarak border ekle
+                     sectionEl.style.borderColor = getComputedStyle(sectionEl).getPropertyValue('--theme-' + player.themeClass.split('-')[1] + '-border') || 'var(--correct-border)';
+
                  } else {
-                     feedbackEl.textContent = `Yanlış!`; feedbackEl.className = 'player-feedback feedback-incorrect';
-                     if (selectedButton) { selectedButton.classList.remove('selected'); selectedButton.classList.add('incorrect'); }
-                     if (correctButton) { correctButton.classList.add('correct'); } // Doğruyu göster
-                     playSound(incorrectSound);
+                     feedbackEl.textContent = `Yanlış!`;
+                     feedbackEl.className = 'player-feedback feedback-incorrect';
+                     sectionEl.style.borderColor = 'var(--incorrect-border)';
                  }
+                 // scoreEl.textContent = `Skor: ${player.score}`; // Gerek yok, skorbord var
+
                  updateScoreboard();
 
-                 // Tur sonu kontrolü
                  if(playersAnsweredCount === players.length) {
                      console.log("Tur tamamlandı, sonraki segmente geçiliyor.");
-                     if(loadingIndicator) loadingIndicator.style.display = 'block';
+                     loadingIndicator.style.display = 'block';
+                     playerAreaElements.forEach(el => el.classList.remove('visible')); // Gizle
+                     playersArea.style.display = 'none';
                      setTimeout(() => {
-                        // Buton sınıflarını temizle ve sonraki segmente geçmeden önce alanları gizle
-                        playerAreaElements.forEach((area, index) => {
-                             if (area) {
-                                 const buttons = playerOptionsElements[index]?.getElementsByTagName('button');
-                                 if (buttons) {
-                                     for(let btn of buttons) {
-                                         btn.classList.remove('selected', 'correct', 'incorrect');
-                                         // İkonları temizle (varsa)
-                                         const icon = btn.querySelector('.feedback-icon');
-                                         if (icon) icon.textContent = '';
-                                     }
-                                 }
-                                 area.classList.remove('visible');
-                             }
-                        });
-                        if(playersArea) playersArea.style.display = 'none';
                          loadSegment(currentSegmentIndex + 1);
-                     }, 2500);
+                     }, 1800);
                  }
              }
 
-             function showResults() { /* ... önceki gibi ... */ }
-             function initializeQuiz() { /* ... önceki gibi ... */ }
-             function startQuiz() { /* ... önceki gibi ... */ }
-             function resetToNameEntry() { /* ... önceki gibi ... */ }
+             function showResults() {
+                 quizContent.style.display = 'none';
+                 resultsElement.style.display = 'block';
+                 finalScoresElement.innerHTML = '';
+                 let maxScore = -1;
+                 let winners = [];
+                 const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+                 sortedPlayers.forEach(player => {
+                      const resultLine = document.createElement('div');
+                      resultLine.classList.add('result-line');
+                      resultLine.innerHTML = `<span class="name ${player.themeClass}">${player.name} (${player.age} yaş)</span> <span class="score">${player.score} Puan</span>`;
+                      finalScoresElement.appendChild(resultLine);
+                      if (player.score > maxScore) { maxScore = player.score; winners = [player.name]; }
+                      else if (player.score === maxScore && maxScore >= 0) { winners.push(player.name); }
+                 });
+                  if (maxScore <= 0 ) { winnerInfoElement.textContent = "Kimse puan alamadı veya yeterli soru bulunamadı!"; }
+                  else if (winners.length > 1) { winnerInfoElement.textContent = `Kazananlar (Berabere): ${winners.join(', ')} (${maxScore} puan)`; }
+                  else { winnerInfoElement.textContent = `🏆 Kazanan: ${winners[0]} (${maxScore} puan)! 🎉`; }
+            }
 
-            // --- Olay Dinleyicileri (Null Kontrollü) ---
-            if (confirmNamesButton) { confirmNamesButton.addEventListener('click', initializeQuiz); }
-            if (restartButton) { restartButton.addEventListener('click', resetToNameEntry); }
-            if (playNarrationButton) { playNarrationButton.addEventListener('click', playNarration); }
+             function initializeQuiz() {
+                 let allAgesValid = true;
+                 players.forEach((player, index) => {
+                     const name = nameInputs[index].value.trim();
+                     const age = parseInt(ageInputs[index].value);
+                     player.name = name === '' ? `Oyuncu ${player.id}` : name;
+                     if (isNaN(age) || age < 7 || age > 18) {
+                         alert(`Oyuncu ${player.id} için geçerli bir yaş (7-18 arası) girin.`);
+                         allAgesValid = false;
+                     } else {
+                         player.age = age;
+                         player.themeClass = getThemeClass(age);
+                     }
+                     player.score = 0; player.answered = false; player.currentQuestion = null;
+                 });
+
+                 if (!allAgesValid) return;
+
+                 players.forEach((player, index) => {
+                      // Elementlerin varlığını kontrol et
+                     const areaEl = playerAreaElements[player.id - 1];
+                     const nameEl = nameDisplays[player.id - 1];
+                     const ageEl = ageDisplays[player.id - 1];
+
+                     if (areaEl) {
+                         areaEl.className = `player-quiz-area ${player.themeClass}`; // Temayı uygula
+                         areaEl.style.borderColor = 'transparent'; // Başlangıç border'ını gizle
+                     } else { console.error(`player-area-${player.id} bulunamadı`); }
+
+                     if (nameEl) { nameEl.textContent = player.name; }
+                     else { console.error(`player-${player.id}-name-display bulunamadı`); }
+
+                     if (ageEl) { ageEl.textContent = `(${player.age} yaş)`; }
+                     else { console.error(`player-${player.id}-age-display bulunamadı`); }
+
+                    // Skor başlangıçta skorbordda görünecek, bireysel alanda göstermeye gerek yok
+                    // const scoreEl = document.getElementById(`score-player-${player.id}`);
+                    // if(scoreEl) scoreEl.textContent = `Skor: 0`;
+                 });
+
+                 nameEntrySection.style.display = 'none';
+                 resultsElement.style.display = 'none';
+                 quizContent.style.display = 'block';
+                 startQuiz();
+             }
+
+             function startQuiz() {
+                 askedQuestionIds = [];
+                 currentSegmentIndex = 0;
+                 players.forEach(p => { p.score = 0; }); // Skorları sıfırla
+                 updateScoreboard();
+                 loadSegment(currentSegmentIndex);
+             }
+
+             function resetToNameEntry() {
+                 window.speechSynthesis.cancel();
+                 quizContent.style.display = 'none';
+                 resultsElement.style.display = 'none';
+                 nameEntrySection.style.display = 'block';
+                 checkTtsSupport();
+             }
+
+             function checkTtsSupport() {
+                 if (!('speechSynthesis' in window) || !window.speechSynthesis) {
+                     ttsSupportWarning.style.display = 'block';
+                      if(confirmNamesButton) confirmNamesButton.disabled = true; // Buton varsa disable et
+                 } else {
+                     ttsSupportWarning.style.display = 'none';
+                     if(confirmNamesButton) confirmNamesButton.disabled = false;
+                 }
+             }
+
+            // --- Olay Dinleyicileri ---
+            // Elementlerin varlığını kontrol ederek listener ekle
+             if (confirmNamesButton) {
+                confirmNamesButton.addEventListener('click', initializeQuiz);
+             } else { console.error("confirmNamesButton bulunamadı!"); }
+
+             if (restartButton) {
+                restartButton.addEventListener('click', resetToNameEntry);
+             } else { console.error("restartButton bulunamadı!"); }
+
+             if (playNarrationButton) {
+                playNarrationButton.addEventListener('click', () => {
+                    if (!('speechSynthesis' in window) || !window.speechSynthesis) { alert("TTS desteklenmiyor."); return; }
+                    window.speechSynthesis.cancel();
+                    const segmentData = quizSegments[currentSegmentIndex];
+                    if (!segmentData || !segmentData.narrationText) { console.error("Seslendirilecek metin yok!"); alert("Metin yok!"); return; }
+                    const utterance = new SpeechSynthesisUtterance(segmentData.narrationText);
+                    utterance.lang = 'tr-TR'; utterance.rate = 0.9; utterance.pitch = 1;
+                    utterance.onend = handleNarrationEnd;
+                    utterance.onerror = (event) => { console.error('TTS Hatası:', event); alert(`Seslendirme hatası: ${event.error}`); playNarrationButton.textContent = "Hata!"; playNarrationButton.disabled = false; };
+                    playNarrationButton.disabled = true; playNarrationButton.textContent = "Seslendiriliyor...";
+                    window.speechSynthesis.speak(utterance);
+                });
+             } else { console.error("playNarrationButton bulunamadı!"); }
 
 
             // --- Başlangıç ---
-            checkTtsSupport(); // TTS desteğini kontrol et
             resetToNameEntry(); // Sayfa ilk yüklendiğinde isim girişi ekranını göster
 
         }); // DOMContentLoaded Sonu
