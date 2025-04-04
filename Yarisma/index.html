@@ -10,14 +10,14 @@
     <div id="quiz-container">
         <h1>Yaşa Özel İslami Bilgi Yarışması (Revize Edilmiş)</h1>
 
-        <div id="name-entry">
-            <div class="player-input-group">
+         <div id="name-entry">
+             <div class="player-input-group">
                  <label for="player-1-name-input">Oyuncu 1 Adı:</label>
                  <input type="text" id="player-1-name-input" placeholder="İsim..." maxlength="20">
                  <label for="player-1-age-input">Yaşı (7-18):</label>
                  <input type="number" id="player-1-age-input" min="7" max="18" placeholder="Yaş...">
              </div>
-             <div class="player-input-group">
+              <div class="player-input-group">
                  <label for="player-2-name-input">Oyuncu 2 Adı:</label>
                  <input type="text" id="player-2-name-input" placeholder="İsim..." maxlength="20">
                  <label for="player-2-age-input">Yaşı (7-18):</label>
@@ -32,11 +32,11 @@
              <div id="confirm-container">
                  <button id="confirm-names-button">Yarışmayı Başlat</button>
              </div>
-            <p id="tts-support-warning">Tarayıcınız metin seslendirme özelliğini desteklemiyor olabilir. Anlatım seslendirilemeyecek.</p>
-        </div>
+            <p id="tts-support-warning">Tarayıcınız metin seslendirme özelliğini desteklemiyor olabilir.</p>
+         </div>
 
-        <div id="quiz-content">
-             <div id="narration-area">
+         <div id="quiz-content">
+              <div id="narration-area">
                 <p id="narration-info">Şimdi dikkatle dinleyin...</p>
                 <button id="play-narration-btn">Anlatımı Seslendir</button>
             </div>
@@ -56,7 +56,7 @@
                      <div class="player-feedback" id="feedback-player-1"></div>
                  </div>
                  <div class="player-quiz-area" id="player-area-2">
-                     <div class="player-info">
+                      <div class="player-info">
                           <span class="player-name" id="player-2-name-display">Oyuncu 2</span>
                           <span class="player-age" id="player-2-age-display">(Yaş)</span>
                      </div>
@@ -74,195 +74,93 @@
                        <div class="player-feedback" id="feedback-player-3"></div>
                  </div>
             </div>
-        </div>
+         </div>
 
-        <div id="results">
+         <div id="results">
               <h2>Yarışma Bitti!</h2>
               <div id="final-scores"></div>
               <p id="winner-info"></p>
               <button id="restart-button">Yeni Oyun (Yeni İsimlerle)</button>
-        </div>
+         </div>
+
     </div> <script src="questions.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- Ses Efektleri (Yerel Dosyalar) ---
-            // BU DOSYALARIN index.html İLE AYNI KLASÖRDE OLDUĞUNU VARSAYIYORUZ!
-            const correctSound = new Audio('dogru.mp3');
-            const incorrectSound = new Audio('yanlis.mp3');
+            // dogru.mp3 ve yanlis.mp3 dosyalarının index.html ile
+            // AYNI KLASÖRDE olduğunu varsayar.
+            let correctSound, incorrectSound;
+            try {
+                 correctSound = new Audio('dogru.mp3');
+                 incorrectSound = new Audio('yanlis.mp3');
 
-            // Ses dosyası yükleme hatalarını yakala (Konsolda görmek için)
-            correctSound.onerror = () => console.error("Doğru ses dosyası ('dogru.mp3') yüklenemedi veya çalınamıyor. Dosyanın varlığını ve adını kontrol edin.");
-            incorrectSound.onerror = () => console.error("Yanlış ses dosyası ('yanlis.mp3') yüklenemedi veya çalınamıyor. Dosyanın varlığını ve adını kontrol edin.");
+                 correctSound.onerror = () => console.error("Ses dosyası hatası: 'dogru.mp3' yüklenemedi. Dosya var mı ve aynı klasörde mi?");
+                 incorrectSound.onerror = () => console.error("Ses dosyası hatası: 'yanlis.mp3' yüklenemedi. Dosya var mı ve aynı klasörde mi?");
+            } catch (error) {
+                console.error("Audio nesneleri oluşturulurken hata:", error);
+                // Sesler olmadan devam etmesi için dummy objeler oluşturabiliriz (opsiyonel)
+                 correctSound = { play: () => {}, onerror: null };
+                 incorrectSound = { play: () => {}, onerror: null };
+            }
 
 
-            // --- SORU HAVUZU & SEGMENTLER questions.js'den GELMELİ ---
-            // Kritik Hata Kontrolü (questions.js yüklenmezse veya hatalıysa)
+            // --- KRİTİK KONTROL: Soru verisi yüklendi mi? ---
             if (typeof quizSegments === 'undefined' || typeof questionPool === 'undefined') {
-                 console.error("CRITICAL ERROR: Question data (questions.js) not loaded or variables are undefined!");
-                 // Kullanıcıya hata göster (opsiyonel ama önerilir)
+                 console.error("!!! KRİTİK HATA: 'questions.js' yüklenemedi veya içindeki 'quizSegments'/'questionPool' değişkenleri bulunamadı!");
                  const container = document.getElementById('quiz-container');
                  if(container) {
-                     container.innerHTML = `<h1>HATA!</h1><p style="color:red; font-weight:bold;">Yarışma verileri yüklenemedi!</p><p> Lütfen 'questions.js' dosyasının 'index.html' ile aynı klasörde olduğundan, içinde yazım hatası olmadığından ve index.html içinde doğru sırada çağrıldığından emin olun. Sayfayı yenilemeyi deneyin.</p>`;
+                     container.innerHTML = `<h1>HATA!</h1><p style="color:red; font-weight:bold;">Yarışma verileri ('questions.js') yüklenemedi!</p><p> Lütfen dosyanın doğru yerde olduğundan, adının doğru yazıldığından ('questions.js') ve içinde hata olmadığından emin olun. index.html'deki script sırasını da kontrol edin.</p>`;
                      container.style.textAlign = 'center';
                  }
-                 return; // Hata varsa script'in geri kalanını çalıştırma
+                 // Hata varsa script'in geri kalanını çalıştırma!
+                 // Bu yüzden butonlar vs. çalışmaz.
+                 return;
             }
 
-            // --- Oyuncu Bilgileri ve Diğer Değişkenler ---
-            // (Bu kısımda değişiklik yok, öncekiyle aynı)
-            const players = [
-                { id: 1, name: "Oyuncu 1", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-                { id: 2, name: "Oyuncu 2", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null },
-                { id: 3, name: "Oyuncu 3", age: 0, score: 0, answered: false, themeClass: '', currentQuestion: null }
-            ];
+            // --- Oyuncu Bilgileri, Değişkenler, Element Referansları ---
+            // (Bu kısımlar önceki yanıttaki gibi kalacak, değişiklik yok)
+            const players = [ /* ... oyuncu nesneleri ... */ ];
             let currentSegmentIndex = 0;
             let askedQuestionIds = [];
-
-            // --- Element Referansları ---
-            // (Bu kısımda değişiklik yok, öncekiyle aynı)
             const nameEntrySection = document.getElementById('name-entry');
             const confirmNamesButton = document.getElementById('confirm-names-button');
-            const ttsSupportWarning = document.getElementById('tts-support-warning');
-            const quizContent = document.getElementById('quiz-content');
-            const narrationArea = document.getElementById('narration-area');
-            const narrationInfo = document.getElementById('narration-info');
-            const playNarrationButton = document.getElementById('play-narration-btn');
-            const scoreboardElement = document.getElementById('scoreboard');
-            const scoreboardListElement = document.getElementById('scoreboard-list');
-            const playersArea = document.getElementById('players-area');
-            const loadingIndicator = document.getElementById('loading-indicator');
-            const resultsElement = document.getElementById('results');
-            const finalScoresElement = document.getElementById('final-scores');
-            const restartButton = document.getElementById('restart-button');
-            const winnerInfoElement = document.getElementById('winner-info');
-            const nameInputs = []; const ageInputs = []; const nameDisplays = []; const ageDisplays = [];
-            const playerAreaElements = []; const playerQuestionElements = []; const playerOptionsElements = []; const playerFeedbackElements = [];
+            // ... diğer tüm element referansları ...
 
-            for (let i = 1; i <= 3; i++) {
-                // Elementleri alırken null kontrolü eklemek iyi bir pratiktir.
-                nameInputs.push(document.getElementById(`player-${i}-name-input`));
-                ageInputs.push(document.getElementById(`player-${i}-age-input`));
-                nameDisplays.push(document.getElementById(`player-${i}-name-display`));
-                ageDisplays.push(document.getElementById(`player-${i}-age-display`));
-                playerAreaElements.push(document.getElementById(`player-area-${i}`));
-                playerQuestionElements.push(document.getElementById(`question-player-${i}`));
-                playerOptionsElements.push(document.getElementById(`options-player-${i}`));
-                playerFeedbackElements.push(document.getElementById(`feedback-player-${i}`));
-            }
+             // --- Fonksiyon Tanımlamaları ---
+             // (shuffleArray, updateScoreboard, getThemeClass, loadSegment, vb.
+             //  TÜM fonksiyonlar önceki yanıttaki GÜNCEL halleriyle buraya gelecek)
 
-            // --- Fonksiyonlar ---
-            // (Tüm fonksiyonlar: shuffleArray, updateScoreboard, getThemeClass, loadSegment,
-            // handleNarrationEnd, loadQuestionsForPlayers, checkRoundCompletion, handleAnswer,
-            // showResults, initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport
-            // önceki cevapta verilen, ses ve animasyonları içeren güncel halleriyle buraya gelecek.)
+             // Örnek olarak handleAnswer fonksiyonunun ses çalma kısmı:
+             function handleAnswer(playerId, selectedOption) {
+                 // ... (diğer kodlar: oyuncu bulma, cevap kontrolü vs.) ...
 
-            // Örnek olarak handleAnswer ve updateScoreboard'un son halini tekrar ekliyorum:
-
-            function shuffleArray(array) { /* ... */ }
-            function getThemeClass(age) { /* ... */ }
-            function loadSegment(segmentIndex) { /* ... */ }
-            function handleNarrationEnd() { /* ... */ }
-            function loadQuestionsForPlayers(segmentIdx) { /* ... */ }
-            function checkRoundCompletion() { /* ... */ }
-            function showResults() { /* ... */ }
-            function initializeQuiz() { /* ... */ }
-            function startQuiz() { /* ... */ }
-            function resetToNameEntry() { /* ... */ }
-            function checkTtsSupport() { /* ... */ }
-
-            // GÜNCELLENMİŞ updateScoreboard
-            function updateScoreboard(scoringPlayerId = null) {
-                if (!scoreboardListElement) return;
-                // Liste öğelerini bul veya oluştur (daha gelişmiş bir yol - şimdilik temizleyip yeniden oluşturalım)
-                scoreboardListElement.innerHTML = ''; // Basitlik için temizle
-
-                const sortedByIdPlayers = [...players].sort((a, b) => a.id - b.id);
-
-                sortedByIdPlayers.forEach(player => {
-                    if (player.age >= 7 && player.age <= 18) {
-                        const listItem = document.createElement('li');
-                        listItem.dataset.playerId = player.id; // ID ekle
-                        listItem.classList.add(player.themeClass); // Tema ekle
-
-                        const nameSpan = `<span class="name">${player.name}</span>`;
-                        const scoreSpan = `<span class="score">${player.score} Puan</span>`;
-                        listItem.innerHTML = `${nameSpan}${scoreSpan}`;
-
-                        if (player.id === scoringPlayerId) {
-                            listItem.classList.add('score-update-animation');
-                            setTimeout(() => {
-                                listItem.classList.remove('score-update-animation');
-                            }, 600); // CSS animasyon süresi
-                        }
-                        scoreboardListElement.appendChild(listItem);
+                 if (selectedOption === player.currentQuestion.correctAnswer) {
+                    // ... (skor artırma, class ekleme vs.) ...
+                    if (correctSound && typeof correctSound.play === 'function') { // Ses nesnesi varsa ve çalabiliyorsa
+                        correctSound.play().catch(e => console.warn("Doğru ses çalınamadı:", e)); // Hataları yakala
                     }
-                });
-            }
+                 } else {
+                    // ... (yanlış cevap kodları, class ekleme vs.) ...
+                    if (incorrectSound && typeof incorrectSound.play === 'function') { // Ses nesnesi varsa ve çalabiliyorsa
+                         incorrectSound.play().catch(e => console.warn("Yanlış ses çalınamadı:", e)); // Hataları yakala
+                     }
+                 }
 
+                 // ... (animasyonları kaldırma, skorbord güncelleme, tur kontrolü vs.) ...
+             }
 
-            // GÜNCELLENMİŞ handleAnswer
-            function handleAnswer(playerId, selectedOption) {
-                const player = players.find(p => p.id === playerId);
-                if (!player || player.answered || !player.currentQuestion || !(player.age >= 7 && player.age <= 18)) return;
+              // === DİĞER TÜM FONKSİYONLAR BURAYA EKLENMELİ ===
+              // (initializeQuiz, startQuiz, resetToNameEntry vb. hepsi)
+              // Önceki yanıtlardaki tam JavaScript kodunu buraya yapıştırın
+              // (Ses tanımlamaları hariç, onlar yukarıda yapıldı)
+              // =============================================
 
-                player.answered = true;
-
-                const feedbackEl = playerFeedbackElements[player.id - 1];
-                const sectionEl = playerAreaElements[player.id - 1];
-                const optionsEl = playerOptionsElements[player.id - 1];
-                const playerOptionButtons = optionsEl?.getElementsByTagName('button');
-
-                if (!feedbackEl || !sectionEl || !optionsEl || !playerOptionButtons) {
-                    console.error(`UI elements missing for player ${playerId}.`);
-                    return; // Elementler yoksa devam etme
-                }
-
-                // Butonları pasifleştir ve doğru/yanlış işaretle
-                for (let btn of playerOptionButtons) {
-                    btn.disabled = true;
-                    if (btn.textContent === player.currentQuestion.correctAnswer) {
-                        btn.classList.add('correct-answer-highlight');
-                    }
-                    if (btn.textContent === selectedOption && selectedOption !== player.currentQuestion.correctAnswer) {
-                        btn.classList.add('user-incorrect-choice'); // Yanlış seçimi de işaretle
-                    }
-                }
-
-                let scored = false;
-
-                // Sonucu değerlendir, ses çal, animasyon ekle
-                if (selectedOption === player.currentQuestion.correctAnswer) {
-                    player.score++;
-                    scored = true;
-                    if(feedbackEl){ feedbackEl.textContent = "Doğru!"; feedbackEl.className = 'player-feedback feedback-correct'; }
-                    if(sectionEl) sectionEl.classList.add('animate-correct');
-                    correctSound.play().catch(e => console.error("Doğru ses çalma hatası:", e)); // Hata yakalama
-                } else {
-                    if(feedbackEl){ feedbackEl.textContent = `Yanlış! Doğru: ${player.currentQuestion.correctAnswer}`; feedbackEl.className = 'player-feedback feedback-incorrect'; }
-                    if(sectionEl) sectionEl.classList.add('animate-incorrect');
-                    incorrectSound.play().catch(e => console.error("Yanlış ses çalma hatası:", e)); // Hata yakalama
-                }
-
-                 const animationDuration = 600;
-                 setTimeout(() => {
-                     if(sectionEl) sectionEl.classList.remove('animate-correct', 'animate-incorrect');
-                 }, animationDuration);
-
-                updateScoreboard(scored ? player.id : null); // Skorbordu güncelle (gerekirse animasyonla)
-                checkRoundCompletion(); // Tur bitti mi kontrol et
-            }
-
-             // === Diğer Fonksiyonlar (Önceki cevaptaki gibi) ===
-             // shuffleArray, getThemeClass, loadSegment, handleNarrationEnd, loadQuestionsForPlayers,
-             // checkRoundCompletion, showResults, initializeQuiz, startQuiz, resetToNameEntry, checkTtsSupport
-             // fonksiyonlarının tamamını buraya eklediğinizden emin olun.
-             // Yukarıda sadece en çok değişenleri örnek olarak verdim. Önceki yanıttaki
-             // JavaScript kodunun tamamını (ses tanımlamaları hariç) buraya yapıştırabilirsiniz.
 
             // --- Başlangıç ---
-            resetToNameEntry(); // Sayfa yüklenince isim girişiyle başla
+            // resetToNameEntry fonksiyonu tanımlandıktan sonra çağrılmalı
+            resetToNameEntry();
 
         }); // DOMContentLoaded Sonu
     </script>
