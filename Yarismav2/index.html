@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İslami Bilgi Yarışması</title>
+
     <link rel="stylesheet" href="styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
@@ -14,26 +20,26 @@
             <h1>İslami Bilgi Yarışması</h1>
             <div class="setup-content">
                 <h2>Oyuncu Bilgileri</h2>
-                <p class="instructions">Lütfen yarışacak oyuncuların adını ve yaşını (7-18) girin. Boş bırakılan alanlar yarışmaya dahil edilmeyecektir.</p>
+                <p class="instructions">Yarışacak oyuncuların adını ve yaşını (7-18) girin. (En az 1 oyuncu)</p>
 
                 <div id="player-inputs">
-                    <div class="player-input-group">
+                    <div class="player-input-group" data-player-index="0">
                         <label for="player-1-name">Oyuncu 1 Adı:</label>
-                        <input type="text" id="player-1-name" data-player="1" name="player_name" placeholder="İsim..." maxlength="20">
+                        <input type="text" id="player-1-name" name="player_name" placeholder="İsim..." maxlength="20">
                         <label for="player-1-age">Yaşı:</label>
-                        <input type="number" id="player-1-age" data-player="1" name="player_age" min="7" max="18" placeholder="Yaş...">
+                        <input type="number" id="player-1-age" name="player_age" min="7" max="18" placeholder="Yaş...">
                     </div>
-                    <div class="player-input-group">
+                    <div class="player-input-group" data-player-index="1">
                         <label for="player-2-name">Oyuncu 2 Adı:</label>
-                        <input type="text" id="player-2-name" data-player="2" name="player_name" placeholder="İsim..." maxlength="20">
+                        <input type="text" id="player-2-name" name="player_name" placeholder="İsim..." maxlength="20">
                         <label for="player-2-age">Yaşı:</label>
-                        <input type="number" id="player-2-age" data-player="2" name="player_age" min="7" max="18" placeholder="Yaş...">
+                        <input type="number" id="player-2-age" name="player_age" min="7" max="18" placeholder="Yaş...">
                     </div>
-                    <div class="player-input-group">
+                    <div class="player-input-group" data-player-index="2">
                         <label for="player-3-name">Oyuncu 3 Adı:</label>
-                        <input type="text" id="player-3-name" data-player="3" name="player_name" placeholder="İsim..." maxlength="20">
+                        <input type="text" id="player-3-name" name="player_name" placeholder="İsim..." maxlength="20">
                         <label for="player-3-age">Yaşı:</label>
-                        <input type="number" id="player-3-age" data-player="3" name="player_age" min="7" max="18" placeholder="Yaş...">
+                        <input type="number" id="player-3-age" name="player_age" min="7" max="18" placeholder="Yaş...">
                     </div>
                 </div>
 
@@ -41,38 +47,40 @@
                     <button id="start-button" class="btn btn-primary">Yarışmayı Başlat</button>
                 </div>
 
-                <p id="setup-message" class="message-area" aria-live="polite"></p> </div>
+                <p id="setup-message" class="message-area" aria-live="polite" style="display: none;"></p>
+                <p id="tts-warning" class="message-area warning-message" style="display: none;">Tarayıcınız metin okumayı desteklemiyor olabilir.</p>
+            </div>
         </section>
 
         <section id="quiz-screen" class="screen">
             <div class="quiz-header">
-                <h2 id="segment-title">Segment Yükleniyor...</h2>
+                <h2 id="segment-title">Segment Başlığı</h2>
                 <div id="scoreboard">
-                    </div>
+                    <ul id="scoreboard-list"></ul>
+                </div>
             </div>
 
-            <div id="narration-area" class="narration-box">
-                <p id="narration-text">Anlatım metni...</p>
+            <div id="narration-area" class="narration-box" style="display: none;">
+                <p id="narration-text"></p>
                 <button id="play-narration-button" class="btn btn-secondary">Anlatımı Dinle</button>
             </div>
 
-            <div id="question-transition-area" class="message-area" style="display: none;">
+            <div id="question-transition-area" class="message-area info-message" style="display: none;">
                 <p>Sıradaki sorular hazırlanıyor...</p>
-                </div>
+            </div>
 
-            <div id="players-quiz-area">
+            <div id="players-quiz-area" class="players-quiz-grid">
                 </div>
 
             <template id="player-card-template">
                 <div class="player-card" data-player-id=""> <div class="player-card-header">
-                        <span class="player-name">Oyuncu Adı</span>
-                        <span class="player-age">(Yaş)</span>
+                        <span class="player-name"></span>
+                        <span class="player-age"></span>
                     </div>
                     <div class="player-card-body">
-                        <div class="question-text">Soru metni...</div>
-                        <div class="options-container">
-                            </div>
-                        <div class="feedback-area" aria-live="polite"></div>
+                        <div class="question-text"></div>
+                        <div class="options-container"></div>
+                        <div class="feedback-area" aria-live="assertive"></div>
                     </div>
                 </div>
             </template>
@@ -81,7 +89,7 @@
         <section id="results-screen" class="screen">
             <h2>Yarışma Sonuçları</h2>
             <div id="final-scoreboard">
-                <h3>Skorlar</h3>
+                <h3>Final Skorları</h3>
                 <ul id="final-score-list">
                     </ul>
             </div>
@@ -94,8 +102,7 @@
         </section>
 
     </div> <script src="questions.js"></script>
-
     <script src="script.js"></script>
 
-</body>
+    </body>
 </html>
