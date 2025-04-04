@@ -1,0 +1,66 @@
+# Decap CMS Yapılandırma Dosyası
+
+backend:
+  name: github # GitHub kullanacağımızı belirtiyoruz
+  repo: srgulbay/kimramazanamcaolmakister # !!! BURAYI KENDİ KULLANICI_ADIN/REPO_ADIN ile DEĞİŞTİR !!!
+  branch: main # veya master (GitHub reponuzdaki ana dalın adı neyse onu yazın)
+  # GitHub ile kimlik doğrulama için ek ayarlar gerekebilir (sonraki adım)
+
+media_folder: "" # Resim vb. kullanmadığımız için boş veya silebilirsiniz
+public_folder: "" # Boş veya silebilirsiniz
+
+collections: # İçerik koleksiyonlarımız (şimdilik sadece tüm soruları içeren tek bir dosya)
+  - name: "soru_bankasi" # Koleksiyonun iç adı (kodlama için)
+    label: "Soru Bankası (Tüm Kategoriler)" # Yönetim panelinde görünecek başlık
+    file: "questions.json" # Düzenlenecek dosyanın adı ve yolu
+    label_singular: "Kategori Soru Listesi" # Tekil etiket
+    description: "Tüm kategorilere ait soruları buradan düzenleyebilirsiniz."
+    format: "json" # Dosya formatı
+    fields: # Bu dosyanın içindeki düzenlenebilir ana alanlar (kategorilerimiz)
+      - label: "Betül Soruları (8. Sınıf)"
+        name: "betul" # questions.json içindeki anahtar kelime
+        widget: "list" # Bu bir liste olacak (soru listesi)
+        label_singular: "Soru (Betül)" # Listeye eklenecek tekil öğe adı
+        fields: # Listedeki her bir öğenin (sorunun) alanları
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "Beyza Soruları (3. Sınıf)"
+        name: "beyza"
+        widget: "list"
+        label_singular: "Soru (Beyza)"
+        fields: # Aynı alanları tekrar tanımlıyoruz
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "Rümeysa Soruları (1. Sınıf)"
+        name: "rumeysa"
+        widget: "list"
+        label_singular: "Soru (Rümeysa)"
+        fields: # Aynı alanları tekrar tanımlıyoruz
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
+
+      - label: "OKS Fen Soruları"
+        name: "oks_fen"
+        widget: "list"
+        label_singular: "Soru (OKS Fen)"
+        fields: # Aynı alanları tekrar tanımlıyoruz
+          - { label: "Soru Metni", name: "question", widget: "text" }
+          - { label: "Seçenek A", name: "optionA", widget: "string" }
+          - { label: "Seçenek B", name: "optionB", widget: "string" }
+          - { label: "Seçenek C", name: "optionC", widget: "string" }
+          - { label: "Seçenek D", name: "optionD", widget: "string" }
+          - { label: "Doğru Cevap", name: "answer", widget: "select", options: ["A", "B", "C", "D"] }
