@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Ramazanamca Kelime Oyunu</title>
+    <title>Kelime Oyunu - Gelişmiş</title>
     <style>
-        /* --- Modern Stil Tanımlamaları --- */
+        /* --- Modern Stil Tanımlamaları (Önceki ile aynı) --- */
         :root {
             --color-correct: #538d4e; /* Daha yumuşak yeşil */
             --color-present: #b59f3b; /* Daha yumuşak sarı */
@@ -20,7 +20,10 @@
             --primary-button-hover-bg: #4a7c45;
             --secondary-button-bg: #007bff;
             --secondary-button-hover-bg: #0056b3;
-            --tile-size: 60px; /* Kutucuk boyutu */
+            --timer-color-normal: #333;
+            --timer-color-warning: #ff8c00; /* Turuncu */
+            --timer-color-critical: #d9534f; /* Kırmızı */
+            --tile-size: 60px;
             --tile-font-size: 2rem;
             --keyboard-key-height: 50px;
         }
@@ -31,10 +34,11 @@
                 --tile-font-size: 1.7rem;
                 --keyboard-key-height: 45px;
             }
+            #leaderboard-container h3 { font-size: 1.1em; }
+            #leaderboard-list li { font-size: 0.9em; }
         }
 
-
-        /* --- Temel Sayfa Stilleri --- */
+        /* --- Temel Sayfa Stilleri (Önceki ile aynı) --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
@@ -42,33 +46,33 @@
             align-items: center;
             background-color: var(--background-color);
             color: var(--text-color);
-            padding: 20px 10px; /* Üst/alt ve yan boşluk */
+            padding: 20px 10px;
             margin: 0;
-            min-height: 100vh; /* Tüm yüksekliği kapla */
+            min-height: 100vh;
             box-sizing: border-box;
         }
 
         h1 {
             margin-bottom: 25px;
-            font-size: clamp(1.8rem, 5vw, 2.5rem); /* Duyarlı başlık boyutu */
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             color: #333;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
-        /* --- Konteyner Stilleri --- */
+        /* --- Konteyner Stilleri (Önceki ile aynı) --- */
         .setup-container,
         .game-container,
         .score-board {
             background-color: var(--container-bg);
             padding: 25px;
-            border-radius: 12px; /* Daha yuvarlak köşeler */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Daha yumuşak gölge */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
-            width: 100%; /* Genişliği ayarla */
-            max-width: 550px; /* Maksimum genişlik */
+            width: 100%;
+            max-width: 550px;
             text-align: center;
-            display: none; /* Başlangıçta gizli */
+            display: none;
             transition: all 0.3s ease-in-out;
             box-sizing: border-box;
         }
@@ -76,30 +80,28 @@
         .setup-container.active,
         .game-container.active,
         .score-board.active {
-            display: block; /* Aktif olunca göster */
+            display: block;
         }
 
-        /* --- Ayar Ekranı Elemanları --- */
+        /* --- Ayar Ekranı Elemanları (Önceki ile aynı) --- */
         .setup-container h2, .score-board h2 {
             margin-top: 0;
             margin-bottom: 20px;
             color: #444;
             font-weight: 500;
         }
-
         .setup-container label {
              display: block;
-             margin: 15px auto 5px; /* Üstte boşluk, altta az */
+             margin: 15px auto 5px;
              font-weight: 500;
              color: #555;
-             text-align: left; /* Etiketleri sola hizala */
-             max-width: 300px; /* İçerik genişliğini sınırlama */
+             text-align: left;
+             max-width: 300px;
         }
-
         .setup-container input[type="number"],
         .setup-container input[type="text"] {
             display: block;
-            margin: 0 auto 15px; /* Ortala ve altta boşluk */
+            margin: 0 auto 15px;
             padding: 12px 15px;
             font-size: 1em;
             border: 1px solid #ccc;
@@ -113,245 +115,156 @@
              border-color: var(--primary-button-bg);
              outline: none;
         }
+        .setup-container input[type="number"] { width: 80px; text-align: center; }
+        #player-names { margin-bottom: 20px; }
 
-        .setup-container input[type="number"] {
-            width: 80px;
-            text-align: center;
-        }
-
-        #player-names {
-            margin-bottom: 20px; /* İsim alanları sonrası boşluk */
-        }
-
-        /* --- Genel Buton Stilleri --- */
+        /* --- Genel Buton Stilleri (Önceki ile aynı) --- */
         button {
             padding: 12px 25px;
             font-size: 1em;
-            font-weight: 500; /* Daha belirgin */
+            font-weight: 500;
             cursor: pointer;
             color: white;
             border: none;
-            border-radius: 8px; /* Yuvarlak köşeler */
+            border-radius: 8px;
             transition: background-color 0.2s ease, transform 0.1s ease;
-            display: inline-block; /* Butonların yan yana gelmesi için */
+            display: inline-block;
             margin-top: 10px;
         }
-        button:hover {
-            opacity: 0.9;
-        }
-        button:active {
-            transform: scale(0.98); /* Tıklama efekti */
-        }
-
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.98); }
         #start-game-btn { background-color: var(--primary-button-bg); }
         #start-game-btn:hover { background-color: var(--primary-button-hover-bg); }
-
         #play-again-btn { background-color: var(--secondary-button-bg); }
         #play-again-btn:hover { background-color: var(--secondary-button-hover-bg); }
 
-        /* --- Oyun Bilgi Alanı --- */
+        /* --- Oyun Bilgi Alanı (Geri sayım eklendi) --- */
         #game-info {
             display: flex;
-            justify-content: space-around; /* Daha iyi dağılım */
+            justify-content: space-around;
             align-items: center;
-            flex-wrap: wrap; /* Küçük ekranlarda alt alta */
-            gap: 10px 15px; /* Satır ve sütun boşlukları */
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #f0f0f0; /* Hafif arka plan */
+            flex-wrap: wrap;
+            gap: 10px 15px;
+            margin-bottom: 15px; /* Mesaj alanına yer aç */
+            padding: 10px 15px;
+            background-color: #f0f0f0;
             border-radius: 8px;
             font-size: 0.9em;
             color: #555;
+            position: relative; /* Zamanlayıcı için */
         }
-        #game-info p {
-            margin: 0; /* Ekstra boşlukları kaldır */
+        #game-info p { margin: 0; }
+        #game-info span { font-weight: 600; color: #333; }
+
+        /* Geri Sayım Sayacı */
+        #timer-container {
+            font-size: 1.3em;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: var(--timer-color-normal); /* Başlangıç rengi */
+            transition: color 0.5s ease;
+            margin-top: -5px; /* Biraz yukarı */
         }
-        #game-info span {
-            font-weight: 600; /* Bilgileri vurgula */
-            color: #333;
+        #timer-container.warning { color: var(--timer-color-warning); }
+        #timer-container.critical { color: var(--timer-color-critical); animation: pulse 1s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-
-        /* --- Mesaj Alanı --- */
+        /* --- Mesaj Alanı (Önceki ile aynı) --- */
         #message-area {
-            min-height: 2.2em; /* Yükseklik */
+            min-height: 2.2em;
             margin-bottom: 15px;
-            font-weight: 500; /* Daha belirgin */
+            font-weight: 500;
             font-size: 1.1em;
-            display: flex; /* Ortalamak için */
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: #333; /* Varsayılan renk */
+            color: #333;
             transition: color 0.3s ease;
         }
         #message-area.error { color: #d9534f; }
         #message-area.success { color: var(--color-correct); }
 
-        /* --- Oyun Tahtası --- */
-        #board-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 25px; /* Klavye ile arasına boşluk */
-            width: auto; /* İçeriğe göre genişlesin */
-            max-width: 100%; /* Taşmayı engelle */
-        }
-
-        #game-board {
-            display: grid;
-            gap: 5px;
-            /* Sütun sayısı JavaScript ile ayarlanacak */
-            width: min-content; /* Kutucuklara göre daralsın */
-        }
-
-        /* --- Kutucuk (Tile) Stilleri --- */
+        /* --- Oyun Tahtası ve Kutucuklar (Önceki ile aynı) --- */
+        #board-container { display: flex; justify-content: center; align-items: center; margin-bottom: 25px; width: auto; max-width: 100%; }
+        #game-board { display: grid; gap: 5px; width: min-content; }
         .tile {
-            width: var(--tile-size);
-            height: var(--tile-size);
-            border: 2px solid var(--color-empty-border);
-            display: inline-flex; /* Flex ile ortalama */
-            justify-content: center;
-            align-items: center;
-            font-size: var(--tile-font-size);
-            font-weight: 600; /* Kalın harfler */
-            text-transform: uppercase;
-            color: var(--text-color);
-            background-color: var(--container-bg);
-            box-sizing: border-box;
-            border-radius: 4px; /* Hafif yuvarlak köşe */
-            user-select: none; /* Seçilemesin */
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), /* Yumuşak dönme */
-                        background-color 0.5s ease,
-                        border-color 0.5s ease,
-                        color 0.5s ease;
+            width: var(--tile-size); height: var(--tile-size); border: 2px solid var(--color-empty-border);
+            display: inline-flex; justify-content: center; align-items: center; font-size: var(--tile-font-size);
+            font-weight: 600; text-transform: uppercase; color: var(--text-color); background-color: var(--container-bg);
+            box-sizing: border-box; border-radius: 4px; user-select: none;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
         }
+        .tile.correct, .tile.present, .tile.absent { transform: rotateX(360deg); color: white; }
+        .tile.correct { background-color: var(--color-correct); border-color: var(--color-correct); }
+        .tile.present { background-color: var(--color-present); border-color: var(--color-present); }
+        .tile.absent { background-color: var(--color-absent); border-color: var(--color-absent); }
+        .tile.filled { border-color: #878a8c; animation: pop 0.15s ease-out; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(3px); } 30%, 50%, 70% { transform: translateX(-5px); } 40%, 60% { transform: translateX(5px); } }
+        .shake { animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
 
-        /* Dönme efekti için */
-        .tile.correct, .tile.present, .tile.absent {
-             transform: rotateX(360deg);
-             color: white; /* Renkli durumlarda beyaz yazı */
-        }
-
-        .tile.correct {
-            background-color: var(--color-correct);
-            border-color: var(--color-correct);
-        }
-        .tile.present {
-            background-color: var(--color-present);
-            border-color: var(--color-present);
-        }
-        .tile.absent {
-            background-color: var(--color-absent);
-            border-color: var(--color-absent);
-        }
-
-        /* Yazma efekti için */
-        .tile.filled {
-            border-color: #878a8c; /* Yazarken kenarlık rengi */
-            animation: pop 0.15s ease-out; /* Pop animasyonu */
-        }
-
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); } /* Biraz daha belirgin */
-            100% { transform: scale(1); }
-        }
-
-        /* Hatalı giriş için sallanma */
-        @keyframes shake {
-          10%, 90% { transform: translateX(-2px); }
-          20%, 80% { transform: translateX(3px); }
-          30%, 50%, 70% { transform: translateX(-5px); }
-          40%, 60% { transform: translateX(5px); }
-        }
-        /* Shake animasyonunu kullanacak class (JS ile eklenir) */
-        .shake {
-            animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-
-        /* --- Klavye Stilleri --- */
-        #keyboard-container {
-            margin-top: 20px;
-            user-select: none; /* Klavye metni seçilemesin */
-            width: 100%;
-            max-width: 550px; /* Tahta ile aynı hizada */
-        }
-
-        .keyboard-row {
-            display: flex;
-            width: 100%;
-            justify-content: center;
-            margin-bottom: 8px;
-            gap: 5px; /* Tuşlar arası boşluk */
-        }
-
+        /* --- Klavye Stilleri (Önceki ile aynı) --- */
+        #keyboard-container { margin-top: 20px; user-select: none; width: 100%; max-width: 550px; }
+        .keyboard-row { display: flex; width: 100%; justify-content: center; margin-bottom: 8px; gap: 5px; }
         .keyboard-row button {
-            font-family: inherit;
-            font-weight: 600; /* Kalın tuş harfleri */
-            border: none; /* Kenarlık kaldırıldı */
-            padding: 0;
-            margin: 0;
-            height: var(--keyboard-key-height);
-            border-radius: 5px; /* Yuvarlak köşeler */
-            cursor: pointer;
-            background-color: var(--color-key-bg);
-            color: var(--color-key-text);
-            flex-grow: 1; /* Esnek genişleme */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-transform: uppercase;
-            font-size: clamp(0.7rem, 2.5vw, 1rem); /* Duyarlı font */
-            transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+            font-family: inherit; font-weight: 600; border: none; padding: 0; margin: 0; height: var(--keyboard-key-height);
+            border-radius: 5px; cursor: pointer; background-color: var(--color-key-bg); color: var(--color-key-text);
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; text-transform: uppercase;
+            font-size: clamp(0.7rem, 2.5vw, 1rem); transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
         }
-
-        .keyboard-row button:hover {
-            background-color: #c4c4c4; /* Hover rengi */
-        }
-        .keyboard-row button:active {
-            transform: scale(0.96); /* Tıklama efekti */
-        }
-
-        .keyboard-row button.wide-key {
-            flex-grow: 1.6; /* Enter/Sil biraz daha geniş */
-            font-size: clamp(0.6rem, 2vw, 0.8rem);
-        }
-
-        /* Klavye tuşu renkleri */
+        .keyboard-row button:hover { background-color: #c4c4c4; }
+        .keyboard-row button:active { transform: scale(0.96); }
+        .keyboard-row button.wide-key { flex-grow: 1.6; font-size: clamp(0.6rem, 2vw, 0.8rem); }
         button.correct { background-color: var(--color-correct); color: white; }
         button.present { background-color: var(--color-present); color: white; }
         button.absent { background-color: var(--color-absent); color: white; }
 
-        /* --- Skor Tablosu Stilleri --- */
-        .score-board h2 {
-            margin-bottom: 20px;
-        }
-        #score-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 25px;
-            text-align: left; /* Skorları sola hizala */
-        }
+        /* --- Skor Tablosu Stilleri (Liderlik eklendi) --- */
+        .score-board h2 { margin-bottom: 15px; }
+        #score-list { list-style: none; padding: 0; margin-bottom: 20px; text-align: left; }
         #score-list li {
-            font-size: 1.1em;
-            margin-bottom: 12px; /* Liste elemanları arası boşluk */
-            padding: 12px 15px;
-            background-color: #f0f0f0;
-            border-radius: 6px;
+            font-size: 1.1em; margin-bottom: 12px; padding: 10px 15px; background-color: #f0f0f0;
+            border-radius: 6px; font-weight: 500;
+        }
+        #score-list li div { font-size: 0.85em; margin-top: 5px; margin-left: 10px; color: #666; font-weight: 400; }
+        #score-list li div p { margin: 3px 0; }
+
+        /* Genel Lider Tablosu */
+        #leaderboard-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        #leaderboard-container h3 {
+            margin-bottom: 15px;
+            color: #555;
             font-weight: 500;
         }
-        #score-list li div { /* Detay kısmı */
-            font-size: 0.85em;
-            margin-top: 5px;
-            margin-left: 10px;
-            color: #666;
-            font-weight: 400;
+        #leaderboard-list {
+            list-style: decimal; /* Sıralı liste */
+            padding-left: 30px; /* Madde işaretleri için boşluk */
+            margin-bottom: 20px;
+            text-align: left;
         }
-        #score-list li div p {
-             margin: 3px 0;
+        #leaderboard-list li {
+            font-size: 1em;
+            margin-bottom: 8px;
+            padding: 5px 0; /* Daha sade */
+            background-color: transparent; /* Arka plan yok */
+            font-weight: 400; /* Normal kalınlık */
+            border-bottom: 1px dashed #eee; /* Hafif ayraç */
         }
-
+         #leaderboard-list li:last-child {
+             border-bottom: none;
+         }
+        #leaderboard-list .player-name { font-weight: 500; }
+        #leaderboard-list .player-score { float: right; font-weight: 600; color: var(--primary-button-bg); }
 
     </style>
 </head>
@@ -362,8 +275,7 @@
         <h2>Oyuncu Ayarları</h2>
         <label for="player-count">Oyuncu Sayısı (1-5):</label>
         <input type="number" id="player-count" min="1" max="5" value="1">
-        <div id="player-names">
-            </div>
+        <div id="player-names"></div>
         <button id="start-game-btn">Oyuna Başla</button>
     </div>
 
@@ -373,67 +285,54 @@
             <p>Oyuncu: <span id="current-player-info">1</span></p>
             <p>Harf: <span id="word-length-info">3</span></p>
             <p>Hak: <span id="guesses-remaining-info">5</span></p>
+            <div id="timer-container">
+                 ⏳ <span id="timer-display">10</span>
+            </div>
         </div>
 
         <div id="message-area"></div>
 
         <div id="board-container">
-            <div id="game-board">
-                </div>
+            <div id="game-board"></div>
         </div>
 
          <div id="keyboard-container">
              <div class="keyboard-row">
-                 <button data-key="E">E</button>
-                 <button data-key="R">R</button>
-                 <button data-key="T">T</button>
-                 <button data-key="Y">Y</button>
-                 <button data-key="U">U</button>
-                 <button data-key="I">I</button>
-                 <button data-key="O">O</button>
-                 <button data-key="P">P</button>
-                 <button data-key="Ğ">Ğ</button>
-                 <button data-key="Ü">Ü</button>
+                 <button data-key="E">E</button><button data-key="R">R</button><button data-key="T">T</button><button data-key="Y">Y</button><button data-key="U">U</button><button data-key="I">I</button><button data-key="O">O</button><button data-key="P">P</button><button data-key="Ğ">Ğ</button><button data-key="Ü">Ü</button>
              </div>
              <div class="keyboard-row">
-                 <button data-key="A">A</button>
-                 <button data-key="S">S</button>
-                 <button data-key="D">D</button>
-                 <button data-key="F">F</button>
-                 <button data-key="G">G</button>
-                 <button data-key="H">H</button>
-                 <button data-key="J">J</button>
-                 <button data-key="K">K</button>
-                 <button data-key="L">L</button>
-                 <button data-key="Ş">Ş</button>
-                 <button data-key="İ">İ</button>
+                 <button data-key="A">A</button><button data-key="S">S</button><button data-key="D">D</button><button data-key="F">F</button><button data-key="G">G</button><button data-key="H">H</button><button data-key="J">J</button><button data-key="K">K</button><button data-key="L">L</button><button data-key="Ş">Ş</button><button data-key="İ">İ</button>
              </div>
              <div class="keyboard-row">
-                 <button data-key="ENTER" class="wide-key">GÖNDER</button>
-                 <button data-key="Z">Z</button>
-                 <button data-key="C">C</button>
-                 <button data-key="V">V</button>
-                 <button data-key="B">B</button>
-                 <button data-key="N">N</button>
-                 <button data-key="M">M</button>
-                 <button data-key="Ö">Ö</button>
-                 <button data-key="Ç">Ç</button>
-                 <button data-key="BACKSPACE" class="wide-key">SİL</button>
+                 <button data-key="ENTER" class="wide-key">GÖNDER</button><button data-key="Z">Z</button><button data-key="C">C</button><button data-key="V">V</button><button data-key="B">B</button><button data-key="N">N</button><button data-key="M">M</button><button data-key="Ö">Ö</button><button data-key="Ç">Ç</button><button data-key="BACKSPACE" class="wide-key">SİL</button>
              </div>
          </div>
     </div>
 
     <div id="score-board" class="score-board">
-        <h2>Skor Tablosu</h2>
-        <ul id="score-list">
+        <h2>Oyun Sonucu</h2>
+        <ul id="score-list"></ul>
+
+        <div id="leaderboard-container">
+            <h3>🏆 Genel Lider Tablosu</h3>
+            <ul id="leaderboard-list">
+                <li>Yükleniyor...</li>
             </ul>
+        </div>
+
         <button id="play-again-btn">Tekrar Oyna</button>
     </div>
 
+    <audio id="sound-type" src="sounds/type.wav" preload="auto"></audio>
+    <audio id="sound-delete" src="sounds/delete.wav" preload="auto"></audio>
+    <audio id="sound-enter" src="sounds/enter.wav" preload="auto"></audio>
+    <audio id="sound-win" src="sounds/win.mp3" preload="auto"></audio>
+    <audio id="sound-lose" src="sounds/lose.wav" preload="auto"></audio>
+    <audio id="sound-invalid" src="sounds/invalid.wav" preload="auto"></audio>
+    <audio id="sound-reveal" src="sounds/reveal.wav" preload="auto"></audio>
+    <audio id="sound-timeout" src="sounds/timeout.wav" preload="auto"></audio>
     <script>
-        // --- Tüm JavaScript Kodu Buraya Gelecek ---
-
-        // --- DOM Elementleri ---
+        // --- DOM Elementleri (timer display eklendi) ---
         const playerCountInput = document.getElementById('player-count');
         const playerNamesDiv = document.getElementById('player-names');
         const startGameBtn = document.getElementById('start-game-btn');
@@ -447,55 +346,78 @@
         const currentPlayerInfoSpan = document.getElementById('current-player-info');
         const wordLengthInfoSpan = document.getElementById('word-length-info');
         const guessesRemainingInfoSpan = document.getElementById('guesses-remaining-info');
+        const timerDisplaySpan = document.getElementById('timer-display');
+        const timerContainerDiv = document.getElementById('timer-container'); // Zamanlayıcı konteyneri
         const scoreListUl = document.getElementById('score-list');
+        const leaderboardListUl = document.getElementById('leaderboard-list'); // Liderlik listesi
         const playAgainBtn = document.getElementById('play-again-btn');
 
-        // --- Oyun Ayarları ---
-        const MAX_GUESSES = 5;
-        const ROUND_WORD_LENGTHS = [3, 4, 5, 6]; // Her turdaki kelime uzunlukları
-        const POINTS_PER_GUESS = { 1: 100, 2: 80, 3: 60, 4: 40, 5: 20, 0: 0 }; // Tahmine göre puanlar (0: bilememe)
-        const TILE_ANIMATION_DELAY = 250; // ms cinsinden harfler arası animasyon gecikmesi
+        // Ses elementleri
+        const sounds = {
+            type: document.getElementById('sound-type'),
+            delete: document.getElementById('sound-delete'),
+            enter: document.getElementById('sound-enter'),
+            win: document.getElementById('sound-win'),
+            lose: document.getElementById('sound-lose'),
+            invalid: document.getElementById('sound-invalid'),
+            reveal: document.getElementById('sound-reveal'),
+            timeout: document.getElementById('sound-timeout'),
+            // tick: document.getElementById('sound-tick') // İsterseniz
+        };
 
-        // --- Kelime Listesi (Örnek - Genişletilebilir) ---
-        const TURKISH_WORDS = {
+        // --- Oyun Ayarları (timer süresi eklendi) ---
+        const MAX_GUESSES = 5;
+        const ROUND_WORD_LENGTHS = [3, 4, 5, 6];
+        const POINTS_PER_GUESS = { 1: 100, 2: 80, 3: 60, 4: 40, 5: 20, 0: 0 };
+        const TILE_ANIMATION_DELAY = 200; // Animasyon gecikmesi biraz azaltıldı
+        const GUESS_TIME_LIMIT = 10; // Saniye cinsinden tahmin süresi
+        const TIMER_BONUS_MULTIPLIER = 2; // Kalan saniye başına eklenecek bonus puan çarpanı
+        const LEADERBOARD_SIZE = 10; // Lider tablosunda gösterilecek kişi sayısı
+
+        // --- Kelime Listesi (Önceki ile aynı) ---
+        const TURKISH_WORDS = { /* ... Kelimeler buraya ... */
             3: ["ACI", "AŞK", "BAL", "CAM", "DUŞ", "EVET", "GOL", "HAN", "ISI", "JEL", "KOL", "LAL", "MAÇ", "NET", "ODA", "PİL", "ROL", "SAÇ", "ŞAP", "TAT", "UYU", "VAR", "YAZ", "ZİL", "ÇAY", "KIŞ", "YÜN", "SEL", "TOP"],
             4: ["ADET", "BABA", "CADİ", "ÇİLE", "DEDE", "ELMA", "FARE", "GÖZL", "HANE", "ISLAK", "KAFA", "LİRA", "MASA", "NOTA", "OKUL", "PARA", "ROTA", "SIRA", "ŞAKA", "TEST", "UÇAK", "VALİ", "YAKA", "ZARF", "KARE", "MAVİ", "YENİ", "KREM", "BORÇ"],
             5: ["AHMET", "BAKIR", "CAMİİ", "ÇİÇEK", "DALGA", "EMLAK", "FATİH", "GELİN", "HABER", "İNSAN", "JAPON", "KALEM", "LAMBA", "MOTOR", "NİSAN", "ORTAK", "PASTA", "RADYO", "SALON", "ŞEKER", "TARİH", "UÇURT", "VATAN", "YAZGI", "ZAMAN", "MODEL", "KÖPEK", "CEVİZ", "MELEK"],
             6: ["ADALET", "BAŞKAN", "CENAZE", "ÇİKİTA", "DOKTOR", "ELBİSE", "FABRİKA", "GAZETE", "HALİFE", "İSKELE", "KAPTAN", "LOKANTA", "MAKİNE", "NERGİS", "OTOBÜS", "PENCERE", "RANDOM", "SİGARA", "ŞAMPİYON", "TİYATRO", "UZAYLI", "VİTAMİN", "YAPRAK", "ZİYARET", "MARKET", "SANDAL", "BIÇAKÇI", "TELEFON"]
         };
 
-        // --- Oyun Durumu Değişkenleri ---
-        let players = []; // { id: 1, name: "Oyuncu 1", score: 0, currentGuessCount: 0, roundFinished: false, roundScores: [] }
+        // --- Oyun Durumu Değişkenleri (timer eklendi) ---
+        let players = [];
         let currentPlayerIndex = 0;
-        let currentRound = 0; // 0-indexed
+        let currentRound = 0;
         let targetWord = "";
         let currentGuess = [];
         let guessesRemaining = MAX_GUESSES;
         let currentRowIndex = 0;
         let isGameOver = false;
-        let isProcessing = false; // Animasyon/işlem sırasında girişi engellemek için
+        let isProcessing = false;
+        let timerInterval = null; // Zamanlayıcı interval'ı
+        let currentTimeLeft = GUESS_TIME_LIMIT; // Kalan süre
 
-        // --- Oyuncu Sayısı Değiştiğinde İsim Alanlarını Güncelle ---
+        // --- Ses Çalma Fonksiyonu ---
+        function playSound(soundId) {
+            const sound = sounds[soundId];
+            if (sound) {
+                sound.currentTime = 0; // Sesi başa sar
+                sound.play().catch(error => console.error(`Ses çalınamadı (${soundId}):`, error));
+            }
+        }
+
+        // --- Oyuncu Sayısı Değişimi (Önceki ile aynı) ---
         playerCountInput.addEventListener('change', () => {
-            const count = Math.max(1, Math.min(5, parseInt(playerCountInput.value) || 1)); // 1-5 arası sınırla
-            playerCountInput.value = count; // Geçerli değeri inputa yaz
-            playerNamesDiv.innerHTML = ''; // Önceki isim alanlarını temizle
+            const count = Math.max(1, Math.min(5, parseInt(playerCountInput.value) || 1));
+            playerCountInput.value = count;
+            playerNamesDiv.innerHTML = '';
             for (let i = 0; i < count; i++) {
-                const label = document.createElement('label');
-                label.htmlFor = `player-name-${i + 1}`;
-                label.textContent = `Oyuncu ${i + 1} Adı:`;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.id = `player-name-${i + 1}`;
-                input.placeholder = `Oyuncu ${i + 1}`;
-                input.setAttribute('data-player-id', i + 1);
-                playerNamesDiv.appendChild(label);
-                playerNamesDiv.appendChild(input);
+                const label = document.createElement('label'); label.htmlFor = `player-name-${i + 1}`; label.textContent = `Oyuncu ${i + 1} Adı:`;
+                const input = document.createElement('input'); input.type = 'text'; input.id = `player-name-${i + 1}`; input.placeholder = `Oyuncu ${i + 1}`; input.setAttribute('data-player-id', i + 1);
+                playerNamesDiv.appendChild(label); playerNamesDiv.appendChild(input);
             }
         });
-        playerCountInput.dispatchEvent(new Event('change')); // Başlangıçta 1 oyuncu için alan oluştur
+        playerCountInput.dispatchEvent(new Event('change'));
 
-        // --- Oyuna Başlama ---
+        // --- Oyuna Başlama (Önceki ile aynı, leaderboard yükleme eklenebilir) ---
         startGameBtn.addEventListener('click', initializeGame);
 
         function initializeGame() {
@@ -504,190 +426,204 @@
             for (let i = 0; i < count; i++) {
                 const nameInput = document.getElementById(`player-name-${i + 1}`);
                 const playerName = nameInput.value.trim() || `Oyuncu ${i + 1}`;
-                players.push({ id: i + 1, name: playerName, score: 0, roundScores: [] }); // roundScores burada başlatılıyor
+                players.push({ id: i + 1, name: playerName, score: 0, roundScores: [] });
             }
-
-            currentPlayerIndex = 0;
-            currentRound = 0;
-            isGameOver = false;
-            isProcessing = false;
-            scoreBoardDiv.classList.remove('active');
-            playerSetupDiv.classList.remove('active');
-            gameContainerDiv.classList.add('active');
-            scoreListUl.innerHTML = ''; // Skor tablosunu temizle
-
+            currentPlayerIndex = 0; currentRound = 0; isGameOver = false; isProcessing = false;
+            stopTimer(); // Varsa önceki zamanlayıcıyı durdur
+            scoreBoardDiv.classList.remove('active'); playerSetupDiv.classList.remove('active'); gameContainerDiv.classList.add('active');
+            scoreListUl.innerHTML = ''; leaderboardListUl.innerHTML = '<li>Yükleniyor...</li>'; // Liderliği temizle/sıfırla
             startRound();
         }
 
         // --- Tur Başlatma ---
         function startRound() {
             if (currentRound >= ROUND_WORD_LENGTHS.length) {
-                endGame();
-                return;
+                endGame(); return;
             }
-
-            // Tur için oyuncu durumlarını sıfırla
             players.forEach(p => {
-                p.currentGuessCount = 0;
-                p.roundFinished = false;
-                // Tur skoru dizisini bu tur için hazırla (önceden yoksa)
-                if (!p.roundScores[currentRound]) {
-                    p.roundScores[currentRound] = { word: '', score: 0, guesses: 0 };
-                }
+                p.currentGuessCount = 0; p.roundFinished = false;
+                if (!p.roundScores[currentRound]) { p.roundScores[currentRound] = { word: '', score: 0, guesses: 0 }; }
             });
-
             const wordLength = ROUND_WORD_LENGTHS[currentRound];
             targetWord = getRandomWord(wordLength);
-             // console.log(`Gizli Kelime (Tur ${currentRound + 1}, Oyuncu ${players[currentPlayerIndex].name}): ${targetWord}`);
-
-            // Seçilen kelimeyi tüm oyuncuların tur skor kaydına ekle
             players.forEach(p => p.roundScores[currentRound].word = targetWord);
-
             currentPlayerIndex = 0; // Tur başında ilk oyuncuya geç
-            setupBoard(wordLength);
-            resetKeyboard();
-            updateGameInfo();
-            showMessage(""); // Mesaj alanını temizle
-            nextPlayerTurn(); // İlk oyuncunun sırasını başlat
+            setupBoard(wordLength); resetKeyboard(); updateGameInfo(); showMessage("");
+            nextPlayerTurn(); // İlk oyuncunun sırasını başlat (içinde timer başlar)
         }
 
-         // --- Sonraki Oyuncunun Sırasını Ayarla ---
+        // --- Sonraki Oyuncunun Sırasını Ayarla (Timer başlatma eklendi) ---
         function nextPlayerTurn() {
             if (isGameOver) return;
+            stopTimer(); // Önceki oyuncunun timer'ını durdur
 
-            // Turu bitirmemiş bir sonraki oyuncuyu bul
-            let nextPlayerFound = false;
-            let checkedCount = 0; // Sonsuz döngüyü engellemek için
-            let potentialNextIndex = currentPlayerIndex;
-
+            let nextPlayerFound = false; let checkedCount = 0; let potentialNextIndex = currentPlayerIndex;
             while (checkedCount < players.length) {
-                 potentialNextIndex = (potentialNextIndex + 1) % players.length; // Sonraki indeksi hesapla
+                 potentialNextIndex = (potentialNextIndex + 1) % players.length;
                  if (!players[potentialNextIndex].roundFinished) {
-                     currentPlayerIndex = potentialNextIndex;
-                     nextPlayerFound = true;
-                     break;
+                     currentPlayerIndex = potentialNextIndex; nextPlayerFound = true; break;
                  }
                  checkedCount++;
             }
 
+            if (!nextPlayerFound) { currentRound++; startRound(); return; }
 
-            // Eğer turu bitirmemiş oyuncu kalmadıysa (yani herkes bitirdiyse), yeni tura geç
-            if (!nextPlayerFound) {
-                currentRound++;
-                startRound();
-                return;
-            }
-
-            // Mevcut oyuncu için tahtayı ve durumu sıfırla
-            currentGuess = [];
-            guessesRemaining = MAX_GUESSES;
-            currentRowIndex = 0; // Her oyuncu kendi satırından başlar
-            setupBoard(targetWord.length); // Tahtayı temizle/yeniden oluştur
-            resetKeyboard(); // Klavyeyi sıfırla (isteğe bağlı, belki oyuncuya özel tutulabilir?)
-            updateGameInfo();
+            currentGuess = []; guessesRemaining = MAX_GUESSES; currentRowIndex = 0;
+            setupBoard(targetWord.length); resetKeyboard(); updateGameInfo();
             showMessage(`${players[currentPlayerIndex].name}, sıra sende!`);
-            isProcessing = false; // Yeni oyuncu için işlem kilidini aç
+            isProcessing = false;
+            startTimer(); // Yeni oyuncu için zamanlayıcıyı başlat
         }
 
-        // --- Rastgele Kelime Seçme ---
-        function getRandomWord(length) {
-            const wordList = TURKISH_WORDS[length];
-            if (!wordList || wordList.length === 0) {
-                console.error(`"${length}" harfli kelime listesi bulunamadı veya boş.`);
-                return "HATA";
+        // --- Geri Sayım Sayacı Fonksiyonları ---
+        function startTimer() {
+            stopTimer(); // Önceki interval'ı temizle
+            currentTimeLeft = GUESS_TIME_LIMIT;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                currentTimeLeft--;
+                updateTimerDisplay();
+                // if (currentTimeLeft > 0 && currentTimeLeft <= 3) playSound('tick'); // İsteğe bağlı tick sesi
+
+                if (currentTimeLeft <= 0) {
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            // Zamanlayıcı görünümünü sıfırla veya gizle (isteğe bağlı)
+            // currentTimeLeft = GUESS_TIME_LIMIT;
+            // updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            timerDisplaySpan.textContent = currentTimeLeft;
+            timerContainerDiv.classList.remove('warning', 'critical');
+            if (currentTimeLeft <= 3 && currentTimeLeft > 0) {
+                timerContainerDiv.classList.add('critical');
+            } else if (currentTimeLeft <= 5 && currentTimeLeft > 0) {
+                timerContainerDiv.classList.add('warning');
             }
-            const randomIndex = Math.floor(Math.random() * wordList.length);
-            return wordList[randomIndex].toLocaleUpperCase('tr-TR'); // Türkçe büyük harf
         }
 
-        // --- Oyun Tahtasını Oluşturma/Sıfırlama ---
-        function setupBoard(wordLength) {
-            gameBoardDiv.innerHTML = ''; // Önceki tahtayı temizle
-            gameBoardDiv.style.gridTemplateColumns = `repeat(${wordLength}, 1fr)`; // Sütun sayısını ayarla
+        // Süre Dolduğunda Çalışacak Fonksiyon
+        function handleTimeout() {
+            stopTimer();
+            playSound('timeout');
+            if (isProcessing || isGameOver) return; // Zaten işlem yapılıyorsa veya oyun bittiyse çık
 
+            isProcessing = true;
+            showMessage("Süre doldu! Bu tahmin hakkını kaybettin.", true);
+            // Satırı başarısız olarak işaretle (örn. kırmızıya boya - isteğe bağlı)
+            // animateRowTimeout(currentRowIndex);
+
+            guessesRemaining--;
+            players[currentPlayerIndex].currentGuessCount++; // Tahmin sayısını yine de artır
+
+            const isLastGuess = guessesRemaining === 0;
+
+             // Oyuncu bu kelimeyi kaybetti mi?
+            if (isLastGuess) {
+                const points = POINTS_PER_GUESS[0];
+                players[currentPlayerIndex].score += points;
+                players[currentPlayerIndex].roundScores[currentRound].score = points;
+                players[currentPlayerIndex].roundScores[currentRound].guesses = MAX_GUESSES + 1; // Kaybettiğini belirt
+                players[currentPlayerIndex].roundFinished = true;
+                showMessage(`${players[currentPlayerIndex].name} bilemedi. Kelime: ${targetWord}`, true);
+            }
+
+            // Tur bitti mi yoksa sonraki oyuncu/tur mu?
+             if (players[currentPlayerIndex].roundFinished) {
+                 const allPlayersFinishedRound = players.every(p => p.roundFinished);
+                 if (allPlayersFinishedRound) {
+                     setTimeout(() => { currentRound++; startRound(); }, 2000);
+                 } else {
+                     setTimeout(nextPlayerTurn, 1500);
+                 }
+             } else { // Sonraki tahmin sırası (aynı oyuncu)
+                 currentRowIndex++;
+                 currentGuess = [];
+                 updateGameInfo();
+                 isProcessing = false;
+                 startTimer(); // Sonraki tahmin için zamanlayıcıyı tekrar başlat
+             }
+        }
+
+        // --- Rastgele Kelime Seçme (Önceki ile aynı) ---
+        function getRandomWord(length) { /* ... kod ... */
+             const wordList = TURKISH_WORDS[length];
+             if (!wordList || wordList.length === 0) return "HATA";
+             const randomIndex = Math.floor(Math.random() * wordList.length);
+             return wordList[randomIndex].toLocaleUpperCase('tr-TR');
+         }
+        // --- Oyun Tahtasını Oluşturma/Sıfırlama (Önceki ile aynı) ---
+        function setupBoard(wordLength) { /* ... kod ... */
+            gameBoardDiv.innerHTML = '';
+            gameBoardDiv.style.gridTemplateColumns = `repeat(${wordLength}, 1fr)`;
             for (let i = 0; i < MAX_GUESSES; i++) {
                 for (let j = 0; j < wordLength; j++) {
-                    const tile = document.createElement('div');
-                    tile.classList.add('tile');
-                    tile.id = `tile-${i}-${j}`; // Her kutucuğa benzersiz ID
-                    gameBoardDiv.appendChild(tile);
+                    const tile = document.createElement('div'); tile.classList.add('tile'); tile.id = `tile-${i}-${j}`; gameBoardDiv.appendChild(tile);
                 }
             }
-            currentRowIndex = 0; // Tahmin satırını sıfırla
+            currentRowIndex = 0;
         }
-
-        // --- Klavye ve Harf Girişi ---
-        function handleKeyPress(event) {
-            if (isGameOver || isProcessing) return;
-
-            const key = event.key.toLocaleUpperCase('tr-TR');
-
-            if (key === 'ENTER') {
-                submitGuess();
-            } else if (key === 'BACKSPACE' || event.key === 'Delete') { // Silme tuşları
-                deleteLetter();
-            } else if (key.length === 1 && /^[A-ZÇĞİÖŞÜ]$/i.test(event.key)) {
-               addLetter(key);
-            }
+        // --- Klavye ve Harf Girişi (Ses eklendi) ---
+        function handleKeyPress(event) { /* ... önceki kod ... */
+             if (isGameOver || isProcessing) return;
+             const key = event.key.toLocaleUpperCase('tr-TR');
+             if (key === 'ENTER') submitGuess();
+             else if (key === 'BACKSPACE' || event.key === 'Delete') deleteLetter();
+             else if (key.length === 1 && /^[A-ZÇĞİÖŞÜ]$/i.test(event.key)) addLetter(key);
         }
-
-        // Sanal Klavye Tıklama Olayı
-        keyboardContainer.addEventListener('click', (event) => {
+        keyboardContainer.addEventListener('click', (event) => { /* ... önceki kod ... */
             if (isGameOver || isProcessing) return;
-
-            const target = event.target;
-            if (!target.matches('button')) return;
-
+            const target = event.target; if (!target.matches('button')) return;
             const key = target.dataset.key;
+            if (key === 'ENTER') submitGuess();
+            else if (key === 'BACKSPACE') deleteLetter();
+            else addLetter(key);
+         });
+        document.addEventListener('keydown', handleKeyPress);
 
-            if (key === 'ENTER') {
-                submitGuess();
-            } else if (key === 'BACKSPACE') {
-                deleteLetter();
-            } else {
-               addLetter(key);
-            }
-        });
-
-        document.addEventListener('keydown', handleKeyPress); // Fiziksel klavye dinleyicisi
-
-        function addLetter(letter) {
+        function addLetter(letter) { /* ... önceki kod ... ses eklendi */
             const wordLength = ROUND_WORD_LENGTHS[currentRound];
             if (currentGuess.length < wordLength) {
                 currentGuess.push(letter);
                 const tile = document.getElementById(`tile-${currentRowIndex}-${currentGuess.length - 1}`);
-                if (tile) {
-                    tile.textContent = letter;
-                    tile.classList.add('filled'); // Yazma efekti için sınıf ekle
-                }
+                if (tile) { tile.textContent = letter; tile.classList.add('filled'); }
                 showMessage("");
+                playSound('type'); // Yazma sesi
             }
         }
-
-        function deleteLetter() {
-            if (currentGuess.length > 0) {
+        function deleteLetter() { /* ... önceki kod ... ses eklendi */
+             if (currentGuess.length > 0) {
                 const tile = document.getElementById(`tile-${currentRowIndex}-${currentGuess.length - 1}`);
-                if (tile) {
-                    tile.textContent = '';
-                    tile.classList.remove('filled'); // Yazma efektini kaldır
-                }
+                if (tile) { tile.textContent = ''; tile.classList.remove('filled'); }
                 currentGuess.pop();
                 showMessage("");
+                playSound('delete'); // Silme sesi
             }
         }
 
-        // --- Tahmin Gönderme ---
+        // --- Tahmin Gönderme (Timer durdurma/başlatma, sesler, puanlama güncellemesi) ---
         async function submitGuess() {
-            if (isProcessing) return; // Eğer zaten işlem yapılıyorsa tekrar göndermeyi engelle
+            if (isProcessing) return;
+            stopTimer(); // Tahmin gönderilince zamanlayıcıyı durdur
 
             const wordLength = ROUND_WORD_LENGTHS[currentRound];
             if (currentGuess.length !== wordLength) {
                 showMessage(`Kelime ${wordLength} harfli olmalı!`, true);
-                shakeRow(currentRowIndex); // Satırı salla
+                shakeRow(currentRowIndex);
+                playSound('invalid');
+                startTimer(); // Hatalı girişte timer devam etsin
                 return;
             }
 
-            isProcessing = true; // İşlem başladığında girişi engelle
+            isProcessing = true;
+            playSound('enter'); // Gönderme sesi
             guessesRemaining--;
             const guessWord = currentGuess.join('');
             players[currentPlayerIndex].currentGuessCount++;
@@ -697,214 +633,191 @@
             const didWin = guessWord === targetWord;
             const isLastGuess = guessesRemaining === 0;
 
-            // Kazandı mı?
             if (didWin) {
-                const points = POINTS_PER_GUESS[players[currentPlayerIndex].currentGuessCount] || 0;
-                players[currentPlayerIndex].score += points;
-                players[currentPlayerIndex].roundScores[currentRound].score = points;
+                const basePoints = POINTS_PER_GUESS[players[currentPlayerIndex].currentGuessCount] || 0;
+                const bonusPoints = Math.max(0, currentTimeLeft * TIMER_BONUS_MULTIPLIER); // Negatif olmasın
+                const totalPoints = basePoints + bonusPoints;
+                players[currentPlayerIndex].score += totalPoints;
+                players[currentPlayerIndex].roundScores[currentRound].score = totalPoints;
                 players[currentPlayerIndex].roundScores[currentRound].guesses = players[currentPlayerIndex].currentGuessCount;
                 players[currentPlayerIndex].roundFinished = true;
-                showMessage(`${players[currentPlayerIndex].name} tebrikler! (+${points} puan)`, false, true);
-
-            } else if (isLastGuess) { // Kaybetti mi?
+                showMessage(`${players[currentPlayerIndex].name} tebrikler! (+${basePoints} + ${bonusPoints} bonus)`, false, true);
+                playSound('win');
+            } else if (isLastGuess) {
                 const points = POINTS_PER_GUESS[0];
                 players[currentPlayerIndex].score += points;
                 players[currentPlayerIndex].roundScores[currentRound].score = points;
-                players[currentPlayerIndex].roundScores[currentRound].guesses = MAX_GUESSES + 1; // Kaybettiğini belirtmek için farklı bir değer
+                players[currentPlayerIndex].roundScores[currentRound].guesses = MAX_GUESSES + 1;
                 players[currentPlayerIndex].roundFinished = true;
                 showMessage(`${players[currentPlayerIndex].name} bilemedi. Kelime: ${targetWord}`, true);
+                playSound('lose');
             }
 
-            // Eğer oyuncu turu bitirdiyse (kazandı veya hakkı bitti)
             if (didWin || isLastGuess) {
-                // Tüm oyuncular bu turu bitirdi mi kontrol et
-                const allPlayersFinishedRound = players.every(p => p.roundFinished);
-
-                if (allPlayersFinishedRound) {
-                    // Kısa bir bekleme süresi sonrası yeni tura geç veya oyunu bitir
-                    setTimeout(() => {
-                        currentRound++;
-                        startRound(); // Yeni tura başla (startRound içinde bitiş kontrolü var)
-                    }, 2000); // 2 saniye bekle
-                } else {
-                    // Sıradaki oyuncuya geç
-                    setTimeout(nextPlayerTurn, 1500); // 1.5 saniye bekle
-                }
-            } else { // Oyuna devam (aynı oyuncu, sonraki satır)
-                currentRowIndex++;
-                currentGuess = [];
-                updateGameInfo(); // Sadece kalan hakkı güncelle
-                isProcessing = false; // Yeni tahmine izin ver
+                 const allPlayersFinishedRound = players.every(p => p.roundFinished);
+                 if (allPlayersFinishedRound) {
+                     setTimeout(() => { currentRound++; startRound(); }, 2000);
+                 } else {
+                     setTimeout(nextPlayerTurn, 1500);
+                 }
+            } else { // Sonraki tahmin sırası (aynı oyuncu)
+                 currentRowIndex++;
+                 currentGuess = [];
+                 updateGameInfo();
+                 isProcessing = false;
+                 startTimer(); // Sonraki tahmin için zamanlayıcıyı başlat
             }
         }
 
-
-        // --- Tahmini Kontrol Etme (Renkleri Belirleme) ---
-        function checkGuess(guess) {
-             const result = Array(targetWord.length).fill('absent'); // Başlangıçta hepsi gri
-             const targetLetters = targetWord.split('');
-             const guessLetters = guess.split('');
-             const letterCount = {};
-
-             // Hedef kelimedeki harf sayılarını say (kopya harfler için önemli)
-             for (const letter of targetLetters) {
-                 letterCount[letter] = (letterCount[letter] || 0) + 1;
-             }
-
-             // 1. Geçiş: Doğru yerdeki harfleri (yeşil) bul
-             for (let i = 0; i < targetWord.length; i++) {
-                 if (guessLetters[i] === targetLetters[i]) {
-                     result[i] = 'correct';
-                     letterCount[guessLetters[i]]--; // Bu harfi sayacı azaltarak 'kullanıldı' olarak işaretle
-                 }
-             }
-
-             // 2. Geçiş: Yanlış yerdeki (sarı) harfleri bul
-             for (let i = 0; i < targetWord.length; i++) {
-                  // Sadece henüz 'correct' olmayan ve hedef kelimede hala 'kullanılabilir' sayıda olan harflere bak
-                 if (result[i] !== 'correct' && targetLetters.includes(guessLetters[i]) && letterCount[guessLetters[i]] > 0) {
-                     result[i] = 'present';
-                     letterCount[guessLetters[i]]--; // Bu harfi de 'kullanıldı' olarak işaretle
-                 }
-             }
+        // --- Tahmini Kontrol Etme (Önceki ile aynı) ---
+        function checkGuess(guess) { /* ... kod ... */
+             const result = Array(targetWord.length).fill('absent'); const targetLetters = targetWord.split(''); const guessLetters = guess.split(''); const letterCount = {};
+             for (const letter of targetLetters) letterCount[letter] = (letterCount[letter] || 0) + 1;
+             for (let i = 0; i < targetWord.length; i++) if (guessLetters[i] === targetLetters[i]) { result[i] = 'correct'; letterCount[guessLetters[i]]--; }
+             for (let i = 0; i < targetWord.length; i++) if (result[i] !== 'correct' && targetLetters.includes(guessLetters[i]) && letterCount[guessLetters[i]] > 0) { result[i] = 'present'; letterCount[guessLetters[i]]--; }
              return result;
         }
-
-        // --- Tahmin Animasyonu ve Renklendirme ---
+        // --- Tahmin Animasyonu (Ses eklendi) ---
         async function animateGuess(rowIndex, result) {
-             const wordLength = ROUND_WORD_LENGTHS[currentRound];
-             const rowTiles = [];
+             const wordLength = ROUND_WORD_LENGTHS[currentRound]; const rowTiles = [];
+             for (let j = 0; j < wordLength; j++) rowTiles.push(document.getElementById(`tile-${rowIndex}-${j}`));
+             let revealed = false; // Satır tamamlanınca tek ses için
              for (let j = 0; j < wordLength; j++) {
-                 rowTiles.push(document.getElementById(`tile-${rowIndex}-${j}`));
-             }
-
-             for (let j = 0; j < wordLength; j++) {
-                 const tile = rowTiles[j];
-                 const state = result[j];
-                 const letter = currentGuess[j]; // Animasyondan önce harfi al
-
-                 // Kısa gecikme ile animasyonu başlat
+                 const tile = rowTiles[j]; const state = result[j]; const letter = currentGuess[j];
                  await new Promise(resolve => setTimeout(resolve, TILE_ANIMATION_DELAY));
-                 if(tile){ // Ekstra kontrol
-                     tile.classList.add(state); // Rengi uygula (CSS transition halleder)
-                     updateKeyboardColor(letter, state); // Klavye rengini güncelle
+                 if(tile){ tile.classList.add(state); updateKeyboardColor(letter, state); }
+                 if(!revealed && j === wordLength - 1) { // Son harf animasyonu bitince
+                     playSound('reveal'); // Harf açılma sesi (satır için bir kez)
+                     revealed = true;
                  }
              }
-             // Tüm animasyonların bitmesini beklemek için ek süre (opsiyonel)
-             // await new Promise(resolve => setTimeout(resolve, wordLength * TILE_ANIMATION_DELAY / 2));
         }
-
-
-        // --- Klavye Renklerini Güncelleme ---
-        function updateKeyboardColor(key, state) {
-             const keyButton = keyboardContainer.querySelector(`button[data-key="${key}"]`);
+        // --- Klavye Renklerini Güncelleme (Önceki ile aynı) ---
+        function updateKeyboardColor(key, state) { /* ... kod ... */
+            const keyButton = keyboardContainer.querySelector(`button[data-key="${key}"]`);
              if (keyButton) {
                  const currentClasses = keyButton.classList;
-                 // Daha iyi bir duruma geçiyorsa güncelle (absent < present < correct)
-                 if (state === 'correct') {
-                     keyButton.className = 'correct'; // Diğerlerini kaldır, sadece correct ekle
-                 } else if (state === 'present' && !currentClasses.contains('correct')) {
-                      keyButton.classList.remove('absent'); // Varsa absent kaldır
-                      keyButton.classList.add('present');
-                 } else if (state === 'absent' && !currentClasses.contains('correct') && !currentClasses.contains('present')) {
-                     keyButton.classList.add('absent');
-                 }
+                 if (state === 'correct') keyButton.className = 'keyboard-row-button correct'; // Ensure button base class remains if needed
+                 else if (state === 'present' && !currentClasses.contains('correct')) { keyButton.classList.remove('absent'); keyButton.classList.add('present'); }
+                 else if (state === 'absent' && !currentClasses.contains('correct') && !currentClasses.contains('present')) keyButton.classList.add('absent');
              }
-        }
-
-        // --- Klavyeyi Sıfırlama ---
-        function resetKeyboard() {
-             const buttons = keyboardContainer.querySelectorAll('button');
-             buttons.forEach(button => {
-                 button.classList.remove('correct', 'present', 'absent');
-             });
-        }
-
-        // --- Oyun Bilgilerini Güncelleme ---
-        function updateGameInfo() {
-            if(isGameOver || !players || players.length === 0) return;
-
-            roundInfoSpan.textContent = currentRound + 1;
-            currentPlayerInfoSpan.textContent = players[currentPlayerIndex]?.name ?? '-'; // Oyuncu adı veya tire
-            wordLengthInfoSpan.textContent = ROUND_WORD_LENGTHS[currentRound];
-            guessesRemainingInfoSpan.textContent = guessesRemaining;
-        }
-
-        // --- Mesaj Gösterme ---
-        function showMessage(msg, isError = false, isSuccess = false) {
-             messageArea.textContent = msg;
-             messageArea.classList.remove('error', 'success'); // Temizle
-             if (isError) messageArea.classList.add('error');
-             else if (isSuccess) messageArea.classList.add('success');
-        }
-
-        // --- Satırı Sallama Animasyonu (Hatalı Giriş İçin) ---
-        function shakeRow(rowIndex) {
+         }
+        // --- Klavyeyi Sıfırlama (Önceki ile aynı) ---
+        function resetKeyboard() { /* ... kod ... */
+            const buttons = keyboardContainer.querySelectorAll('button'); buttons.forEach(button => button.classList.remove('correct', 'present', 'absent'));
+         }
+        // --- Oyun Bilgilerini Güncelleme (Önceki ile aynı) ---
+        function updateGameInfo() { /* ... kod ... */
+             if(isGameOver || !players || players.length === 0) return;
+             roundInfoSpan.textContent = currentRound + 1; currentPlayerInfoSpan.textContent = players[currentPlayerIndex]?.name ?? '-';
+             wordLengthInfoSpan.textContent = ROUND_WORD_LENGTHS[currentRound]; guessesRemainingInfoSpan.textContent = guessesRemaining;
+             updateTimerDisplay(); // Zamanlayıcıyı da güncelle
+         }
+        // --- Mesaj Gösterme (Önceki ile aynı) ---
+        function showMessage(msg, isError = false, isSuccess = false) { /* ... kod ... */
+            messageArea.textContent = msg; messageArea.classList.remove('error', 'success');
+            if (isError) messageArea.classList.add('error'); else if (isSuccess) messageArea.classList.add('success');
+         }
+        // --- Satırı Sallama (Ses eklendi) ---
+        function shakeRow(rowIndex) { /* ... kod ... ses eklendi */
              const wordLength = ROUND_WORD_LENGTHS[currentRound];
              for(let j=0; j< wordLength; j++) {
                  const tile = document.getElementById(`tile-${rowIndex}-${j}`);
-                 if(tile) {
-                     // Önce class'ı kaldırıp sonra ekleyerek animasyonu tekrar tetikle
-                     tile.classList.remove('shake');
-                     // Reflow tetiklemesi (bazen gerekli olabilir)
-                     void tile.offsetWidth;
-                     tile.classList.add('shake');
-                      // Animasyon bittikten sonra class'ı kaldır (isteğe bağlı)
-                     /*
-                     tile.addEventListener('animationend', () => {
-                         tile.classList.remove('shake');
-                     }, { once: true });
-                     */
-                 }
+                 if(tile) { tile.classList.remove('shake'); void tile.offsetWidth; tile.classList.add('shake'); }
+             }
+             playSound('invalid'); // Sallama ile birlikte geçersiz sesini çal
+        }
+
+        // --- Lider Tablosu Fonksiyonları ---
+        function loadLeaderboard() {
+            try {
+                const leaderboardData = JSON.parse(localStorage.getItem('kelimeOyunuLeaderboard')) || [];
+                return leaderboardData;
+            } catch (error) {
+                console.error("Lider tablosu yüklenirken hata oluştu:", error);
+                return [];
+            }
+        }
+
+        function saveLeaderboard(leaderboardData) {
+             try {
+                 // Skora göre sırala ve limiti uygula
+                 leaderboardData.sort((a, b) => b.score - a.score);
+                 const limitedData = leaderboardData.slice(0, LEADERBOARD_SIZE);
+                 localStorage.setItem('kelimeOyunuLeaderboard', JSON.stringify(limitedData));
+             } catch (error) {
+                 console.error("Lider tablosu kaydedilirken hata oluştu:", error);
              }
         }
 
-        // --- Oyunu Bitirme ---
+        function updateLeaderboard(playersData) {
+            let leaderboard = loadLeaderboard();
+            playersData.forEach(player => {
+                const existingPlayerIndex = leaderboard.findIndex(entry => entry.name.toLowerCase() === player.name.toLowerCase());
+                if (existingPlayerIndex !== -1) {
+                    // Oyuncu varsa ve yeni skor daha yüksekse güncelle
+                    if (player.score > leaderboard[existingPlayerIndex].score) {
+                        leaderboard[existingPlayerIndex].score = player.score;
+                    }
+                } else {
+                    // Yeni oyuncu ekle
+                    leaderboard.push({ name: player.name, score: player.score });
+                }
+            });
+            saveLeaderboard(leaderboard);
+        }
+
+        function displayLeaderboard() {
+             leaderboardListUl.innerHTML = ''; // Temizle
+             const leaderboard = loadLeaderboard();
+             if (leaderboard.length === 0) {
+                 leaderboardListUl.innerHTML = '<li>Henüz skor kaydedilmemiş.</li>';
+                 return;
+             }
+             leaderboard.forEach((entry, index) => {
+                 const li = document.createElement('li');
+                 // li.textContent = `${index + 1}. ${entry.name} - ${entry.score} Puan`; // Basit gösterim
+                 li.innerHTML = `
+                     <span class="player-name">${entry.name}</span>
+                     <span class="player-score">${entry.score} Puan</span>
+                 `; // Daha stilli gösterim
+                 leaderboardListUl.appendChild(li);
+             });
+        }
+
+        // --- Oyunu Bitirme (Liderlik güncelleme/gösterme eklendi) ---
         function endGame() {
-            isGameOver = true;
-            isProcessing = true; // Oyun bitince işlem yapılmasın
-            gameContainerDiv.classList.remove('active');
-            scoreBoardDiv.classList.add('active');
-            displayScores();
+            isGameOver = true; isProcessing = true; stopTimer();
+            updateLeaderboard(players); // Oyuncuların skorlarını genel liderliğe işle
+            gameContainerDiv.classList.remove('active'); scoreBoardDiv.classList.add('active');
+            displayScores(); // Bu oyunun skorlarını göster
+            displayLeaderboard(); // Genel lider tablosunu göster
             showMessage("Oyun Bitti!", false, true);
         }
 
-        // --- Skorları Gösterme ---
+        // --- Skorları Gösterme (Bu oyun için - önceki ile aynı) ---
         function displayScores() {
-             scoreListUl.innerHTML = ''; // Liste temizle
+             scoreListUl.innerHTML = '';
              const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-
              sortedPlayers.forEach(player => {
-                 const li = document.createElement('li');
-                 li.textContent = `${player.name}: ${player.score} Puan`;
-                 scoreListUl.appendChild(li);
-
-                 // Detaylı tur skorları
+                 const li = document.createElement('li'); li.textContent = `${player.name}: ${player.score} Puan`;
                  const detailsDiv = document.createElement('div');
                  player.roundScores.forEach((rs, index) => {
                      if(rs && rs.word) {
                          let detailText = `Tur ${index + 1} (${ROUND_WORD_LENGTHS[index]} Harf - ${rs.word}): `;
-                         if (rs.guesses > 0 && rs.guesses <= MAX_GUESSES) {
-                            detailText += `${rs.guesses}. tahminde (+${rs.score}p)`;
-                         } else {
-                             detailText += `Bilemedi`;
-                         }
-                         const p = document.createElement('p');
-                         p.textContent = detailText;
-                         detailsDiv.appendChild(p);
+                         if (rs.guesses > 0 && rs.guesses <= MAX_GUESSES) detailText += `${rs.guesses}. tahminde (+${rs.score}p)`;
+                         else detailText += `Bilemedi`;
+                         const p = document.createElement('p'); p.textContent = detailText; detailsDiv.appendChild(p);
                      }
                  });
-                 li.appendChild(detailsDiv);
+                 li.appendChild(detailsDiv); scoreListUl.appendChild(li);
              });
         }
 
-         // --- Tekrar Oyna ---
+         // --- Tekrar Oyna (Önceki ile aynı) ---
          playAgainBtn.addEventListener('click', () => {
-             scoreBoardDiv.classList.remove('active');
-             playerSetupDiv.classList.add('active');
-             playerCountInput.value = '1'; // Oyuncu sayısını 1'e ayarla
-             playerCountInput.dispatchEvent(new Event('change')); // İsim alanlarını güncelle
-             // Diğer oyun durumu değişkenleri initializeGame içinde sıfırlanacak
+             scoreBoardDiv.classList.remove('active'); playerSetupDiv.classList.add('active');
+             playerCountInput.value = '1'; playerCountInput.dispatchEvent(new Event('change'));
          });
 
     </script>
