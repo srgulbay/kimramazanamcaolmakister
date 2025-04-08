@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <style>
-        #map { height: 500px; }
+        #map { height: 600px; width: 800px; }
     </style>
 </head>
 <body>
@@ -13,29 +13,52 @@
 <div id="map"></div>
 
 <script>
-    var map = L.map('map').setView([40, 35], 4); // Başlangıç konumu ve yakınlaştırma seviyesi
+    var map = L.map('map').setView([40, 35], 4);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    fetch('world.geojson') // Dünya haritası GeoJSON dosyası
-        .then(response => response.json())
-        .then(data => {
-            L.geoJSON(data).addTo(map);
-        });
-
-    fetch('turkey.geojson') // Türkiye sınırları GeoJSON dosyası
-        .then(response => response.json())
-        .then(data => {
-            L.geoJSON(data, {
-                style: {
-                    color: 'red',
-                    weight: 2,
-                    fillOpacity: 0
+    // Dünya haritası GeoJSON verileri (basitleştirilmiş)
+    var worldData = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-180, -90], [-180, 90], [180, 90], [180, -90], [-180, -90]
+                        ]
+                    ]
                 }
-            }).addTo(map);
-        });
+            }
+        ]
+    };
+
+    L.geoJSON(worldData).addTo(map);
+
+    // Türkiye sınırları GeoJSON verileri (basitleştirilmiş)
+    var turkeyData = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [[25.35, 35.83], [44.82, 35.83], [44.82, 42.10], [39.82, 42.10], [25.35, 40.50], [25.35, 35.83]]
+            ]
+        }
+    };
+
+    L.geoJSON(turkeyData, {
+        style: {
+            color: 'red',
+            weight: 2,
+            fillOpacity: 0
+        }
+    }).addTo(map);
 </script>
 
 </body>
