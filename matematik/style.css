@@ -49,13 +49,14 @@
     --input-focus-color: var(--header-color); /* Input odak rengi ana mavi */
     --input-focus-shadow: rgba(0, 119, 182, 0.25); /* Input odak gölgesi */
 
-    /* Ölçüler ve Efektler (Öncekiyle aynı) */
+    /* Ölçüler ve Efektler */
     --border-radius-main: 20px;
     --border-radius-inner: 12px;
     --box-shadow-main: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
     --box-shadow-light: 0 4px 10px rgba(0, 0, 0, 0.06);
     --transition-speed: 0.3s;
     --animation-duration: 0.6s; /* Animasyon süresi */
+    --visibility-transition-duration: 0.5s; /* Görünürlük animasyon süresi */
 }
 
 /* === Temel Stiller === */
@@ -100,6 +101,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 20px;
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
 }
 
 .player-input-group {
@@ -184,6 +186,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    opacity: 0.7;
 }
 
 /* Yükleniyor Göstergesi */
@@ -199,17 +202,17 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
 }
 
 /* TTS Uyarı Mesajı */
-#tts-support-warning {
+p#tts-support-warning.tts-warning { /* ID ve class birlikte daha spesifik */
     color: #856404; /* Koyu sarı */
     background-color: #fff3cd; /* Açık sarı */
     border: 1px solid #ffeeba; /* Sarı sınır */
     padding: 10px 15px;
     border-radius: 8px;
     width: auto;
-    display: inline-block;
-    margin-top: 15px;
+    display: none; /* JS ile block yapılacak */
+    margin: 15px auto 0 auto; /* Ortalama ve üst boşluk */
+    max-width: 80%; /* Çok geniş olmasın */
     font-size: 0.9em;
-    display: none; /* JS ile gösterilecek */
 }
 
 /* === Skor Tablosu === */
@@ -255,15 +258,11 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     position: relative; /* Animasyon için */
 }
 
-/* Puan güncelleme animasyonu için sınıf */
-#scoreboard-list li.score-update-animation {
-    animation: scoreUpdateFlash var(--animation-duration) ease-in-out;
-}
-
-/* Temalara göre sol border rengi */
+/* Temalara göre sol border rengi (JS li elementine class ekleyecek) */
 #scoreboard-list li.theme-child { border-left-color: var(--theme-child-border); }
 #scoreboard-list li.theme-teen { border-left-color: var(--theme-teen-border); }
 #scoreboard-list li.theme-young-adult { border-left-color: var(--theme-young-adult-border); }
+#scoreboard-list li.theme-default { border-left-color: #adb5bd; } /* Varsayılan tema için */
 
 
 #scoreboard-list .name {
@@ -273,9 +272,10 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     font-size: 0.95em;
 }
 /* İsim renkleri tema başlık renkleriyle eşleşsin */
-#scoreboard-list .theme-child .name { color: var(--theme-child-header); }
-#scoreboard-list .theme-teen .name { color: var(--theme-teen-header); }
-#scoreboard-list .theme-young-adult .name { color: var(--theme-young-adult-header); }
+#scoreboard-list li.theme-child .name { color: var(--theme-child-header); }
+#scoreboard-list li.theme-teen .name { color: var(--theme-teen-header); }
+#scoreboard-list li.theme-young-adult .name { color: var(--theme-young-adult-header); }
+#scoreboard-list li.theme-default .name { color: var(--primary-text); }
 
 #scoreboard-list .score {
     font-weight: 700;
@@ -285,10 +285,11 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
 
 /* === Oyuncu Alanları === */
 #players-area {
-    display: flex;
+    display: none; /* Başlangıçta gizli, JS ile flex yapılacak */
     justify-content: center;
     flex-wrap: wrap;
     gap: 25px; /* Alanlar arası boşluk */
+    perspective: 1000px; /* 3D efektler için (opsiyonel) */
 }
 
 .player-quiz-area {
@@ -299,10 +300,13 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     box-shadow: var(--box-shadow-light);
     border-top: 5px solid transparent; /* Üst kenar tema rengi için */
     border-bottom: 5px solid transparent; /* Alt kenar geri bildirim için */
-    transition: all var(--transition-speed) ease-in-out, border-color 0.1s ease; /* Border rengi hızlı değişsin */
+    transition: opacity var(--visibility-transition-duration) ease-in-out,
+                transform var(--visibility-transition-duration) ease-in-out,
+                box-shadow var(--transition-speed) ease-in-out,
+                border-color var(--transition-speed) ease; /* border rengi hızlı değişebilir */
     text-align: center;
     opacity: 0; /* Başlangıçta gizli */
-    transform: translateY(15px); /* Aşağıdan gelsin */
+    transform: translateY(20px) scale(0.98); /* Aşağıdan ve hafif küçük gelsin */
     display: flex;
     flex-direction: column; /* İçerik dikey sıralansın */
     background-color: #fff; /* Beyaz arka plan */
@@ -310,21 +314,22 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     overflow: hidden; /* Animasyon taşmalarını engelle */
 }
 
-/* Temalara göre üst border rengi */
-.theme-child { border-top-color: var(--theme-child-border); }
-.theme-teen { border-top-color: var(--theme-teen-border); }
-.theme-young-adult { border-top-color: var(--theme-young-adult-border); }
+/* Temalara göre üst border rengi (JS class ekleyecek) */
+.player-quiz-area.theme-child { border-top-color: var(--theme-child-border); background-color: var(--theme-child-bg);}
+.player-quiz-area.theme-teen { border-top-color: var(--theme-teen-border); background-color: var(--theme-teen-bg); }
+.player-quiz-area.theme-young-adult { border-top-color: var(--theme-young-adult-border); background-color: var(--theme-young-adult-bg); }
+.player-quiz-area.theme-default { border-top-color: #adb5bd; } /* Varsayılan tema */
 
 
 /* JavaScript ile eklenen görünürlük sınıfı */
 .player-quiz-area.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
-/* Hover efekti */
-.player-quiz-area:hover {
+/* Hover efekti (sadece görünürken) */
+.player-quiz-area.visible:hover {
       transform: translateY(-5px); /* Hafif yukarı kalksın */
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Oyuncu Bilgisi */
@@ -333,7 +338,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     font-weight: 700;
     font-size: 1.25em; /* Biraz daha büyük */
     padding-bottom: 10px;
-    /* Başlık renkleri temaya göre */
+    border-bottom: 1px solid #eee; /* Genel sınır */
 }
 .player-info .player-age {
     font-size: 0.8em;
@@ -341,9 +346,11 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     margin-left: 8px;
     font-weight: 400;
 }
-.theme-child .player-info { color: var(--theme-child-header); border-bottom: 1px solid var(--theme-child-border); }
-.theme-teen .player-info { color: var(--theme-teen-header); border-bottom: 1px solid var(--theme-teen-border); }
-.theme-young-adult .player-info { color: var(--theme-young-adult-header); border-bottom: 1px solid var(--theme-young-adult-border); }
+/* Başlık renkleri ve alt çizgi temaya göre */
+.theme-child .player-info { color: var(--theme-child-header); border-bottom-color: var(--theme-child-border); }
+.theme-teen .player-info { color: var(--theme-teen-header); border-bottom-color: var(--theme-teen-border); }
+.theme-young-adult .player-info { color: var(--theme-young-adult-header); border-bottom-color: var(--theme-young-adult-border); }
+.theme-default .player-info { color: var(--primary-text); border-bottom-color: #adb5bd; }
 
 /* Soru Metni Alanı */
 .player-question {
@@ -371,7 +378,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     width: 100%;
     padding: 14px; /* Biraz daha dolgun butonlar */
     margin: 10px 0; /* Butonlar arası boşluk */
-    border: none; /* Kenarlık yok, tema rengi arkaplan olacak */
+    border: 2px solid transparent; /* Geri bildirim için yer aç */
     border-radius: 8px;
     color: white;
     cursor: pointer;
@@ -379,7 +386,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     font-weight: 600;
     transition: all 0.2s ease-in-out;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Hafif gölge */
-    position: relative;
+    position: relative; /* İçerik işaretleri için */
 }
 /* Temalara göre buton renkleri */
 .theme-child .player-options button { background: var(--theme-child-button); }
@@ -388,33 +395,49 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
 .theme-teen .player-options button:hover:not(:disabled) { background: var(--theme-teen-button-hover); transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
 .theme-young-adult .player-options button { background: var(--theme-young-adult-button); }
 .theme-young-adult .player-options button:hover:not(:disabled) { background: var(--theme-young-adult-button-hover); transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+.theme-default .player-options button { background: linear-gradient(145deg, #adb5bd, #6c757d); } /* Varsayılan tema butonu */
+.theme-default .player-options button:hover:not(:disabled) { background: linear-gradient(145deg, #6c757d, #adb5bd); transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+
 
 .player-options button:active:not(:disabled) { transform: scale(0.98); }
 .player-options button:disabled {
-    background: #ced4da !important; /* Devre dışı gri */
+    background: #ced4da !important; /* Devre dışı gri (tema rengini ezer) */
     cursor: not-allowed;
     opacity: 0.7;
     transform: none;
-    box-shadow: none;
+    box-shadow: none !important; /* Gölgeleri de kaldır */
+    border-color: transparent !important; /* Border'ı da sıfırla */
 }
 
 /* Doğru/Yanlış cevap sonrası buton stilleri (JS ile eklenecek) */
-/* Kullanıcının Seçimi (Doğruysa Yeşil Vurgu, Yanlışsa Kırmızı) */
+/* Kullanıcının Seçimi */
 .player-options button.selected-correct {
      box-shadow: 0 0 15px var(--correct-glow);
-     border: 2px solid var(--correct-color);
+     border-color: var(--correct-color); /* Kenarlık yeşil */
 }
 .player-options button.selected-incorrect {
      box-shadow: 0 0 15px var(--incorrect-glow);
-     border: 2px solid var(--incorrect-color);
+     border-color: var(--incorrect-color); /* Kenarlık kırmızı */
      opacity: 0.7; /* Yanlış seçimi biraz soldur */
 }
 /* Gösterilen Doğru Cevap (Eğer kullanıcı yanlış seçtiyse) */
 .player-options button.reveal-correct {
-     border: 2px dashed var(--correct-color); /* Doğru cevabı farklı belirt */
+     /* border: 2px dashed var(--correct-color); /* Bu çok belirgin olmayabilir */
      background: linear-gradient(145deg, #e9f7ec, #d4edda) !important; /* Açık yeşil arka plan */
      color: var(--correct-color) !important; /* Yeşil yazı */
-     box-shadow: none;
+     box-shadow: 0 0 10px rgba(40, 167, 69, 0.3); /* Hafif yeşil içe gölge */
+     border-color: var(--correct-color) !important; /* Sınır rengini de ayarla */
+}
+/* İşaretler (Opsiyonel) */
+.player-options button.selected-correct::after {
+    content: '✔'; /* Doğru işareti */
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--correct-color); background-color: white; padding: 0 3px; border-radius: 50%; font-size: 1.1em;
+}
+.player-options button.selected-incorrect::after {
+    content: '✖'; /* Yanlış işareti */
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--incorrect-color); background-color: white; padding: 0 3px; border-radius: 50%; font-size: 1.1em;
 }
 
 
@@ -430,7 +453,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
 .feedback-correct { color: var(--correct-color); }
 .feedback-incorrect { color: var(--incorrect-color); }
 
-/* Cevap sonrası Oyuncu Alanı alt border rengi */
+/* Cevap sonrası Oyuncu Alanı alt border rengi (JS class ekleyecek) */
 .player-quiz-area.answered-correct { border-bottom-color: var(--correct-border); }
 .player-quiz-area.answered-incorrect { border-bottom-color: var(--incorrect-border); }
 
@@ -453,6 +476,12 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     flex-direction: column;
     gap: 12px; /* Skor satırları arası boşluk */
 }
+#final-scores p.no-score { /* Skor olmadığında mesaj stili */
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+}
 
 .result-line {
     font-size: 1.25em;
@@ -464,15 +493,16 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: transform var(--transition-speed) ease;
-    border-left: 5px solid transparent; /* Tema rengi için */
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    border-left: 5px solid transparent; /* Tema rengi için (JS class ekleyecek) */
 }
-.result-line:hover { transform: translateX(5px); }
+.result-line:hover { transform: translateX(5px); box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
 
-/* Sonuçlardaki tema renkleri */
+/* Sonuçlardaki tema renkleri (JS class ekleyecek) */
 .result-line.theme-child { border-left-color: var(--theme-child-border); }
 .result-line.theme-teen { border-left-color: var(--theme-teen-border); }
 .result-line.theme-young-adult { border-left-color: var(--theme-young-adult-border); }
+.result-line.theme-default { border-left-color: #adb5bd; }
 
 
 .result-line .name {
@@ -481,10 +511,11 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     text-align: left;
     margin-right: 15px;
 }
-/* Sonuçlarda isim renkleri */
-.result-line .theme-child .name { color: var(--theme-child-header); }
-.result-line .theme-teen .name { color: var(--theme-teen-header); }
-.result-line .theme-young-adult .name { color: var(--theme-young-adult-header); }
+/* Sonuçlarda isim renkleri (span içinden tema class'ı kaldırıldı, li'den alacak) */
+.result-line.theme-child .name { color: var(--theme-child-header); }
+.result-line.theme-teen .name { color: var(--theme-teen-header); }
+.result-line.theme-young-adult .name { color: var(--theme-young-adult-header); }
+.result-line.theme-default .name { color: var(--primary-text); }
 
 .result-line .score {
     font-weight: 700;
@@ -493,6 +524,7 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
     border-radius: 6px;
     color: var(--header-color); /* Ana mavi puan */
     font-size: 1.1em;
+    white-space: nowrap; /* Puanlar tek satırda kalsın */
 }
 
 /* Kazanan Bilgisi */
@@ -534,32 +566,36 @@ h3 { font-size: 1.4em; color: var(--subheader-color); margin-bottom: 15px; font-
 }
 
 
-/* === Animasyon Keyframes (Mevcut animasyonlar korunuyor) === */
-@keyframes correctPulse {
+/* === Animasyon Keyframes === */
+@keyframes correctPulse { /* Bu animasyon şu an aktif olarak kullanılmıyor, istenirse eklenebilir */
   0%, 100% {
     transform: scale(1);
-    /* box-shadow: 0 0 5px rgba(40, 167, 69, 0.2); */ /* İsteğe bağlı: Hafif başlangıç gölgesi */
   }
   50% {
-    transform: scale(1.03); /* Hafif büyüme */
-    box-shadow: var(--correct-glow); /* Belirgin parlama */
+    transform: scale(1.03);
+    box-shadow: var(--correct-glow);
   }
 }
 
-@keyframes incorrectShake {
+@keyframes incorrectShake { /* Bu animasyon şu an aktif olarak kullanılmıyor, istenirse eklenebilir */
   0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); } /* Biraz daha fazla titretme */
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
   20%, 40%, 60%, 80% { transform: translateX(6px); }
 }
 
-@keyframes scoreUpdateFlash {
+@keyframes scoreUpdateFlash { /* Bu animasyon scoreboard için eklendi ama JS'den kaldırılmıştı, tekrar eklenebilir */
   0%, 100% {
-    background-color: #fff; /* Normal arka plan */
-      transform: scale(1);
+    background-color: #fff;
+    transform: scale(1);
   }
   50% {
-    background-color: #ade8f4; /* Yeni tema vurgu rengi (açık mavi) */
-      transform: scale(1.05); /* Hafif büyüt */
-      box-shadow: 0 5px 10px rgba(0, 180, 216, 0.3); /* Mavi tonlu gölge */
+    background-color: #ade8f4; /* Açık mavi vurgu */
+    transform: scale(1.05);
+    box-shadow: 0 5px 10px rgba(0, 180, 216, 0.3);
   }
+}
+
+/* Genel Geçişler (Ekranlar arası) */
+#name-entry, #quiz-content, #results {
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
