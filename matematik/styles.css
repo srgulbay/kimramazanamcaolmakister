@@ -599,3 +599,36 @@ p#tts-support-warning.tts-warning { /* ID ve class birlikte daha spesifik */
 #name-entry, #quiz-content, #results {
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
+/* styles.css dosyasının sonuna eklenebilir */
+
+#skip-narration-btn {
+    margin-left: 15px; /* Play butonuyla arasına boşluk */
+    padding: 10px 20px; /* Biraz daha küçük */
+    font-size: 1em; /* Biraz daha küçük font */
+    background: #6c757d; /* Farklı bir renk (gri tonu) */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    font-weight: 500;
+}
+
+#skip-narration-btn:hover:not(:disabled) {
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#skip-narration-btn:disabled {
+    background: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+/* İki butonu yan yana daha iyi hizalamak için */
+#narration-area > button {
+    vertical-align: middle; /* Dikey hizalama */
+}
